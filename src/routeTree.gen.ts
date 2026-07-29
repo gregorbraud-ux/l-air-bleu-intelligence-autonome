@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AvisRouteImport } from './routes/avis'
+import { Route as CalendrierRouteImport } from './routes/calendrier'
+import { Route as ConcurrenceRouteImport } from './routes/concurrence'
+import { Route as MarketingRouteImport } from './routes/marketing'
+import { Route as ValorisationRouteImport } from './routes/valorisation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AvisRoute = AvisRouteImport.update({
+  id: '/avis',
+  path: '/avis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendrierRoute = CalendrierRouteImport.update({
+  id: '/calendrier',
+  path: '/calendrier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConcurrenceRoute = ConcurrenceRouteImport.update({
+  id: '/concurrence',
+  path: '/concurrence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingRoute = MarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ValorisationRoute = ValorisationRouteImport.update({
+  id: '/valorisation',
+  path: '/valorisation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/calendrier': typeof CalendrierRoute
+  '/concurrence': typeof ConcurrenceRoute
+  '/marketing': typeof MarketingRoute
+  '/valorisation': typeof ValorisationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/calendrier': typeof CalendrierRoute
+  '/concurrence': typeof ConcurrenceRoute
+  '/marketing': typeof MarketingRoute
+  '/valorisation': typeof ValorisationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/avis': typeof AvisRoute
+  '/calendrier': typeof CalendrierRoute
+  '/concurrence': typeof ConcurrenceRoute
+  '/marketing': typeof MarketingRoute
+  '/valorisation': typeof ValorisationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/avis'
+    | '/calendrier'
+    | '/concurrence'
+    | '/marketing'
+    | '/valorisation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/avis'
+    | '/calendrier'
+    | '/concurrence'
+    | '/marketing'
+    | '/valorisation'
+  id:
+    | '__root__'
+    | '/'
+    | '/avis'
+    | '/calendrier'
+    | '/concurrence'
+    | '/marketing'
+    | '/valorisation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AvisRoute: typeof AvisRoute
+  CalendrierRoute: typeof CalendrierRoute
+  ConcurrenceRoute: typeof ConcurrenceRoute
+  MarketingRoute: typeof MarketingRoute
+  ValorisationRoute: typeof ValorisationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +117,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/avis': {
+      id: '/avis'
+      path: '/avis'
+      fullPath: '/avis'
+      preLoaderRoute: typeof AvisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendrier': {
+      id: '/calendrier'
+      path: '/calendrier'
+      fullPath: '/calendrier'
+      preLoaderRoute: typeof CalendrierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/concurrence': {
+      id: '/concurrence'
+      path: '/concurrence'
+      fullPath: '/concurrence'
+      preLoaderRoute: typeof ConcurrenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing': {
+      id: '/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof MarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/valorisation': {
+      id: '/valorisation'
+      path: '/valorisation'
+      fullPath: '/valorisation'
+      preLoaderRoute: typeof ValorisationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AvisRoute: AvisRoute,
+  CalendrierRoute: CalendrierRoute,
+  ConcurrenceRoute: ConcurrenceRoute,
+  MarketingRoute: MarketingRoute,
+  ValorisationRoute: ValorisationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
