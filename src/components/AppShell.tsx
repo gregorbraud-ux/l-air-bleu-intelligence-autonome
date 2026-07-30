@@ -8,10 +8,13 @@ import {
   Swords,
   Menu,
   Waves,
+  ShieldCheck,
+  LogIn,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { useAuthSession } from "@/hooks/useAuthSession";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -65,6 +68,44 @@ function Brand() {
   );
 }
 
+function CompteBloc({ onNavigate }: { onNavigate?: () => void }) {
+  const { session, loading } = useAuthSession();
+
+  if (loading) return null;
+
+  return (
+    <div className="rounded-2xl border border-sidebar-border/60 bg-sidebar-accent/50 p-4">
+      {session ? (
+        <>
+          <p className="text-xs font-semibold uppercase tracking-wider text-sidebar-primary">
+            Espace sécurisé
+          </p>
+          <p className="mt-1 truncate text-sm text-sidebar-foreground/80">{session.user.email}</p>
+          <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
+            <Link to="/admin" onClick={onNavigate}>
+              <ShieldCheck className="mr-2 h-4 w-4" /> Administration
+            </Link>
+          </Button>
+        </>
+      ) : (
+        <>
+          <p className="text-xs font-semibold uppercase tracking-wider text-sidebar-primary">
+            Accès administrateur
+          </p>
+          <p className="mt-2 text-sm text-sidebar-foreground/80">
+            Connectez-vous pour gérer les données du tableau de bord.
+          </p>
+          <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
+            <Link to="/auth" onClick={onNavigate}>
+              <LogIn className="mr-2 h-4 w-4" /> Connexion
+            </Link>
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
@@ -73,11 +114,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 flex-col gap-8 bg-sidebar p-5 lg:flex">
         <Brand />
         <NavList />
-        <div className="mt-auto rounded-2xl border border-sidebar-border/60 bg-sidebar-accent/50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-sidebar-primary">Copilote IA</p>
-          <p className="mt-2 text-sm text-sidebar-foreground/80">
-            6 recommandations en attente pour améliorer votre visibilité locale.
-          </p>
+        <div className="mt-auto">
+          <CompteBloc />
         </div>
       </aside>
 
@@ -93,6 +131,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="flex flex-col gap-8">
                 <Brand />
                 <NavList onNavigate={() => setOpen(false)} />
+                <CompteBloc onNavigate={() => setOpen(false)} />
               </div>
             </SheetContent>
           </Sheet>
