@@ -134,6 +134,135 @@ export const concurrents: Concurrent[] = [
 
 export type ModuleIA = { titre: string; description: string; categorie: string; duree: string };
 
+export type AlerteConcurrence = {
+  id: string;
+  concurrent: string;
+  type: "note" | "prix" | "visibilite" | "nouveaute";
+  titre: string;
+  detail: string;
+  variation: number;
+  gravite: "critique" | "importante" | "info";
+  date: string;
+  lue: boolean;
+};
+
+export const alertesConcurrence: AlerteConcurrence[] = [
+  {
+    id: "a1",
+    concurrent: "Table du Vieux-Port",
+    type: "visibilite",
+    titre: "Bond de visibilité locale",
+    detail: "Score de visibilité passé de 79 à 88 en 14 jours (campagne Google Ads détectée).",
+    variation: 11.4,
+    gravite: "critique",
+    date: "Aujourd'hui, 09:12",
+    lue: false,
+  },
+  {
+    id: "a2",
+    concurrent: "Le Comptoir Marin",
+    type: "prix",
+    titre: "Hausse du ticket moyen",
+    detail: "Nouvelle carte : ticket moyen estimé à 52 € (+6 €). Écart avec L'Air Bleu porté à 13 %.",
+    variation: 13,
+    gravite: "importante",
+    date: "Hier, 18:40",
+    lue: false,
+  },
+  {
+    id: "a3",
+    concurrent: "Maison Calanque",
+    type: "note",
+    titre: "Note Google en progression",
+    detail: "4,3 → 4,5 / 5 après 38 nouveaux avis en un mois.",
+    variation: 4.6,
+    gravite: "importante",
+    date: "Il y a 2 jours",
+    lue: false,
+  },
+  {
+    id: "a4",
+    concurrent: "Bistrot Azur",
+    type: "nouveaute",
+    titre: "Lancement d'un brunch dominical",
+    detail: "Offre 29 € annoncée sur Instagram : chevauche votre créneau du dimanche midi.",
+    variation: 0,
+    gravite: "info",
+    date: "Il y a 4 jours",
+    lue: true,
+  },
+  {
+    id: "a5",
+    concurrent: "Table du Vieux-Port",
+    type: "note",
+    titre: "Chute ponctuelle de la note",
+    detail: "3 avis 2 étoiles publiés le même week-end : opportunité de captation clientèle.",
+    variation: -2.1,
+    gravite: "info",
+    date: "Il y a 6 jours",
+    lue: true,
+  },
+];
+
+export type RegleAlerte = {
+  id: "note" | "prix" | "visibilite" | "nouveaute";
+  label: string;
+  description: string;
+  unite: string;
+  seuil: number;
+  min: number;
+  max: number;
+  pas: number;
+  active: boolean;
+};
+
+export const reglesAlertesDefaut: RegleAlerte[] = [
+  {
+    id: "note",
+    label: "Variation de note Google",
+    description: "Alerter si la note d'un concurrent bouge de plus de",
+    unite: "%",
+    seuil: 3,
+    min: 1,
+    max: 15,
+    pas: 1,
+    active: true,
+  },
+  {
+    id: "prix",
+    label: "Évolution tarifaire",
+    description: "Alerter si le ticket moyen estimé varie de plus de",
+    unite: "%",
+    seuil: 8,
+    min: 2,
+    max: 30,
+    pas: 1,
+    active: true,
+  },
+  {
+    id: "visibilite",
+    label: "Visibilité locale",
+    description: "Alerter si le score de visibilité gagne plus de",
+    unite: "pts",
+    seuil: 6,
+    min: 2,
+    max: 25,
+    pas: 1,
+    active: true,
+  },
+  {
+    id: "nouveaute",
+    label: "Nouveautés & offres",
+    description: "Alerter à chaque nouvelle offre détectée (carte, brunch, événement)",
+    unite: "",
+    seuil: 0,
+    min: 0,
+    max: 0,
+    pas: 1,
+    active: false,
+  },
+];
+
 export const modulesIA: ModuleIA[] = [
   {
     titre: "Générateur de posts réseaux",
