@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { PageHeader } from "@/components/AppShell";
+import { AlertesConcurrence } from "@/components/AlertesConcurrence";
 import { Badge } from "@/components/ui/badge";
 import { concurrents } from "@/lib/data";
 
@@ -105,6 +106,8 @@ function ConcurrencePage() {
           </article>
         ))}
       </section>
+
+      <AlertesConcurrence />
     </div>
   );
 }
