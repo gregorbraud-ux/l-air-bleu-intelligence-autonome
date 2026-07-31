@@ -1,37 +1,49 @@
 export const restaurant = {
   nom: "L'Air Bleu",
-  ville: "Marseille",
-  couverts: 78,
-  ticketMoyen: 46,
+  societe: "SARL LG AIR",
+  adresse: "3 rue Anatole France, 44550 Montoir-de-Bretagne",
+  ville: "Montoir-de-Bretagne",
+  telephone: "02 40 90 01 17",
+  positionnement: "Restaurant traditionnel — référence du déjeuner en Loire-Atlantique",
+  couverts: 70,
+  ticketMoyen: 17.5,
+};
+
+/** Exercice clos au 31/08/2025 — données officielles de référence. */
+export const finances = {
+  exercice: "Exercice clos au 31/08/2025",
+  chiffreAffaires: 492781.72,
+  resultatNet: -9192.13,
 };
 
 export type Kpi = { label: string; valeur: string; variation: number; detail: string };
 
 export const kpis: Kpi[] = [
-  { label: "Chiffre d'affaires (30 j)", valeur: "128 400 €", variation: 8.4, detail: "vs. mois précédent" },
-  { label: "Ticket moyen", valeur: "46 €", variation: 3.1, detail: "objectif 48 €" },
-  { label: "Taux de remplissage", valeur: "82 %", variation: -1.6, detail: "78 couverts / service" },
-  { label: "Note Google", valeur: "4,6 / 5", variation: 2.2, detail: "1 284 avis cumulés" },
-  { label: "Marge brute", valeur: "68 %", variation: 1.4, detail: "coût matière 32 %" },
-  { label: "Réservations en ligne", valeur: "1 942", variation: 12.7, detail: "dont 41 % via Instagram" },
+  { label: "Chiffre d'affaires annuel", valeur: "492 782 €", variation: 2.1, detail: "exercice clos au 31/08/2025" },
+  { label: "Résultat net", valeur: "-9 192 €", variation: -1.9, detail: "objectif : retour à l'équilibre" },
+  { label: "Ticket moyen déjeuner", valeur: "17,50 €", variation: 2.4, detail: "objectif 19 € (dessert + café)" },
+  { label: "Couverts / service midi", valeur: "70", variation: 3.2, detail: "capacité utilisée à 84 %" },
+  { label: "Note Google", valeur: "4,5 / 5", variation: 1.8, detail: "312 avis cumulés" },
+  { label: "Communauté Facebook + Instagram", valeur: "2 480", variation: 6.4, detail: "dont 1 690 abonnés Facebook" },
 ];
 
+/** Répartition mensuelle indicative du CA de l'exercice clos au 31/08/2025 (total 492 782 €). */
 export const caMensuel = [
-  { mois: "Jan", ca: 92000, couverts: 1780 },
-  { mois: "Fév", ca: 98500, couverts: 1860 },
-  { mois: "Mar", ca: 105200, couverts: 1990 },
-  { mois: "Avr", ca: 112800, couverts: 2110 },
-  { mois: "Mai", ca: 119400, couverts: 2240 },
-  { mois: "Juin", ca: 124100, couverts: 2320 },
-  { mois: "Juil", ca: 128400, couverts: 2415 },
+  { mois: "Fév", ca: 38900, couverts: 2210 },
+  { mois: "Mar", ca: 41200, couverts: 2350 },
+  { mois: "Avr", ca: 42600, couverts: 2430 },
+  { mois: "Mai", ca: 43800, couverts: 2500 },
+  { mois: "Juin", ca: 44500, couverts: 2540 },
+  { mois: "Juil", ca: 39100, couverts: 2230 },
+  { mois: "Août", ca: 33400, couverts: 1910 },
 ];
 
 export const canaux = [
-  { canal: "Google", part: 38 },
-  { canal: "Instagram", part: 26 },
-  { canal: "Bouche-à-oreille", part: 18 },
-  { canal: "TheFork", part: 12 },
-  { canal: "Site web", part: 6 },
+  { canal: "Google Business", part: 42 },
+  { canal: "Bouche-à-oreille", part: 24 },
+  { canal: "Facebook", part: 16 },
+  { canal: "Instagram", part: 10 },
+  { canal: "Téléphone / passage", part: 8 },
 ];
 
 export type Avis = {
@@ -49,7 +61,7 @@ export const avis: Avis[] = [
     note: 5,
     date: "12 juil.",
     texte:
-      "Une soirée magnifique, le menu dégustation autour du poisson est une réussite. Service attentionné et vue superbe.",
+      "Menu du midi copieux et vraiment fait maison. Servis en 45 minutes avec le sourire, parfait pour la pause déjeuner.",
     sentiment: "positif",
     repondu: true,
   },
@@ -57,7 +69,7 @@ export const avis: Avis[] = [
     auteur: "Julien M.",
     note: 4,
     date: "10 juil.",
-    texte: "Très bonne cuisine, mais l'attente entre les plats était un peu longue en terrasse.",
+    texte: "Bon rapport qualité-prix, mais salle très pleine à 12 h 30 : pensez à réserver si vous êtes pressés.",
     sentiment: "neutre",
     repondu: false,
   },
@@ -65,7 +77,7 @@ export const avis: Avis[] = [
     auteur: "Sofia B.",
     note: 2,
     date: "8 juil.",
-    texte: "Accueil froid le soir de notre réservation et plat principal servi tiède. Dommage pour le prix.",
+    texte: "Plat du jour épuisé quand nous sommes arrivés à 13 h et peu d'alternatives proposées. Dommage.",
     sentiment: "négatif",
     repondu: false,
   },
@@ -73,7 +85,7 @@ export const avis: Avis[] = [
     auteur: "Antoine L.",
     note: 5,
     date: "5 juil.",
-    texte: "Le meilleur rapport qualité-prix du quartier. La carte des vins naturels est excellente.",
+    texte: "On y déjeune entre collègues chaque semaine : cuisine généreuse, accueil chaleureux, addition raisonnable.",
     sentiment: "positif",
     repondu: true,
   },
@@ -81,38 +93,38 @@ export const avis: Avis[] = [
     auteur: "Marie D.",
     note: 4,
     date: "2 juil.",
-    texte: "Cadre élégant et produits frais. Je reviendrai pour le menu du midi.",
+    texte: "Desserts maison excellents et produits frais. Repas de famille du dimanche très réussi.",
     sentiment: "positif",
     repondu: false,
   },
 ];
 
 export const repartitionNotes = [
-  { note: "5 étoiles", nombre: 742 },
-  { note: "4 étoiles", nombre: 361 },
-  { note: "3 étoiles", nombre: 108 },
-  { note: "2 étoiles", nombre: 45 },
-  { note: "1 étoile", nombre: 28 },
+  { note: "5 étoiles", nombre: 178 },
+  { note: "4 étoiles", nombre: 86 },
+  { note: "3 étoiles", nombre: 28 },
+  { note: "2 étoiles", nombre: 12 },
+  { note: "1 étoile", nombre: 8 },
 ];
 
 export type Publication = {
   jour: number;
   titre: string;
-  canal: "Instagram" | "Google" | "Newsletter" | "TikTok";
+  canal: "Instagram" | "Facebook" | "Google" | "Newsletter";
   statut: "planifié" | "brouillon" | "publié";
   heure: string;
 };
 
 export const calendrier: Publication[] = [
-  { jour: 2, titre: "Nouvelle carte d'été", canal: "Instagram", statut: "publié", heure: "12:00" },
-  { jour: 4, titre: "Post Google : menu du midi", canal: "Google", statut: "publié", heure: "10:30" },
-  { jour: 7, titre: "Reels coulisses cuisine", canal: "TikTok", statut: "planifié", heure: "18:00" },
-  { jour: 9, titre: "Newsletter accords mets-vins", canal: "Newsletter", statut: "planifié", heure: "09:00" },
-  { jour: 12, titre: "Portrait du chef", canal: "Instagram", statut: "brouillon", heure: "19:00" },
-  { jour: 16, titre: "Offre brunch dominical", canal: "Google", statut: "planifié", heure: "11:00" },
-  { jour: 19, titre: "Story sondage dessert", canal: "Instagram", statut: "brouillon", heure: "17:30" },
-  { jour: 23, titre: "Teaser menu automne", canal: "TikTok", statut: "planifié", heure: "20:00" },
-  { jour: 27, titre: "Newsletter fidélité", canal: "Newsletter", statut: "brouillon", heure: "08:30" },
+  { jour: 1, titre: "Menu de la semaine", canal: "Facebook", statut: "publié", heure: "09:00" },
+  { jour: 2, titre: "Plat du jour : blanquette maison", canal: "Google", statut: "publié", heure: "10:30" },
+  { jour: 4, titre: "Coulisses cuisine : épluchage du matin", canal: "Instagram", statut: "planifié", heure: "11:00" },
+  { jour: 8, titre: "Menu de la semaine", canal: "Facebook", statut: "planifié", heure: "09:00" },
+  { jour: 11, titre: "Dessert maison du jour", canal: "Instagram", statut: "brouillon", heure: "11:30" },
+  { jour: 15, titre: "Offre déjeuner pro : formule express", canal: "Google", statut: "planifié", heure: "10:00" },
+  { jour: 18, titre: "Portrait de l'équipe en salle", canal: "Facebook", statut: "brouillon", heure: "17:30" },
+  { jour: 22, titre: "Produits frais : nos fournisseurs locaux", canal: "Instagram", statut: "planifié", heure: "11:00" },
+  { jour: 26, titre: "Newsletter fidélité déjeuner", canal: "Newsletter", statut: "brouillon", heure: "08:30" },
 ];
 
 export type Concurrent = {
@@ -125,11 +137,11 @@ export type Concurrent = {
 };
 
 export const concurrents: Concurrent[] = [
-  { nom: "L'Air Bleu", note: 4.6, avis: 1284, ticket: 46, visibilite: 78, tendance: 6.2 },
-  { nom: "Le Comptoir Marin", note: 4.4, avis: 962, ticket: 52, visibilite: 71, tendance: 2.1 },
-  { nom: "Table du Vieux-Port", note: 4.7, avis: 2140, ticket: 61, visibilite: 88, tendance: 4.8 },
-  { nom: "Bistrot Azur", note: 4.1, avis: 540, ticket: 38, visibilite: 54, tendance: -1.3 },
-  { nom: "Maison Calanque", note: 4.5, avis: 1105, ticket: 49, visibilite: 66, tendance: 3.4 },
+  { nom: "L'Air Bleu", note: 4.5, avis: 312, ticket: 17.5, visibilite: 68, tendance: 4.2 },
+  { nom: "Brasserie du Brivet (Trignac)", note: 4.3, avis: 486, ticket: 19, visibilite: 74, tendance: 2.1 },
+  { nom: "Le Routier de Montoir", note: 4.4, avis: 264, ticket: 15, visibilite: 61, tendance: 3.5 },
+  { nom: "Table de la Zone (Saint-Nazaire)", note: 4.1, avis: 198, ticket: 16.5, visibilite: 52, tendance: -1.3 },
+  { nom: "Auberge de Donges", note: 4.6, avis: 402, ticket: 21, visibilite: 70, tendance: 3.4 },
 ];
 
 export type ModuleIA = { titre: string; description: string; categorie: string; duree: string };
@@ -149,43 +161,43 @@ export type AlerteConcurrence = {
 export const alertesConcurrence: AlerteConcurrence[] = [
   {
     id: "a1",
-    concurrent: "Table du Vieux-Port",
+    concurrent: "Brasserie du Brivet (Trignac)",
     type: "visibilite",
     titre: "Bond de visibilité locale",
-    detail: "Score de visibilité passé de 79 à 88 en 14 jours (campagne Google Ads détectée).",
-    variation: 11.4,
+    detail: "Score de visibilité passé de 66 à 74 en 14 jours : publications Google Business quasi quotidiennes.",
+    variation: 12.1,
     gravite: "critique",
     date: "Aujourd'hui, 09:12",
     lue: false,
   },
   {
     id: "a2",
-    concurrent: "Le Comptoir Marin",
+    concurrent: "Auberge de Donges",
     type: "prix",
-    titre: "Hausse du ticket moyen",
-    detail: "Nouvelle carte : ticket moyen estimé à 52 € (+6 €). Écart avec L'Air Bleu porté à 13 %.",
-    variation: 13,
+    titre: "Hausse de la formule déjeuner",
+    detail: "Formule du midi passée de 19 € à 21 € : opportunité de mise en avant de notre rapport qualité/prix.",
+    variation: 10.5,
     gravite: "importante",
     date: "Hier, 18:40",
     lue: false,
   },
   {
     id: "a3",
-    concurrent: "Maison Calanque",
+    concurrent: "Le Routier de Montoir",
     type: "note",
     titre: "Note Google en progression",
-    detail: "4,3 → 4,5 / 5 après 38 nouveaux avis en un mois.",
-    variation: 4.6,
+    detail: "4,2 → 4,4 / 5 après 26 nouveaux avis en un mois (sollicitation active en fin de repas).",
+    variation: 4.8,
     gravite: "importante",
     date: "Il y a 2 jours",
     lue: false,
   },
   {
     id: "a4",
-    concurrent: "Bistrot Azur",
+    concurrent: "Table de la Zone (Saint-Nazaire)",
     type: "nouveaute",
-    titre: "Lancement d'un brunch dominical",
-    detail: "Offre 29 € annoncée sur Instagram : chevauche votre créneau du dimanche midi.",
+    titre: "Formule express 13,90 € pour les pros",
+    detail: "Entrée + plat servis en 30 minutes, annoncée sur Facebook : cible la clientèle professionnelle du midi.",
     variation: 0,
     gravite: "info",
     date: "Il y a 4 jours",
@@ -193,10 +205,10 @@ export const alertesConcurrence: AlerteConcurrence[] = [
   },
   {
     id: "a5",
-    concurrent: "Table du Vieux-Port",
+    concurrent: "Brasserie du Brivet (Trignac)",
     type: "note",
     titre: "Chute ponctuelle de la note",
-    detail: "3 avis 2 étoiles publiés le même week-end : opportunité de captation clientèle.",
+    detail: "3 avis 2 étoiles sur l'attente du midi : opportunité de captation de la clientèle pressée.",
     variation: -2.1,
     gravite: "info",
     date: "Il y a 6 jours",
@@ -266,7 +278,7 @@ export const reglesAlertesDefaut: RegleAlerte[] = [
 export const modulesIA: ModuleIA[] = [
   {
     titre: "Générateur de posts réseaux",
-    description: "Rédige des publications Instagram et TikTok à partir du plat du jour et du ton de la maison.",
+    description: "Rédige des publications Facebook et Instagram à partir du menu de la semaine et du plat du jour.",
     categorie: "Contenu",
     duree: "~20 s",
   },
@@ -278,25 +290,25 @@ export const modulesIA: ModuleIA[] = [
   },
   {
     titre: "Optimisation de la carte",
-    description: "Analyse marges et popularité des plats pour recommander un nouveau menu-engineering.",
+    description: "Analyse marges et popularité des plats du midi pour retrouver l'équilibre et gagner en rentabilité.",
     categorie: "Revenus",
     duree: "~40 s",
   },
   {
-    titre: "Campagne e-mail",
-    description: "Crée une séquence de fidélisation segmentée selon la fréquence de visite des clients.",
-    categorie: "CRM",
+    titre: "Campagne e-mail & SEO local",
+    description: "Crée une séquence de fidélisation et des textes optimisés sur les mots-clés déjeuner Montoir-de-Bretagne.",
+    categorie: "CRM & SEO",
     duree: "~30 s",
   },
   {
     titre: "Veille concurrentielle",
-    description: "Résume les nouveautés, prix et notes des restaurants comparables du quartier.",
+    description: "Résume nouveautés, prix et notes des restaurants du secteur Montoir, Trignac, Donges, Saint-Nazaire.",
     categorie: "Marché",
     duree: "~1 min",
   },
   {
-    titre: "Prévision d'affluence",
-    description: "Anticipe les couverts par service selon la météo, les événements locaux et l'historique.",
+    titre: "Prévision d'affluence du midi",
+    description: "Anticipe les couverts du déjeuner selon la météo, l'activité des entreprises voisines et l'historique.",
     categorie: "Opérations",
     duree: "~15 s",
   },

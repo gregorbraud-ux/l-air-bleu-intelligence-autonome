@@ -25,11 +25,11 @@ export const Route = createFileRoute("/valorisation")({
 const euro = (v: number) => `${Math.round(v).toLocaleString("fr-FR")} €`;
 
 function ValorisationPage() {
-  const [ca, setCa] = useState(1_540_000);
-  const [marge, setMarge] = useState(14);
-  const [note, setNote] = useState(4.6);
-  const [visibilite, setVisibilite] = useState(78);
-  const [fidelite, setFidelite] = useState(42);
+  const [ca, setCa] = useState(492_782);
+  const [marge, setMarge] = useState(4);
+  const [note, setNote] = useState(4.5);
+  const [visibilite, setVisibilite] = useState(68);
+  const [fidelite, setFidelite] = useState(38);
 
   const calcul = useMemo(() => {
     const ebe = (ca * marge) / 100;
@@ -54,7 +54,7 @@ function ValorisationPage() {
     <div>
       <PageHeader
         titre="Valorisation du restaurant"
-        sousTitre="Estimation du fonds de commerce à partir des indicateurs financiers et marketing"
+        sousTitre="L'Air Bleu (SARL LG AIR) — base : CA 492 782 € et résultat net -9 192 € (exercice clos au 31/08/2025)"
       />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -62,7 +62,7 @@ function ValorisationPage() {
           <h2 className="text-lg font-semibold">Vos indicateurs</h2>
 
           <Champ label="Chiffre d'affaires annuel" valeur={euro(ca)}>
-            <Slider value={[ca]} min={400_000} max={4_000_000} step={20_000} onValueChange={([v]) => setCa(v)} />
+            <Slider value={[ca]} min={300_000} max={1_200_000} step={5_000} onValueChange={([v]) => setCa(v)} />
           </Champ>
           <Champ label="Marge d'exploitation (EBE)" valeur={`${marge} %`}>
             <Slider value={[marge]} min={2} max={30} step={1} onValueChange={([v]) => setMarge(v)} />

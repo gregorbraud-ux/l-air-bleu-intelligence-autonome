@@ -24,7 +24,8 @@ export const Route = createFileRoute("/calendrier")({
       { title: "Calendrier éditorial — AirBleu AI | L'Air Bleu" },
       {
         name: "description",
-        content: "Planifiez les publications Instagram, Google, TikTok et newsletters du restaurant L'Air Bleu.",
+        content:
+          "Planifiez les publications Facebook, Instagram, Google Business et newsletters du restaurant L'Air Bleu à Montoir-de-Bretagne.",
       },
       { property: "og:title", content: "Calendrier éditorial — AirBleu AI" },
       { property: "og:description", content: "Un mois de publications planifiées et validées en un coup d'œil." },
@@ -38,14 +39,14 @@ const canalStyle: Record<string, string> = {
   Instagram: "bg-chart-5/15 text-chart-5",
   Google: "bg-chart-1/15 text-chart-1",
   Newsletter: "bg-chart-4/15 text-chart-4",
-  TikTok: "bg-chart-2/15 text-chart-2",
+  Facebook: "bg-chart-2/15 text-chart-2",
 };
 
-const tons = ["Élégant", "Gourmand", "Convivial", "Storytelling", "Promotionnel"] as const;
+const tons = ["Chaleureux", "Convivial", "Authentique", "Dynamique", "Gourmand"] as const;
 
 function CalendrierPage() {
   const cases = Array.from({ length: 31 }, (_, i) => i + 1);
-  const [ton, setTon] = useState<string>("Élégant");
+  const [ton, setTon] = useState<string>("Chaleureux");
   const [nombre, setNombre] = useState(8);
   const [plan, setPlan] = useState<PlanEditorial | null>(null);
   const [selection, setSelection] = useState<IdeePost | null>(null);
@@ -135,7 +136,8 @@ function CalendrierPage() {
               <Sparkles className="h-4 w-4 text-primary" /> Générateur de calendrier IA
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Un mois de publications construit à partir de vos avis Google récents et de la veille concurrentielle.
+              Un mois de publications Facebook, Instagram, Google Business et newsletter, construit à partir de vos avis
+              Google récents et de la veille concurrentielle locale.
             </p>
           </div>
           <Button disabled={generation.isPending} onClick={() => generation.mutate()}>
@@ -297,10 +299,10 @@ function CalendrierPage() {
           <h2 className="text-lg font-semibold">Recommandations IA</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             {(plan?.tendances.length ? plan.tendances : [
-              "Publier le vendredi entre 18 h et 19 h : +34 % d'engagement observé.",
-              "Ajouter une story sondage par semaine pour nourrir la carte d'automne.",
-              "Deux posts Google Business manquants pour maintenir la visibilité locale.",
-              "Programmer une newsletter avant le 15 pour relancer les clients inactifs.",
+              "Publier le menu de la semaine chaque lundi avant 9 h : capte les recherches déjeuner du secteur.",
+              "Un post Google Business tous les 3 jours pour tenir la première page sur « restaurant Montoir-de-Bretagne ».",
+              "Story quotidienne du plat du jour vers 11 h, juste avant la décision de déjeuner.",
+              "Newsletter mensuelle aux entreprises voisines pour la clientèle professionnelle du midi.",
             ]).map((t) => (
               <li key={t}>{t}</li>
             ))}

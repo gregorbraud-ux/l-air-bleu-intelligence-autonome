@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const canaux = ["Instagram", "Google", "Newsletter", "TikTok"] as const;
+export const canaux = ["Facebook", "Instagram", "Google", "Newsletter"] as const;
 export const statuts = ["planifié", "brouillon"] as const;
 
 export type IdeePost = {
@@ -90,7 +90,10 @@ export function nettoyerPlan(plan: PlanEditorial, nombre: number): PlanEditorial
 
 export function construirePrompt(data: EntreePlan) {
   return [
-    `Restaurant : L'Air Bleu, cuisine méditerranéenne de produits frais à Marseille, ticket moyen 46 €, note Google 4,6/5.`,
+    `Restaurant : L'Air Bleu (SARL LG AIR), restaurant traditionnel de cuisine maison, 3 rue Anatole France, 44550 Montoir-de-Bretagne (Loire-Atlantique), tél. 02 40 90 01 17.`,
+    `Positionnement : la référence du déjeuner du secteur (Montoir-de-Bretagne, Trignac, Donges, Saint-Nazaire) — chaleureux, convivial, généreux, produits frais, cuisine maison, excellent rapport qualité/prix, service rapide le midi.`,
+    `Cibles : clientèle professionnelle du midi et clientèle familiale. Ticket moyen déjeuner 17,50 €, note Google 4,5/5.`,
+    `Objectifs : fréquentation du midi, réservations, avis Google, notoriété locale, communauté Facebook et Instagram.`,
     `Mois à planifier : ${data.mois}. Ton souhaité : ${data.ton}.`,
     ``,
     `Avis Google récents :`,
@@ -100,14 +103,18 @@ export function construirePrompt(data: EntreePlan) {
     ...data.tendancesConcurrence.map((t) => `- ${t}`),
     ``,
     `Génère exactement ${data.nombre} publications réparties sur le mois (jours 1 à 31, jamais deux publications le même jour),`,
-    `sur les canaux Instagram, Google, Newsletter et TikTok, en français.`,
+    `sur les canaux Facebook, Instagram, Google et Newsletter, en français.`,
+    `Thèmes à privilégier : menus de la semaine, plats du jour, desserts maison, produits frais et fournisseurs locaux, équipes, cuisine, clients (avec autorisation), événements.`,
+    `Intègre naturellement des mots-clés locaux (déjeuner Montoir-de-Bretagne, restaurant traditionnel Loire-Atlantique, menu du midi près de Saint-Nazaire) pour le référencement local.`,
     `Chaque publication doit s'appuyer sur un avis récent ou une tendance : indique-le dans "source".`,
     ``,
     `Pour chaque publication, produis un texte de post PRÊT À PUBLIER dans "legende" :`,
     `- une caption complète et autonome (3 à 5 courts paragraphes séparés par des sauts de ligne),`,
     `- écrite à la première personne du pluriel ("nous"), voix du restaurant, sans placeholder ni crochets,`,
-    `- adaptée au canal (Instagram sensoriel et rythmé, TikTok punchy avec accroche en 1re ligne,`,
-    `  Google Business informatif et local, Newsletter plus narrative et un peu plus longue),`,
+    `- adaptée au canal (Facebook chaleureux et communautaire avec info pratique, Instagram visuel et rythmé,`,
+    `  Google Business informatif et local sans emoji, Newsletter plus narrative et un peu plus longue),`,
+    `- ton professionnel, chaleureux, authentique, humain et dynamique : jamais artificiel ni trop commercial,`,
+    `- chaque post doit pouvoir être adapté à la fois à Facebook et Instagram,`,
     `- terminée par l'appel à l'action donné dans "cta" (réservation, lien en bio, visite, etc.).`,
     `"angle" : l'angle éditorial en une phrase courte (ex. « preuve sociale via avis 5/5 sur le poulpe »).`,
     `"tonVoix" : 2 à 4 adjectifs décrivant le ton employé, cohérents avec le ton souhaité "${data.ton}".`,

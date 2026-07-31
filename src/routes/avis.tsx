@@ -31,18 +31,18 @@ const sentimentStyle: Record<string, string> = {
 function AvisPage() {
   return (
     <div>
-      <PageHeader titre="Avis Google" sousTitre="1 284 avis cumulés · note moyenne 4,6 / 5" />
+      <PageHeader titre="Avis Google" sousTitre="312 avis cumulés · note moyenne 4,5 / 5 · Montoir-de-Bretagne" />
 
       <section className="grid gap-4 lg:grid-cols-3">
         <div className="surface-card p-5">
           <p className="text-sm text-muted-foreground">Note moyenne</p>
-          <p className="mt-2 font-display text-5xl">4,6</p>
+          <p className="mt-2 font-display text-5xl">4,5</p>
           <div className="mt-2 flex gap-1 text-accent">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-4 w-4 fill-current" />
             ))}
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">+0,1 point sur 90 jours · 62 nouveaux avis</p>
+          <p className="mt-4 text-sm text-muted-foreground">+0,1 point sur 90 jours · 24 nouveaux avis</p>
         </div>
         <div className="surface-card p-5 lg:col-span-2">
           <h2 className="text-lg font-semibold">Répartition des notes</h2>
