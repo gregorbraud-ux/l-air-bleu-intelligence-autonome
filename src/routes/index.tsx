@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Pilotez le restaurant L'Air Bleu : chiffre d'affaires, remplissage, réputation et marketing IA dans un tableau de bord unique.",
+          "Pilotez L'Air Bleu, restaurant traditionnel à Montoir-de-Bretagne : chiffre d'affaires, fréquentation du midi, réputation et marketing IA.",
       },
       { property: "og:title", content: "Tableau de bord — AirBleu AI" },
       {
@@ -40,7 +40,7 @@ function Dashboard() {
     <div>
       <PageHeader
         titre="Tableau de bord"
-        sousTitre="Vue consolidée des performances de L'Air Bleu — juillet 2026"
+        sousTitre="L'Air Bleu · Montoir-de-Bretagne — exercice clos au 31/08/2025 et pilotage courant"
         action={
           <Button className="shrink-0">
             <Sparkles className="mr-2 h-4 w-4" /> Analyse IA du mois
@@ -74,7 +74,7 @@ function Dashboard() {
       <section className="mt-6 grid gap-4 lg:grid-cols-3">
         <div className="surface-card p-5 lg:col-span-2">
           <h2 className="text-lg font-semibold">Chiffre d'affaires mensuel</h2>
-          <p className="text-sm text-muted-foreground">Progression continue depuis janvier</p>
+          <p className="text-sm text-muted-foreground">Répartition de l'exercice clos au 31/08/2025 — total 492 782 €</p>
           <div className="mt-6 h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={caMensuel} margin={{ left: -12, right: 8 }}>
@@ -118,9 +118,9 @@ function Dashboard() {
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
         {[
-          { titre: "Réputation", texte: "3 avis négatifs sans réponse depuis 5 jours.", lien: "/avis", cta: "Traiter les avis" },
-          { titre: "Contenu", texte: "4 publications à valider dans le calendrier de juillet.", lien: "/calendrier", cta: "Ouvrir le calendrier" },
-          { titre: "Valeur", texte: "Valorisation estimée en hausse de 9 % ce trimestre.", lien: "/valorisation", cta: "Voir l'estimation" },
+          { titre: "Réputation", texte: "2 avis sans réponse : chaque réponse renforce le référencement local.", lien: "/avis", cta: "Traiter les avis" },
+          { titre: "Contenu", texte: "3 publications Facebook / Instagram à valider cette semaine.", lien: "/calendrier", cta: "Ouvrir le calendrier" },
+          { titre: "Rentabilité", texte: "Résultat net à -9 192 € : priorité au ticket moyen du midi.", lien: "/valorisation", cta: "Voir l'estimation" },
         ].map((c) => (
           <article key={c.titre} className="surface-card flex flex-col gap-3 p-5">
             <Badge variant="secondary" className="w-fit">{c.titre}</Badge>

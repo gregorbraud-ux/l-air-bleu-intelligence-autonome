@@ -25,11 +25,13 @@ export const Route = createFileRoute("/marketing")({
   component: MarketingPage,
 });
 
-const tons = ["Élégant", "Chaleureux", "Gourmand", "Direct"];
+const tons = ["Chaleureux", "Convivial", "Authentique", "Dynamique"];
 
 function MarketingPage() {
-  const [brief, setBrief] = useState("Menu dégustation autour du poisson de Méditerranée, terrasse ouverte tout l'été.");
-  const [ton, setTon] = useState("Élégant");
+  const [brief, setBrief] = useState(
+    "Menu du midi de la semaine : blanquette de veau maison, dessert du jour, formule à 15,90 € servie en 45 minutes.",
+  );
+  const [ton, setTon] = useState("Chaleureux");
   const [resultat, setResultat] = useState<string | null>(null);
   const [chargement, setChargement] = useState(false);
 
@@ -38,7 +40,7 @@ function MarketingPage() {
     setResultat(null);
     setTimeout(() => {
       setResultat(
-        `Ton ${ton.toLowerCase()} — Proposition Instagram\n\n« Le bleu de la Méditerranée dans l'assiette. Cette semaine à L'Air Bleu, notre menu dégustation met à l'honneur la pêche du jour, sublimée par les herbes de nos collines. Terrasse ouverte jusqu'à 23 h. »\n\n#LAirBleu #Marseille #PoissonDuJour #Terrasse\n\nAppel à l'action suggéré : « Réservez votre table du soir en 30 secondes. »`,
+        `Ton ${ton.toLowerCase()} — Proposition Facebook / Instagram\n\n« Cette semaine à L'Air Bleu, la blanquette de veau mijote depuis ce matin dans nos cuisines. Produits frais, cuisine 100 % maison, dessert du jour compris : la formule déjeuner à 15,90 €, servie en 45 minutes.\n\nUne pause midi généreuse à deux pas des entreprises de Montoir-de-Bretagne, dans une salle où l'on prend le temps de vous accueillir comme il faut. »\n\n#LAirBleu #MontoirDeBretagne #MenuDuMidi #CuisineMaison #LoireAtlantique\n\nAppel à l'action suggéré : « Réservez votre table du midi au 02 40 90 01 17. »`,
       );
       setChargement(false);
       toast.success("Contenu généré", { description: "Brouillon ajouté au calendrier éditorial." });
@@ -47,7 +49,10 @@ function MarketingPage() {
 
   return (
     <div>
-      <PageHeader titre="Marketing IA" sousTitre="Six modules pour accélérer la communication du restaurant" />
+      <PageHeader
+        titre="Marketing IA"
+        sousTitre="Six modules gratuits pour développer le déjeuner et la notoriété locale de L'Air Bleu"
+      />
 
       <section className="surface-card p-5 sm:p-6">
         <h2 className="text-lg font-semibold">Studio de création</h2>
