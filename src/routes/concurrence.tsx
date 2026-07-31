@@ -12,7 +12,8 @@ export const Route = createFileRoute("/concurrence")({
       { title: "Concurrence — AirBleu AI | L'Air Bleu" },
       {
         name: "description",
-        content: "Comparez L'Air Bleu aux restaurants du quartier : notes, avis, ticket moyen et visibilité locale.",
+        content:
+          "Comparez L'Air Bleu aux restaurants du secteur Montoir-de-Bretagne, Trignac, Donges et Saint-Nazaire : notes, avis, ticket moyen et visibilité locale.",
       },
       { property: "og:title", content: "Concurrence — AirBleu AI" },
       { property: "og:description", content: "Veille concurrentielle locale du restaurant L'Air Bleu." },
@@ -25,15 +26,18 @@ function ConcurrencePage() {
   const moi = concurrents[0];
   const radar = [
     { axe: "Note", valeur: (moi.note / 5) * 100 },
-    { axe: "Volume d'avis", valeur: Math.min(100, (moi.avis / 2200) * 100) },
-    { axe: "Ticket moyen", valeur: (moi.ticket / 65) * 100 },
+    { axe: "Volume d'avis", valeur: Math.min(100, (moi.avis / 500) * 100) },
+    { axe: "Ticket moyen", valeur: Math.min(100, (moi.ticket / 22) * 100) },
     { axe: "Visibilité", valeur: moi.visibilite },
     { axe: "Croissance", valeur: Math.min(100, moi.tendance * 12) },
   ];
 
   return (
     <div>
-      <PageHeader titre="Suivi de la concurrence" sousTitre="5 établissements comparables dans un rayon de 1,5 km" />
+      <PageHeader
+        titre="Suivi de la concurrence"
+        sousTitre="Restaurants de déjeuner comparables : Montoir-de-Bretagne, Trignac, Donges, Saint-Nazaire"
+      />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <section className="surface-card overflow-x-auto p-5">
@@ -97,9 +101,9 @@ function ConcurrencePage() {
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
         {[
-          "Table du Vieux-Port publie 3× plus souvent sur Google : opportunité de rattrapage.",
-          "Votre ticket moyen reste 12 % sous la moyenne du segment premium local.",
-          "Croissance de visibilité la plus rapide du panel sur les 90 derniers jours.",
+          "La Brasserie du Brivet publie 3× plus souvent sur Google Business : rattrapage possible sans budget.",
+          "Votre ticket moyen déjeuner (17,50 €) reste 9 % sous la moyenne du secteur : marge de progression sur desserts et boissons.",
+          "Volume d'avis Google le plus faible du panel : la sollicitation en fin de repas est le levier n° 1, gratuit et mesurable.",
         ].map((texte) => (
           <article key={texte} className="surface-card p-5 text-sm text-muted-foreground">
             {texte}
