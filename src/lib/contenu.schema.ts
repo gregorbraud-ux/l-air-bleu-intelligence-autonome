@@ -10,7 +10,10 @@ export type IdeePost = {
   statut: (typeof statuts)[number];
   titre: string;
   accroche: string;
+  angle: string;
+  tonVoix: string;
   legende: string;
+  cta: string;
   hashtags: string[];
   source: string;
 };
@@ -32,7 +35,10 @@ export const planSchema = z.object({
       statut: z.enum(statuts),
       titre: z.string(),
       accroche: z.string(),
+      angle: z.string(),
+      tonVoix: z.string(),
       legende: z.string(),
+      cta: z.string(),
       hashtags: z.array(z.string()),
       source: z.string(),
     }),
@@ -71,8 +77,11 @@ export function nettoyerPlan(plan: PlanEditorial, nombre: number): PlanEditorial
         jour: Math.min(31, Math.max(1, Math.round(p.jour))),
         titre: p.titre.slice(0, 70),
         accroche: p.accroche.slice(0, 160),
-        legende: p.legende.slice(0, 500),
-        hashtags: (p.hashtags ?? []).slice(0, 6),
+        angle: (p.angle ?? "").slice(0, 120),
+        tonVoix: (p.tonVoix ?? "").slice(0, 60),
+        legende: p.legende.slice(0, 1100),
+        cta: (p.cta ?? "").slice(0, 120),
+        hashtags: (p.hashtags ?? []).slice(0, 8).map((h) => (h.startsWith("#") ? h : `#${h}`)),
         source: p.source.slice(0, 120),
       }))
       .sort((a, b) => a.jour - b.jour),
@@ -93,7 +102,18 @@ export function construirePrompt(data: EntreePlan) {
     `Génère exactement ${data.nombre} publications réparties sur le mois (jours 1 à 31, jamais deux publications le même jour),`,
     `sur les canaux Instagram, Google, Newsletter et TikTok, en français.`,
     `Chaque publication doit s'appuyer sur un avis récent ou une tendance : indique-le dans "source".`,
-    `Contraintes de longueur : titre max 70 caractères, accroche max 160 caractères, légende max 500 caractères, 3 à 5 hashtags.`,
+    ``,
+    `Pour chaque publication, produis un texte de post PRÊT À PUBLIER dans "legende" :`,
+    `- une caption complète et autonome (3 à 5 courts paragraphes séparés par des sauts de ligne),`,
+    `- écrite à la première personne du pluriel ("nous"), voix du restaurant, sans placeholder ni crochets,`,
+    `- adaptée au canal (Instagram sensoriel et rythmé, TikTok punchy avec accroche en 1re ligne,`,
+    `  Google Business informatif et local, Newsletter plus narrative et un peu plus longue),`,
+    `- terminée par l'appel à l'action donné dans "cta" (réservation, lien en bio, visite, etc.).`,
+    `"angle" : l'angle éditorial en une phrase courte (ex. « preuve sociale via avis 5/5 sur le poulpe »).`,
+    `"tonVoix" : 2 à 4 adjectifs décrivant le ton employé, cohérents avec le ton souhaité "${data.ton}".`,
+    `"accroche" : la première ligne accrocheuse du post. "hashtags" : 4 à 6 hashtags pertinents, mélange marque/local/thème,`,
+    `avec le préfixe #, sans doublon entre publications d'un même canal.`,
+    `Contraintes : titre max 70 caractères, accroche max 160 caractères, légende max 1000 caractères, aucun emoji sur Google Business, emojis sobres ailleurs.`,
     `"tendances" : 4 enseignements courts issus des avis et de la concurrence. "synthese" : 2 phrases max.`,
   ].join("\n");
 }

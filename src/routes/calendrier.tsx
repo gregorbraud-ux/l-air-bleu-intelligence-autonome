@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Sparkles, TrendingUp } from "lucide-react";
+import { Check, Copy, Loader2, Plus, Sparkles, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { calendrier, avis, alertesConcurrence, concurrents } from "@/lib/data";
 import { genererPlanEditorial, type IdeePost, type PlanEditorial } from "@/lib/contenu.functions";
@@ -49,6 +49,7 @@ function CalendrierPage() {
   const [nombre, setNombre] = useState(8);
   const [plan, setPlan] = useState<PlanEditorial | null>(null);
   const [selection, setSelection] = useState<IdeePost | null>(null);
+  const [copie, setCopie] = useState(false);
   const generer = useServerFn(genererPlanEditorial);
 
   const contexte = useMemo(
@@ -84,7 +85,32 @@ function CalendrierPage() {
 
   const publications = plan
     ? plan.publications.map((p) => ({ ...p, genere: true as const }))
-    : calendrier.map((p) => ({ ...p, genere: false as const, accroche: "", source: "" }));
+    : calendrier.map((p) => ({
+        ...p,
+        genere: false as const,
+        accroche: "",
+        source: "",
+        angle: "",
+        tonVoix: "",
+        cta: "",
+      }));
+
+  const textePret = selection
+    ? `${selection.legende}\n\n${selection.hashtags
+        .map((h) => (h.startsWith("#") ? h : `#${h}`))
+        .join(" ")}`
+    : "";
+
+  const copier = async () => {
+    try {
+      await navigator.clipboard.writeText(textePret);
+      setCopie(true);
+      toast.success("Post copié, prêt à publier.");
+      setTimeout(() => setCopie(false), 2000);
+    } catch {
+      toast.error("Copie impossible sur cet appareil.");
+    }
+  };
 
   return (
     <div>
@@ -181,6 +207,7 @@ function CalendrierPage() {
                       onClick={() => {
                         if (p.genere) {
                           setSelection(p as IdeePost);
+                          setCopie(false);
                           return;
                         }
                         toast.info(p.titre, { description: `${p.canal} · ${p.heure} · ${p.statut}` });
@@ -210,16 +237,39 @@ function CalendrierPage() {
               Fermer
             </Button>
           </div>
-          <p className="mt-4 text-sm font-medium">{selection.accroche}</p>
-          <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">{selection.legende}</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {selection.hashtags.map((h) => (
-              <Badge key={h} variant="secondary">
-                {h.startsWith("#") ? h : `#${h}`}
-              </Badge>
-            ))}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {selection.angle && <Badge variant="outline">Angle : {selection.angle}</Badge>}
+            {selection.tonVoix && <Badge variant="outline">Ton : {selection.tonVoix}</Badge>}
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">Inspiré de : {selection.source}</p>
+
+          <p className="mt-4 text-sm font-medium">{selection.accroche}</p>
+
+          <div className="mt-3 rounded-xl border border-border/70 bg-secondary/40 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Post prêt à publier
+              </p>
+              <Button variant="secondary" size="sm" onClick={copier}>
+                {copie ? <Check className="mr-2 h-3.5 w-3.5" /> : <Copy className="mr-2 h-3.5 w-3.5" />}
+                {copie ? "Copié" : "Copier"}
+              </Button>
+            </div>
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed">{selection.legende}</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {selection.hashtags.map((h) => (
+                <Badge key={h} variant="secondary">
+                  {h.startsWith("#") ? h : `#${h}`}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {selection.cta && (
+            <p className="mt-3 text-sm">
+              <span className="font-medium">Appel à l'action :</span> {selection.cta}
+            </p>
+          )}
+          <p className="mt-3 text-xs text-muted-foreground">Inspiré de : {selection.source}</p>
         </section>
       )}
 
