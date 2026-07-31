@@ -62,7 +62,7 @@ function Brand() {
       </div>
       <div className="min-w-0">
         <p className="truncate font-display text-lg leading-tight text-sidebar-accent-foreground">AirBleu AI</p>
-        <p className="truncate text-xs text-sidebar-foreground/60">Restaurant L'Air Bleu</p>
+        <p className="truncate text-xs text-sidebar-foreground/60">L'Air Bleu · Montoir-de-Bretagne</p>
       </div>
     </div>
   );
