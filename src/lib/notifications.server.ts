@@ -151,7 +151,11 @@ export async function envoyerPushAlertes(userId: string, alertes: AlerteEnvoi[])
           subscription,
           { subject, publicKey, privateKey },
         );
-        const res = await fetch(subscription.endpoint, payload);
+        const res = await fetch(subscription.endpoint, {
+          method: payload.method,
+          headers: payload.headers as Record<string, string>,
+          body: payload.body as unknown as BodyInit,
+        });
         if (res.status === 404 || res.status === 410) {
           await supabaseAdmin.from("push_subscriptions").delete().eq("id", abo.id);
           echecs += 1;
