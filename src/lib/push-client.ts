@@ -5,10 +5,10 @@ import {
   supprimerAbonnementPush,
 } from "@/lib/notifications.functions";
 
-function base64UrlVersUint8Array(base64: string): Uint8Array {
+function base64UrlVersUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
   const brut = atob((base64 + padding).replace(/-/g, "+").replace(/_/g, "/"));
-  const sortie = new Uint8Array(brut.length);
+  const sortie = new Uint8Array(new ArrayBuffer(brut.length));
   for (let i = 0; i < brut.length; i += 1) sortie[i] = brut.charCodeAt(i);
   return sortie;
 }
