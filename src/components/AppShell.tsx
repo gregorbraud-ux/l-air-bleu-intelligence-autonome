@@ -6,6 +6,7 @@ import {
   Star,
   Gauge,
   Swords,
+  BellRing,
   Menu,
   Waves,
   ShieldCheck,
@@ -24,6 +25,7 @@ const nav = [
   { to: "/avis", label: "Avis Google", icon: Star },
   { to: "/valorisation", label: "Valorisation", icon: Gauge },
   { to: "/concurrence", label: "Concurrence", icon: Swords },
+  { to: "/alertes", label: "Alertes & seuils", icon: BellRing },
 ] as const;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
