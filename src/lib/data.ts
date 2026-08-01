@@ -156,6 +156,9 @@ export type AlerteConcurrence = {
   gravite: "critique" | "importante" | "info";
   date: string;
   lue: boolean;
+  /** Lien vers la source du signal (fiche Google, page Facebook, site…) */
+  source: string;
+  sourceLabel: string;
 };
 
 export const alertesConcurrence: AlerteConcurrence[] = [
@@ -169,6 +172,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     gravite: "critique",
     date: "Aujourd'hui, 09:12",
     lue: false,
+    source: "https://www.google.com/maps/search/?api=1&query=Brasserie+du+Brivet+Trignac",
+    sourceLabel: "Fiche Google Business",
   },
   {
     id: "a2",
@@ -180,6 +185,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     gravite: "importante",
     date: "Hier, 18:40",
     lue: false,
+    source: "https://www.google.com/maps/search/?api=1&query=Auberge+de+Donges",
+    sourceLabel: "Fiche Google Business",
   },
   {
     id: "a3",
@@ -191,6 +198,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     gravite: "importante",
     date: "Il y a 2 jours",
     lue: false,
+    source: "https://www.google.com/maps/search/?api=1&query=Le+Routier+de+Montoir",
+    sourceLabel: "Avis Google",
   },
   {
     id: "a4",
@@ -202,6 +211,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     gravite: "info",
     date: "Il y a 4 jours",
     lue: true,
+    source: "https://www.facebook.com/search/top?q=Table%20de%20la%20Zone%20Saint-Nazaire",
+    sourceLabel: "Publication Facebook",
   },
   {
     id: "a5",
@@ -213,6 +224,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     gravite: "info",
     date: "Il y a 6 jours",
     lue: true,
+    source: "https://www.google.com/maps/search/?api=1&query=Brasserie+du+Brivet+Trignac",
+    sourceLabel: "Avis Google",
   },
 ];
 

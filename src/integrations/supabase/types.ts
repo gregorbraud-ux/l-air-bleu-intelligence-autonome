@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      alertes_envois: {
+        Row: {
+          alerte_id: string
+          canal: string
+          created_at: string
+          destinataire: string | null
+          erreur: string | null
+          id: string
+          statut: string
+          user_id: string
+        }
+        Insert: {
+          alerte_id: string
+          canal: string
+          created_at?: string
+          destinataire?: string | null
+          erreur?: string | null
+          id?: string
+          statut: string
+          user_id: string
+        }
+        Update: {
+          alerte_id?: string
+          canal?: string
+          created_at?: string
+          destinataire?: string | null
+          erreur?: string | null
+          id?: string
+          statut?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -35,6 +68,39 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          libelle: string | null
+          p256dh: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          libelle?: string | null
+          p256dh: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          libelle?: string | null
+          p256dh?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

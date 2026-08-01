@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { BellRing, Check, Settings2, TrendingDown, TrendingUp } from "lucide-react";
+import { BellRing, Check, ExternalLink, Settings2, TrendingDown, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -120,6 +120,14 @@ export function AlertesConcurrence() {
                     <Check className="mr-2 h-4 w-4" /> Marquer comme traitée
                   </Button>
                 )}
+                <a
+                  href={a.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-accent underline"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" /> {a.sourceLabel}
+                </a>
               </div>
             </article>
           );

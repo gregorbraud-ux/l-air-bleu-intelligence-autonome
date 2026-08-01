@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BellRing, RotateCcw, Save, Swords } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/AppShell";
+import { CanauxNotification } from "@/components/CanauxNotification";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -91,6 +92,8 @@ function PageAlertes() {
           </Button>
         </CardContent>
       </Card>
+
+      {pret && <CanauxNotification config={config} />}
 
       {!pret ? null : (
         <div className="space-y-6">
