@@ -3,10 +3,7 @@ import { concurrents, reglesAlertesDefaut, type RegleAlerte } from "@/lib/data";
 
 export type CategorieAlerte = RegleAlerte["id"];
 
-export const categoriesAlerte = reglesAlettesIds();
-function reglesAlettesIds(): CategorieAlerte[] {
-  return reglesAlertesDefaut.map((r) => r.id);
-}
+export const categoriesAlerte: CategorieAlerte[] = reglesAlertesDefaut.map((r) => r.id);
 
 export type ConfigCategorie = { active: boolean; seuil: number };
 
