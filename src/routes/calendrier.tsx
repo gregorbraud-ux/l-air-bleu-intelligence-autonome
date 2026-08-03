@@ -308,8 +308,8 @@ function CalendrierPage() {
                     {` ${p.jour} ${plan ? "août" : "juillet"} à ${p.heure}`}
                   </p>
                 </div>
-                <Badge variant={p.statut === "planifié" ? "default" : "secondary"} className="shrink-0">
-                  {p.statut}
+                <Badge variant={p.statutValidation === "publié" ? "default" : "secondary"} className="shrink-0">
+                  {p.statutValidation ?? p.statut}
                 </Badge>
               </li>
             ))}
