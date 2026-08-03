@@ -195,6 +195,17 @@ function CalendrierPage() {
         )}
       </section>
 
+      {validation.posts.length > 0 && (
+        <div className="mb-6">
+          <ValidationPosts
+            posts={validation.posts}
+            onModifier={validation.modifier}
+            onStatut={validation.changerStatut}
+            onSupprimer={validation.supprimer}
+          />
+        </div>
+      )}
+
       <div className="surface-card overflow-hidden p-3 sm:p-5">
         <div className="grid grid-cols-7 gap-2 pb-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {jours.map((j) => (
