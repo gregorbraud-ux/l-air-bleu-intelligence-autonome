@@ -11,29 +11,35 @@ import {
   Waves,
   ShieldCheck,
   LogIn,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { useParametresAdmin, type ModuleCle } from "@/lib/parametres-config";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/marketing", label: "Marketing IA", icon: Sparkles },
-  { to: "/calendrier", label: "Calendrier éditorial", icon: CalendarDays },
-  { to: "/avis", label: "Avis Google", icon: Star },
-  { to: "/valorisation", label: "Valorisation", icon: Gauge },
-  { to: "/concurrence", label: "Concurrence", icon: Swords },
-  { to: "/alertes", label: "Alertes & seuils", icon: BellRing },
+  { to: "/", label: "Tableau de bord", icon: LayoutDashboard, module: null },
+  { to: "/marketing", label: "Marketing IA", icon: Sparkles, module: "marketing" },
+  { to: "/calendrier", label: "Calendrier éditorial", icon: CalendarDays, module: "calendrier" },
+  { to: "/avis", label: "Avis Google", icon: Star, module: "avis" },
+  { to: "/valorisation", label: "Valorisation", icon: Gauge, module: "valorisation" },
+  { to: "/concurrence", label: "Concurrence", icon: Swords, module: "concurrence" },
+  { to: "/alertes", label: "Alertes & seuils", icon: BellRing, module: "alertes" },
 ] as const;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { parametres, pret } = useParametresAdmin();
+  const visibles = nav.filter(
+    (item) => !pret || item.module === null || parametres.modules[item.module as ModuleCle],
+  );
 
   return (
     <nav className="flex flex-col gap-1">
-      {nav.map((item) => {
+      {visibles.map((item) => {
         const active = pathname === item.to;
         return (
           <Link
@@ -83,11 +89,18 @@ function CompteBloc({ onNavigate }: { onNavigate?: () => void }) {
             Espace sécurisé
           </p>
           <p className="mt-1 truncate text-sm text-sidebar-foreground/80">{session.user.email}</p>
-          <Button asChild variant="secondary" size="sm" className="mt-3 w-full">
-            <Link to="/admin" onClick={onNavigate}>
-              <ShieldCheck className="mr-2 h-4 w-4" /> Administration
-            </Link>
-          </Button>
+          <div className="mt-3 grid gap-2">
+            <Button asChild variant="secondary" size="sm" className="w-full">
+              <Link to="/admin" onClick={onNavigate}>
+                <ShieldCheck className="mr-2 h-4 w-4" /> Administration
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="w-full text-sidebar-foreground/80">
+              <Link to="/parametres" onClick={onNavigate}>
+                <SlidersHorizontal className="mr-2 h-4 w-4" /> Paramètres
+              </Link>
+            </Button>
+          </div>
         </>
       ) : (
         <>
