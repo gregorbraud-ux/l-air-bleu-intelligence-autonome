@@ -19,6 +19,7 @@ import { Route as ConcurrenceRouteImport } from './routes/concurrence'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as ValorisationRouteImport } from './routes/valorisation'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedParametresRouteImport } from './routes/_authenticated/parametres'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +70,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedParametresRoute = AuthenticatedParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/parametres': typeof AuthenticatedParametresRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/parametres': typeof AuthenticatedParametresRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/parametres': typeof AuthenticatedParametresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/valorisation'
     | '/admin'
+    | '/parametres'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/valorisation'
     | '/admin'
+    | '/parametres'
   id:
     | '__root__'
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/valorisation'
     | '/_authenticated/admin'
+    | '/_authenticated/parametres'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,15 +238,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/parametres': {
+      id: '/_authenticated/parametres'
+      path: '/parametres'
+      fullPath: '/parametres'
+      preLoaderRoute: typeof AuthenticatedParametresRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedParametresRoute: typeof AuthenticatedParametresRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedParametresRoute: AuthenticatedParametresRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
