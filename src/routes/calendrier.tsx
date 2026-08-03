@@ -17,6 +17,8 @@ import { Check, Copy, Loader2, Plus, Sparkles, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { calendrier, avis, alertesConcurrence, concurrents } from "@/lib/data";
 import { genererPlanEditorial, type IdeePost, type PlanEditorial } from "@/lib/contenu.functions";
+import { ValidationPosts } from "@/components/ValidationPosts";
+import { useValidationPosts, type PostValidation } from "@/lib/validation-posts";
 
 export const Route = createFileRoute("/calendrier")({
   head: () => ({
@@ -49,9 +51,11 @@ function CalendrierPage() {
   const [ton, setTon] = useState<string>("Chaleureux");
   const [nombre, setNombre] = useState(8);
   const [plan, setPlan] = useState<PlanEditorial | null>(null);
-  const [selection, setSelection] = useState<IdeePost | null>(null);
+  const [selection, setSelection] = useState<PostValidation | IdeePost | null>(null);
   const [copie, setCopie] = useState(false);
   const generer = useServerFn(genererPlanEditorial);
+  const validation = useValidationPosts();
+  const valides = validation.posts.filter((p) => p.statutValidation !== "à valider");
 
   const contexte = useMemo(
     () => ({
@@ -79,13 +83,16 @@ function CalendrierPage() {
       }),
     onSuccess: (resultat) => {
       setPlan(resultat);
-      toast.success(`${resultat.publications.length} idées de posts générées à partir des avis et tendances.`);
+      const ajoutes = validation.ajouterIdees(resultat.publications);
+      toast.success(
+        `${ajoutes} idées de posts en attente de validation. Approuvez-les pour les ajouter au calendrier.`,
+      );
     },
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const publications = plan
-    ? plan.publications.map((p) => ({ ...p, genere: true as const }))
+  const publications = valides.length
+    ? valides.map((p) => ({ ...p, genere: true as const }))
     : calendrier.map((p) => ({
         ...p,
         genere: false as const,
@@ -94,6 +101,7 @@ function CalendrierPage() {
         angle: "",
         tonVoix: "",
         cta: "",
+        statutValidation: undefined,
       }));
 
   const textePret = selection
@@ -118,8 +126,8 @@ function CalendrierPage() {
       <PageHeader
         titre="Calendrier éditorial"
         sousTitre={
-          plan
-            ? `Août 2026 — ${plan.publications.length} publications générées par l'IA sur 4 canaux`
+          valides.length
+            ? `Août 2026 — ${valides.length} publications validées · ${validation.posts.filter((p) => p.statutValidation === "à valider").length} en attente de validation`
             : "Juillet 2026 — 9 publications programmées sur 4 canaux"
         }
         action={
@@ -137,7 +145,7 @@ function CalendrierPage() {
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Un mois de publications Facebook, Instagram, Google Business et newsletter, construit à partir de vos avis
-              Google récents et de la veille concurrentielle locale.
+              Google récents et de la veille concurrentielle locale. Chaque idée passe d'abord par la file de validation.
             </p>
           </div>
           <Button disabled={generation.isPending} onClick={() => generation.mutate()}>
@@ -187,6 +195,17 @@ function CalendrierPage() {
         )}
       </section>
 
+      {validation.posts.length > 0 && (
+        <div className="mb-6">
+          <ValidationPosts
+            posts={validation.posts}
+            onModifier={validation.modifier}
+            onStatut={validation.changerStatut}
+            onSupprimer={validation.supprimer}
+          />
+        </div>
+      )}
+
       <div className="surface-card overflow-hidden p-3 sm:p-5">
         <div className="grid grid-cols-7 gap-2 pb-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {jours.map((j) => (
@@ -208,7 +227,7 @@ function CalendrierPage() {
                       key={p.titre}
                       onClick={() => {
                         if (p.genere) {
-                          setSelection(p as IdeePost);
+                          setSelection(p as PostValidation);
                           setCopie(false);
                           return;
                         }
@@ -232,7 +251,8 @@ function CalendrierPage() {
             <div className="min-w-0">
               <h2 className="text-lg font-semibold">{selection.titre}</h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                {selection.canal} · jour {selection.jour} à {selection.heure} · {selection.statut}
+                {selection.canal} · jour {selection.jour} à {selection.heure} ·{" "}
+                {"statutValidation" in selection ? selection.statutValidation : selection.statut}
               </p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => setSelection(null)}>
@@ -288,8 +308,8 @@ function CalendrierPage() {
                     {` ${p.jour} ${plan ? "août" : "juillet"} à ${p.heure}`}
                   </p>
                 </div>
-                <Badge variant={p.statut === "planifié" ? "default" : "secondary"} className="shrink-0">
-                  {p.statut}
+                <Badge variant={p.statutValidation === "publié" ? "default" : "secondary"} className="shrink-0">
+                  {p.statutValidation ?? p.statut}
                 </Badge>
               </li>
             ))}
