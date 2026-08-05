@@ -326,3 +326,129 @@ export const modulesIA: ModuleIA[] = [
     duree: "~15 s",
   },
 ];
+
+// ============ Veille automatique par zone ============
+
+export type SignalVeille = {
+  categorie: "menu" | "promotion" | "publication";
+  etablissement: string;
+  constat: string;
+  variation?: string;
+  date: string;
+  source: string;
+  sourceLabel: string;
+};
+
+export type ZoneVeille = {
+  zone: "Trignac" | "Donges" | "Saint-Nazaire";
+  etablissements: string[];
+  signaux: SignalVeille[];
+};
+
+export const zonesVeille: ZoneVeille[] = [
+  {
+    zone: "Trignac",
+    etablissements: ["Brasserie du Brivet", "Le Comptoir de la Zone"],
+    signaux: [
+      {
+        categorie: "menu",
+        etablissement: "Brasserie du Brivet",
+        constat:
+          "Nouvelle carte du midi : 2 plats du jour au choix (dont un poisson) + suggestion végétarienne quotidienne.",
+        date: "Cette semaine",
+        source: "https://www.google.com/maps/search/?api=1&query=Brasserie+du+Brivet+Trignac",
+        sourceLabel: "Fiche Google Business",
+      },
+      {
+        categorie: "promotion",
+        etablissement: "Brasserie du Brivet",
+        constat: "Formule entrée + plat + café à 15,90 € annoncée pour les artisans et salariés de la zone.",
+        variation: "-1,10 € vs formule précédente",
+        date: "Il y a 3 jours",
+        source: "https://www.facebook.com/search/top?q=Brasserie%20du%20Brivet%20Trignac",
+        sourceLabel: "Publication Facebook",
+      },
+      {
+        categorie: "publication",
+        etablissement: "Brasserie du Brivet",
+        constat: "Rythme de publication passé à 5 posts / semaine (plat du jour publié chaque matin avant 10 h).",
+        variation: "+12 pts de visibilité en 14 jours",
+        date: "Aujourd'hui",
+        source: "https://www.google.com/maps/search/?api=1&query=Brasserie+du+Brivet+Trignac",
+        sourceLabel: "Posts Google Business",
+      },
+      {
+        categorie: "publication",
+        etablissement: "Le Comptoir de la Zone",
+        constat: "Aucune publication depuis 3 semaines : fenêtre de visibilité libre sur les recherches déjeuner Trignac.",
+        date: "Il y a 3 semaines",
+        source: "https://www.facebook.com/search/top?q=Le%20Comptoir%20de%20la%20Zone%20Trignac",
+        sourceLabel: "Page Facebook",
+      },
+    ],
+  },
+  {
+    zone: "Donges",
+    etablissements: ["Auberge de Donges", "Le Relais du Port"],
+    signaux: [
+      {
+        categorie: "promotion",
+        etablissement: "Auberge de Donges",
+        constat: "Formule déjeuner passée de 19 € à 21 €, dessert désormais en supplément.",
+        variation: "+10,5 %",
+        date: "Hier",
+        source: "https://www.google.com/maps/search/?api=1&query=Auberge+de+Donges",
+        sourceLabel: "Fiche Google Business",
+      },
+      {
+        categorie: "menu",
+        etablissement: "Auberge de Donges",
+        constat: "Carte recentrée sur 6 plats maison, mise en avant des producteurs locaux dans les descriptions.",
+        date: "Il y a 5 jours",
+        source: "https://www.google.com/maps/search/?api=1&query=Auberge+de+Donges",
+        sourceLabel: "Menu Google",
+      },
+      {
+        categorie: "publication",
+        etablissement: "Le Relais du Port",
+        constat: "2 posts Instagram par semaine avec photos de l'équipe : forte interaction locale malgré peu d'abonnés.",
+        variation: "+18 % d'engagement",
+        date: "Cette semaine",
+        source: "https://www.instagram.com/explore/search/keyword/?q=relais%20du%20port%20donges",
+        sourceLabel: "Compte Instagram",
+      },
+    ],
+  },
+  {
+    zone: "Saint-Nazaire",
+    etablissements: ["Table de la Zone", "Cantine des Chantiers"],
+    signaux: [
+      {
+        categorie: "promotion",
+        etablissement: "Table de la Zone",
+        constat: "Formule express 13,90 € (entrée + plat servis en 30 min) ciblant la clientèle professionnelle du midi.",
+        variation: "-2,60 € vs notre ticket moyen",
+        date: "Il y a 4 jours",
+        source: "https://www.facebook.com/search/top?q=Table%20de%20la%20Zone%20Saint-Nazaire",
+        sourceLabel: "Publication Facebook",
+      },
+      {
+        categorie: "menu",
+        etablissement: "Cantine des Chantiers",
+        constat: "Ajout d'un menu à emporter en bocal pour les équipes des chantiers, retrait avant 11 h 30.",
+        date: "Cette semaine",
+        source: "https://www.google.com/maps/search/?api=1&query=Cantine+des+Chantiers+Saint-Nazaire",
+        sourceLabel: "Fiche Google Business",
+      },
+      {
+        categorie: "publication",
+        etablissement: "Table de la Zone",
+        constat: "Publication irrégulière (1 post / 10 jours) mais forte activité d'avis clients sollicités en caisse.",
+        variation: "-1,3 % de tendance",
+        date: "Il y a 6 jours",
+        source: "https://www.google.com/maps/search/?api=1&query=Table+de+la+Zone+Saint-Nazaire",
+        sourceLabel: "Avis Google",
+      },
+    ],
+  },
+];
