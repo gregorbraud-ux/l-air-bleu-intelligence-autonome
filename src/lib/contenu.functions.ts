@@ -12,7 +12,13 @@ export const genererPlanEditorial = createServerFn({ method: "POST" })
 
     const { generateText, Output, NoObjectGeneratedError } = await import("ai");
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
-    const { planSchema, nettoyerPlan, construirePrompt } = await import("@/lib/contenu.schema");
+    const { planSchema, nettoyerPlanAvecContraintes, construirePrompt } = await import("@/lib/contenu.schema");
+    const contraintes = {
+      nombre: data.nombre,
+      plateformes: data.plateformes,
+      jourDebut: data.jourDebut,
+      jourFin: data.jourFin,
+    };
 
     const gateway = createLovableAiGatewayProvider(cle, undefined, { structuredOutputs: true });
 
@@ -22,12 +28,12 @@ export const genererPlanEditorial = createServerFn({ method: "POST" })
         output: Output.object({ schema: planSchema }),
         prompt: construirePrompt(data),
       });
-      return nettoyerPlan(output as PlanEditorial, data.nombre);
+      return nettoyerPlanAvecContraintes(output as PlanEditorial, contraintes);
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
         try {
           const brut = planSchema.parse(JSON.parse(error.text ?? ""));
-          return nettoyerPlan(brut as PlanEditorial, data.nombre);
+          return nettoyerPlanAvecContraintes(brut as PlanEditorial, contraintes);
         } catch {
           throw new Error("L'IA n'a pas pu générer un plan exploitable. Réessayez.");
         }

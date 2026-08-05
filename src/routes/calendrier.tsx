@@ -5,20 +5,14 @@ import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Check, Copy, Loader2, Plus, Sparkles, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { calendrier, avis, alertesConcurrence, concurrents } from "@/lib/data";
 import { genererPlanEditorial, type IdeePost, type PlanEditorial } from "@/lib/contenu.functions";
 import { ValidationPosts } from "@/components/ValidationPosts";
 import { useValidationPosts, type PostValidation } from "@/lib/validation-posts";
+import { StrategieIAPanneau } from "@/components/StrategieIAPanneau";
+import { nombreDePosts, useStrategieIA } from "@/lib/strategie-ia";
 
 export const Route = createFileRoute("/calendrier")({
   head: () => ({
@@ -44,17 +38,14 @@ const canalStyle: Record<string, string> = {
   Facebook: "bg-chart-2/15 text-chart-2",
 };
 
-const tons = ["Chaleureux", "Convivial", "Authentique", "Dynamique", "Gourmand"] as const;
-
 function CalendrierPage() {
   const cases = Array.from({ length: 31 }, (_, i) => i + 1);
-  const [ton, setTon] = useState<string>("Chaleureux");
-  const [nombre, setNombre] = useState(8);
   const [plan, setPlan] = useState<PlanEditorial | null>(null);
   const [selection, setSelection] = useState<PostValidation | IdeePost | null>(null);
   const [copie, setCopie] = useState(false);
   const generer = useServerFn(genererPlanEditorial);
   const validation = useValidationPosts();
+  const { strategie, maj, basculerPlateforme, basculerTheme, reinitialiser } = useStrategieIA();
   const valides = validation.posts.filter((p) => p.statutValidation !== "à valider");
 
   const contexte = useMemo(
@@ -79,7 +70,18 @@ function CalendrierPage() {
   const generation = useMutation({
     mutationFn: () =>
       generer({
-        data: { mois: "Août 2026", nombre, ton, ...contexte },
+        data: {
+          mois: strategie.mois,
+          nombre: nombreDePosts(strategie),
+          ton: strategie.ton,
+          frequenceParSemaine: strategie.frequenceParSemaine,
+          plateformes: strategie.plateformes,
+          themes: strategie.themes,
+          motsInterdits: strategie.motsInterdits,
+          jourDebut: Math.min(strategie.jourDebut, strategie.jourFin),
+          jourFin: Math.max(strategie.jourDebut, strategie.jourFin),
+          ...contexte,
+        },
       }),
     onSuccess: (resultat) => {
       setPlan(resultat);
@@ -148,7 +150,10 @@ function CalendrierPage() {
               Google récents et de la veille concurrentielle locale. Chaque idée passe d'abord par la file de validation.
             </p>
           </div>
-          <Button disabled={generation.isPending} onClick={() => generation.mutate()}>
+          <Button
+            disabled={generation.isPending || strategie.plateformes.length === 0}
+            onClick={() => generation.mutate()}
+          >
             {generation.isPending ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -158,27 +163,13 @@ function CalendrierPage() {
           </Button>
         </div>
 
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Ton éditorial</p>
-            <Select value={ton} onValueChange={setTon}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {tons.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-3">
-            <p className="text-sm font-medium">Publications à générer : {nombre}</p>
-            <Slider min={4} max={16} step={1} value={[nombre]} onValueChange={(v) => setNombre(v[0])} />
-          </div>
-        </div>
+        <StrategieIAPanneau
+          strategie={strategie}
+          onMaj={maj}
+          onBasculerPlateforme={basculerPlateforme}
+          onBasculerTheme={basculerTheme}
+          onReinitialiser={reinitialiser}
+        />
 
         {plan && (
           <div className="mt-5 rounded-xl border border-border/70 bg-secondary/40 p-4">
