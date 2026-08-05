@@ -150,7 +150,10 @@ function CalendrierPage() {
               Google récents et de la veille concurrentielle locale. Chaque idée passe d'abord par la file de validation.
             </p>
           </div>
-          <Button disabled={generation.isPending} onClick={() => generation.mutate()}>
+          <Button
+            disabled={generation.isPending || strategie.plateformes.length === 0}
+            onClick={() => generation.mutate()}
+          >
             {generation.isPending ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
