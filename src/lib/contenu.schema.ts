@@ -49,6 +49,12 @@ export const entreePlan = z.object({
   mois: z.string().trim().max(40),
   nombre: z.number().int().min(4).max(16),
   ton: z.string().trim().max(40),
+  frequenceParSemaine: z.number().min(0.5).max(21).default(3),
+  plateformes: z.array(z.enum(canaux)).min(1).max(4).default(["Facebook", "Instagram"]),
+  themes: z.array(z.string().max(80)).max(12).default([]),
+  motsInterdits: z.array(z.string().max(40)).max(30).default([]),
+  jourDebut: z.number().int().min(1).max(31).default(1),
+  jourFin: z.number().int().min(1).max(31).default(31),
   avis: z
     .array(
       z.object({
@@ -66,15 +72,35 @@ export const entreePlan = z.object({
 export type EntreePlan = z.infer<typeof entreePlan>;
 
 export function nettoyerPlan(plan: PlanEditorial, nombre: number): PlanEditorial {
+  return nettoyerPlanAvecContraintes(plan, { nombre });
+}
+
+export function nettoyerPlanAvecContraintes(
+  plan: PlanEditorial,
+  options: {
+    nombre: number;
+    plateformes?: readonly (typeof canaux)[number][];
+    jourDebut?: number;
+    jourFin?: number;
+  },
+): PlanEditorial {
+  const { nombre } = options;
+  const min = Math.min(options.jourDebut ?? 1, options.jourFin ?? 31);
+  const max = Math.max(options.jourDebut ?? 1, options.jourFin ?? 31);
+  const plateformes = options.plateformes?.length ? options.plateformes : canaux;
   return {
     synthese: (plan.synthese ?? "").slice(0, 400),
     tendances: (plan.tendances ?? []).slice(0, 6).map((t) => t.slice(0, 160)),
     publications: (plan.publications ?? [])
       .filter((p) => Number.isFinite(p.jour))
+      .map((p) => ({
+        ...p,
+        canal: plateformes.includes(p.canal) ? p.canal : plateformes[0],
+      }))
       .slice(0, nombre)
       .map((p) => ({
         ...p,
-        jour: Math.min(31, Math.max(1, Math.round(p.jour))),
+        jour: Math.min(max, Math.max(min, Math.round(p.jour))),
         titre: p.titre.slice(0, 70),
         accroche: p.accroche.slice(0, 160),
         angle: (p.angle ?? "").slice(0, 120),
