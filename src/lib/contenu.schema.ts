@@ -121,6 +121,13 @@ export function construirePrompt(data: EntreePlan) {
     `Cibles : clientèle professionnelle du midi et clientèle familiale. Ticket moyen déjeuner 17,50 €, note Google 4,5/5.`,
     `Objectifs : fréquentation du midi, réservations, avis Google, notoriété locale, communauté Facebook et Instagram.`,
     `Mois à planifier : ${data.mois}. Ton souhaité : ${data.ton}.`,
+    `Période à couvrir : du jour ${data.jourDebut} au jour ${data.jourFin} du mois.`,
+    `Fréquence cible : environ ${data.frequenceParSemaine} publication(s) par semaine.`,
+    `Plateformes autorisées (n'utilise AUCUN autre canal) : ${data.plateformes.join(", ")}.`,
+    data.themes.length ? `Thèmes imposés par la stratégie (répartis-les équitablement) : ${data.themes.join(" ; ")}.` : "",
+    data.motsInterdits.length
+      ? `Mots et expressions STRICTEMENT interdits dans tous les textes (titres, accroches, légendes, hashtags, CTA) : ${data.motsInterdits.join(", ")}. N'utilise ni ces termes ni de variantes proches.`
+      : "",
     ``,
     `Avis Google récents :`,
     ...data.avis.map((a) => `- ${a.date} · ${a.note}/5 (${a.sentiment}) · ${a.auteur} : ${a.texte}`),
@@ -128,9 +135,11 @@ export function construirePrompt(data: EntreePlan) {
     `Tendances et signaux de veille concurrentielle :`,
     ...data.tendancesConcurrence.map((t) => `- ${t}`),
     ``,
-    `Génère exactement ${data.nombre} publications réparties sur le mois (jours 1 à 31, jamais deux publications le même jour),`,
-    `sur les canaux Facebook, Instagram, Google et Newsletter, en français.`,
-    `Thèmes à privilégier : menus de la semaine, plats du jour, desserts maison, produits frais et fournisseurs locaux, équipes, cuisine, clients (avec autorisation), événements.`,
+    `Génère exactement ${data.nombre} publications réparties sur la période (jours ${data.jourDebut} à ${data.jourFin}, jamais deux publications le même jour),`,
+    `uniquement sur les canaux suivants : ${data.plateformes.join(", ")}, en français.`,
+    data.themes.length
+      ? `Thèmes à traiter : ${data.themes.join(" ; ")}.`
+      : `Thèmes à privilégier : menus de la semaine, plats du jour, desserts maison, produits frais et fournisseurs locaux, équipes, cuisine, clients (avec autorisation), événements.`,
     `Intègre naturellement des mots-clés locaux (déjeuner Montoir-de-Bretagne, restaurant traditionnel Loire-Atlantique, menu du midi près de Saint-Nazaire) pour le référencement local.`,
     `Chaque publication doit s'appuyer sur un avis récent ou une tendance : indique-le dans "source".`,
     ``,
