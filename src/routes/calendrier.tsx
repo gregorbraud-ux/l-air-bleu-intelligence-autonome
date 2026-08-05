@@ -160,27 +160,13 @@ function CalendrierPage() {
           </Button>
         </div>
 
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Ton éditorial</p>
-            <Select value={ton} onValueChange={setTon}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {tons.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-3">
-            <p className="text-sm font-medium">Publications à générer : {nombre}</p>
-            <Slider min={4} max={16} step={1} value={[nombre]} onValueChange={(v) => setNombre(v[0])} />
-          </div>
-        </div>
+        <StrategieIAPanneau
+          strategie={strategie}
+          onMaj={maj}
+          onBasculerPlateforme={basculerPlateforme}
+          onBasculerTheme={basculerTheme}
+          onReinitialiser={reinitialiser}
+        />
 
         {plan && (
           <div className="mt-5 rounded-xl border border-border/70 bg-secondary/40 p-4">
