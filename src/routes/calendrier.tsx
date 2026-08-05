@@ -5,20 +5,14 @@ import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Check, Copy, Loader2, Plus, Sparkles, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { calendrier, avis, alertesConcurrence, concurrents } from "@/lib/data";
 import { genererPlanEditorial, type IdeePost, type PlanEditorial } from "@/lib/contenu.functions";
 import { ValidationPosts } from "@/components/ValidationPosts";
 import { useValidationPosts, type PostValidation } from "@/lib/validation-posts";
+import { StrategieIAPanneau } from "@/components/StrategieIAPanneau";
+import { nombreDePosts, useStrategieIA } from "@/lib/strategie-ia";
 
 export const Route = createFileRoute("/calendrier")({
   head: () => ({
@@ -44,17 +38,14 @@ const canalStyle: Record<string, string> = {
   Facebook: "bg-chart-2/15 text-chart-2",
 };
 
-const tons = ["Chaleureux", "Convivial", "Authentique", "Dynamique", "Gourmand"] as const;
-
 function CalendrierPage() {
   const cases = Array.from({ length: 31 }, (_, i) => i + 1);
-  const [ton, setTon] = useState<string>("Chaleureux");
-  const [nombre, setNombre] = useState(8);
   const [plan, setPlan] = useState<PlanEditorial | null>(null);
   const [selection, setSelection] = useState<PostValidation | IdeePost | null>(null);
   const [copie, setCopie] = useState(false);
   const generer = useServerFn(genererPlanEditorial);
   const validation = useValidationPosts();
+  const { strategie, maj, basculerPlateforme, basculerTheme, reinitialiser } = useStrategieIA();
   const valides = validation.posts.filter((p) => p.statutValidation !== "à valider");
 
   const contexte = useMemo(
@@ -79,7 +70,18 @@ function CalendrierPage() {
   const generation = useMutation({
     mutationFn: () =>
       generer({
-        data: { mois: "Août 2026", nombre, ton, ...contexte },
+        data: {
+          mois: strategie.mois,
+          nombre: nombreDePosts(strategie),
+          ton: strategie.ton,
+          frequenceParSemaine: strategie.frequenceParSemaine,
+          plateformes: strategie.plateformes,
+          themes: strategie.themes,
+          motsInterdits: strategie.motsInterdits,
+          jourDebut: Math.min(strategie.jourDebut, strategie.jourFin),
+          jourFin: Math.max(strategie.jourDebut, strategie.jourFin),
+          ...contexte,
+        },
       }),
     onSuccess: (resultat) => {
       setPlan(resultat);
