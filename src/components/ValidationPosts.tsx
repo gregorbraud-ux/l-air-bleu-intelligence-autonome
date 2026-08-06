@@ -10,11 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertTriangle, Check, Copy, Pencil, Send, Trash2, Undo2 } from "lucide-react";
+import { AlertTriangle, Check, Copy, Pencil, Send, Sparkles, Trash2, Undo2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
 import type { PostValidation, StatutValidation } from "@/lib/validation-posts";
 import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
+import { appliquerToutesCorrections, suggestionsPour } from "@/lib/corrections-posts";
 
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
@@ -82,6 +83,7 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
             const enEdition = edition === post.id;
             const anomalies = contraintes ? verifierPost(post, contraintes) : [];
             const bloquant = anomalies.some((a) => a.gravite === "bloquant");
+            const suggestions = contraintes ? suggestionsPour(post, contraintes) : [];
             return (
               <li key={post.id} className="rounded-xl border border-border/70 bg-secondary/40 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -118,6 +120,59 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                       </li>
                     ))}
                   </ul>
+                )}
+
+                {suggestions.length > 0 && contraintes && (
+                  <div className="mt-3 rounded-lg border border-primary/25 bg-primary/5 p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        Corrections suggérées ({suggestions.length})
+                      </p>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes);
+                          if (!appliquees.length) return;
+                          onModifier(post.id, corrige);
+                          toast.success(`${appliquees.length} correction(s) appliquée(s).`);
+                        }}
+                      >
+                        <Wand2 className="mr-2 h-3.5 w-3.5" /> Tout corriger
+                      </Button>
+                    </div>
+                    <ul className="mt-2.5 space-y-2">
+                      {suggestions.map((s) => (
+                        <li key={s.id} className="flex flex-wrap items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium">
+                              {s.titre}
+                              <span
+                                className={`ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase ${
+                                  s.gravite === "bloquant"
+                                    ? "bg-destructive/15 text-destructive"
+                                    : "bg-chart-4/15 text-chart-4"
+                                }`}
+                              >
+                                {s.champ}
+                              </span>
+                            </p>
+                            <p className="mt-0.5 text-xs text-muted-foreground">{s.detail}</p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => {
+                              onModifier(post.id, s.patch);
+                              toast.success("Correction appliquée.");
+                            }}
+                          >
+                            Appliquer
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
 
                 {enEdition ? (
