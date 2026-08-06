@@ -10,10 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, Copy, Pencil, Send, Trash2, Undo2 } from "lucide-react";
+import { AlertTriangle, Check, Copy, Pencil, Send, Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
 import type { PostValidation, StatutValidation } from "@/lib/validation-posts";
+import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
 
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
@@ -25,12 +26,13 @@ const filtres: Array<StatutValidation | "tous"> = ["à valider", "approuvé", "p
 
 type Props = {
   posts: PostValidation[];
+  contraintes?: ContraintesConformite;
   onModifier: (id: string, patch: Partial<PostValidation>) => void;
   onStatut: (id: string, statut: StatutValidation) => void;
   onSupprimer: (id: string) => void;
 };
 
-export function ValidationPosts({ posts, onModifier, onStatut, onSupprimer }: Props) {
+export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSupprimer }: Props) {
   const [filtre, setFiltre] = useState<StatutValidation | "tous">("à valider");
   const [edition, setEdition] = useState<string | null>(null);
 
@@ -78,6 +80,8 @@ export function ValidationPosts({ posts, onModifier, onStatut, onSupprimer }: Pr
         <ul className="mt-5 space-y-3">
           {visibles.map((post) => {
             const enEdition = edition === post.id;
+            const anomalies = contraintes ? verifierPost(post, contraintes) : [];
+            const bloquant = anomalies.some((a) => a.gravite === "bloquant");
             return (
               <li key={post.id} className="rounded-xl border border-border/70 bg-secondary/40 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -88,10 +92,33 @@ export function ValidationPosts({ posts, onModifier, onStatut, onSupprimer }: Pr
                       {post.angle ? ` · ${post.angle}` : ""}
                     </p>
                   </div>
-                  <Badge className={`shrink-0 border-0 ${statutStyle[post.statutValidation]}`}>
-                    {post.statutValidation}
-                  </Badge>
+                  <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                    {anomalies.length > 0 && (
+                      <Badge
+                        className={`border-0 ${bloquant ? "bg-destructive/15 text-destructive" : "bg-chart-4/15 text-chart-4"}`}
+                      >
+                        <AlertTriangle className="mr-1 h-3 w-3" />
+                        {bloquant ? "Contraintes non respectées" : "À vérifier"}
+                      </Badge>
+                    )}
+                    <Badge className={`border-0 ${statutStyle[post.statutValidation]}`}>
+                      {post.statutValidation}
+                    </Badge>
+                  </div>
                 </div>
+
+                {anomalies.length > 0 && (
+                  <ul className="mt-3 space-y-1 rounded-lg border border-border/60 bg-background/60 p-3 text-xs">
+                    {anomalies.map((a) => (
+                      <li
+                        key={`${a.champ}-${a.message}`}
+                        className={a.gravite === "bloquant" ? "text-destructive" : "text-muted-foreground"}
+                      >
+                        <span className="font-medium capitalize">{a.champ}</span> · {a.message}
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
                 {enEdition ? (
                   <div className="mt-4 space-y-3">
@@ -204,7 +231,15 @@ export function ValidationPosts({ posts, onModifier, onStatut, onSupprimer }: Pr
                   {post.statutValidation === "à valider" && (
                     <Button
                       size="sm"
+                      variant={bloquant ? "secondary" : "default"}
                       onClick={() => {
+                        if (bloquant) {
+                          toast.error(
+                            "Ce post ne respecte pas vos contraintes : corrigez les points signalés avant de l'approuver.",
+                          );
+                          setEdition(post.id);
+                          return;
+                        }
                         onStatut(post.id, "approuvé");
                         setEdition(null);
                         toast.success("Post approuvé et ajouté au calendrier éditorial.");
