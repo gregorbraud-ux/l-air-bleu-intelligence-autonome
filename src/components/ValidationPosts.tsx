@@ -291,6 +291,20 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                         if (bloquant) {
                           toast.error(
                             "Ce post ne respecte pas vos contraintes : corrigez les points signalés avant de l'approuver.",
+                            contraintes
+                              ? {
+                                  action: {
+                                    label: "Corriger",
+                                    onClick: () => {
+                                      const { post: corrige } = appliquerToutesCorrections(post, contraintes, {
+                                        seulementBloquants: true,
+                                      });
+                                      onModifier(post.id, corrige);
+                                      toast.success("Corrections bloquantes appliquées.");
+                                    },
+                                  },
+                                }
+                              : undefined,
                           );
                           setEdition(post.id);
                           return;
