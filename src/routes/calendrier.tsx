@@ -13,6 +13,8 @@ import { ValidationPosts } from "@/components/ValidationPosts";
 import { useValidationPosts, type PostValidation } from "@/lib/validation-posts";
 import { StrategieIAPanneau } from "@/components/StrategieIAPanneau";
 import { nombreDePosts, useStrategieIA } from "@/lib/strategie-ia";
+import { RapportConformite } from "@/components/RapportConformite";
+import { verifierPlan, type ContraintesConformite } from "@/lib/conformite-posts";
 
 export const Route = createFileRoute("/calendrier")({
   head: () => ({
@@ -47,6 +49,22 @@ function CalendrierPage() {
   const validation = useValidationPosts();
   const { strategie, maj, basculerPlateforme, basculerTheme, reinitialiser } = useStrategieIA();
   const valides = validation.posts.filter((p) => p.statutValidation !== "à valider");
+
+  const contraintes: ContraintesConformite = useMemo(
+    () => ({
+      motsInterdits: strategie.motsInterdits,
+      themes: strategie.themes,
+      plateformes: strategie.plateformes,
+      jourDebut: Math.min(strategie.jourDebut, strategie.jourFin),
+      jourFin: Math.max(strategie.jourDebut, strategie.jourFin),
+    }),
+    [strategie],
+  );
+
+  const rapport = useMemo(
+    () => (plan ? verifierPlan(plan.publications, contraintes) : null),
+    [plan, contraintes],
+  );
 
   const contexte = useMemo(
     () => ({
@@ -86,9 +104,17 @@ function CalendrierPage() {
     onSuccess: (resultat) => {
       setPlan(resultat);
       const ajoutes = validation.ajouterIdees(resultat.publications);
+      const controle = verifierPlan(resultat.publications, contraintes);
       toast.success(
         `${ajoutes} idées de posts en attente de validation. Approuvez-les pour les ajouter au calendrier.`,
       );
+      if (controle.bloquants > 0) {
+        toast.warning(
+          `${controle.bloquants} publication(s) ne respectent pas vos contraintes (mots interdits, longueur, période) : à corriger avant approbation.`,
+        );
+      } else if (controle.avertissements > 0) {
+        toast.info(`${controle.avertissements} point(s) de vigilance détecté(s) par le contrôle automatique.`);
+      }
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -171,6 +197,8 @@ function CalendrierPage() {
           onReinitialiser={reinitialiser}
         />
 
+        {rapport && <RapportConformite rapport={rapport} />}
+
         {plan && (
           <div className="mt-5 rounded-xl border border-border/70 bg-secondary/40 p-4">
             <p className="text-sm">{plan.synthese}</p>
@@ -190,6 +218,7 @@ function CalendrierPage() {
         <div className="mb-6">
           <ValidationPosts
             posts={validation.posts}
+            contraintes={contraintes}
             onModifier={validation.modifier}
             onStatut={validation.changerStatut}
             onSupprimer={validation.supprimer}
