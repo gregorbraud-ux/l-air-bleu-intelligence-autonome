@@ -16,6 +16,45 @@ export const finances = {
   resultatNet: -9192.13,
 };
 
+/**
+ * Exercice clos au 31/08/2024 (bilan Exco Avec, attesté le 27/11/2024) — données officielles.
+ * Sert de comparatif N-1 pour toute analyse économique et de valorisation.
+ */
+export const financesN1 = {
+  exercice: "Exercice du 01/09/2023 au 31/08/2024",
+  chiffreAffaires: 473976.35,
+  margeCommerciale: 291629.69,
+  tauxMarge: 61.53,
+  autresChargesExternes: 103610.08,
+  valeurAjoutee: 187608.38,
+  salairesEtTraitements: 121012.57,
+  chargesSociales: 25046.3,
+  excedentBrutExploitation: 40286.68,
+  dotationsAmortissements: 26056.77,
+  resultatExploitation: 13326.3,
+  chargesFinancieres: 10737.69,
+  resultatNet: 2598.61,
+  capaciteAutofinancement: 28655.38,
+  totalBilan: 269818.62,
+  immobilisationsNettes: 193072.39,
+  capitauxPropres: 12598.61,
+  empruntsMoyenLongTerme: 233915.11,
+  tresorerieNette: 69235.54,
+  fondsDeRoulementNet: 53441.33,
+  besoinEnFondsDeRoulement: -15794.21,
+  stocks: 4710.97,
+  effectifEquivalent: 5.25,
+  autonomieFinanciere: 4.67,
+  capaciteRemboursementAnnees: 8.16,
+  cabinet: "Exco Avec (Pornichet) — Thierry Cadoret, expert-comptable",
+};
+
+/** Comparatif des deux derniers exercices clos (données officielles). */
+export const historiqueExercices = [
+  { exercice: "2023/2024", ca: 473976.35, resultatNet: 2598.61, ebe: 40286.68 },
+  { exercice: "2024/2025", ca: 492781.72, resultatNet: -9192.13, ebe: null },
+];
+
 export type Kpi = { label: string; valeur: string; variation: number; detail: string };
 
 export const kpis: Kpi[] = [
