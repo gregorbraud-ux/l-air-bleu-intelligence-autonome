@@ -149,16 +149,39 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                       </p>
                       <Button
                         size="sm"
+                        variant="ghost"
+                        onClick={() => basculerApercu(`${post.id}-global`)}
+                      >
+                        {apercus.includes(`${post.id}-global`) ? (
+                          <>
+                            <EyeOff className="mr-1.5 h-3.5 w-3.5" /> Masquer l'aperçu global
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="mr-1.5 h-3.5 w-3.5" /> Aperçu global
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => {
                           const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes);
                           if (!appliquees.length) return;
                           onModifier(post.id, corrige);
+                          setApercus((prev) => prev.filter((c) => !c.startsWith(`${post.id}-`)));
                           toast.success(`${appliquees.length} correction(s) appliquée(s).`);
                         }}
                       >
                         <Wand2 className="mr-2 h-3.5 w-3.5" /> Tout corriger
                       </Button>
                     </div>
+                    {apercus.includes(`${post.id}-global`) && (
+                      <div className="mt-2.5">
+                        <DiffCorrection
+                          diffs={diffPatch(post, appliquerToutesCorrections(post, contraintes).post)}
+                        />
+                      </div>
+                    )}
                     <ul className="mt-2.5 space-y-2">
                       {suggestions.map((s) => {
                         const cle = `${post.id}-${s.id}`;
