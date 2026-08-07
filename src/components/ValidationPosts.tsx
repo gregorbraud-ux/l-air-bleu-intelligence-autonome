@@ -10,12 +10,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertTriangle, Check, Copy, Pencil, Send, Sparkles, Trash2, Undo2, Wand2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Check,
+  Copy,
+  Eye,
+  EyeOff,
+  Pencil,
+  Send,
+  Sparkles,
+  Trash2,
+  Undo2,
+  Wand2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
 import type { PostValidation, StatutValidation } from "@/lib/validation-posts";
 import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
 import { appliquerToutesCorrections, suggestionsPour } from "@/lib/corrections-posts";
+import { diffPatch } from "@/lib/diff-texte";
+import { DiffCorrection } from "@/components/DiffCorrection";
 
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
@@ -36,6 +50,10 @@ type Props = {
 export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSupprimer }: Props) {
   const [filtre, setFiltre] = useState<StatutValidation | "tous">("à valider");
   const [edition, setEdition] = useState<string | null>(null);
+  const [apercus, setApercus] = useState<string[]>([]);
+
+  const basculerApercu = (cle: string) =>
+    setApercus((prev) => (prev.includes(cle) ? prev.filter((c) => c !== cle) : [...prev, cle]));
 
   const visibles = filtre === "tous" ? posts : posts.filter((p) => p.statutValidation === filtre);
   const compte = (s: StatutValidation) => posts.filter((p) => p.statutValidation === s).length;
@@ -142,8 +160,13 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                       </Button>
                     </div>
                     <ul className="mt-2.5 space-y-2">
-                      {suggestions.map((s) => (
-                        <li key={s.id} className="flex flex-wrap items-start justify-between gap-2">
+                      {suggestions.map((s) => {
+                        const cle = `${post.id}-${s.id}`;
+                        const ouvert = apercus.includes(cle);
+                        const diffs = ouvert ? diffPatch(post, s.patch) : [];
+                        return (
+                        <li key={s.id} className="space-y-2">
+                        <div className="flex flex-wrap items-start justify-between gap-2">
                           <div className="min-w-0">
                             <p className="text-xs font-medium">
                               {s.titre}
@@ -159,18 +182,35 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                             </p>
                             <p className="mt-0.5 text-xs text-muted-foreground">{s.detail}</p>
                           </div>
+                          <div className="flex shrink-0 flex-wrap gap-1.5">
+                          <Button size="sm" variant="ghost" onClick={() => basculerApercu(cle)}>
+                            {ouvert ? (
+                              <>
+                                <EyeOff className="mr-1.5 h-3.5 w-3.5" /> Masquer le diff
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="mr-1.5 h-3.5 w-3.5" /> Avant / après
+                              </>
+                            )}
+                          </Button>
                           <Button
                             size="sm"
                             variant="secondary"
                             onClick={() => {
                               onModifier(post.id, s.patch);
+                              setApercus((prev) => prev.filter((c) => c !== cle));
                               toast.success("Correction appliquée.");
                             }}
                           >
                             Appliquer
                           </Button>
+                          </div>
+                        </div>
+                        {ouvert && <DiffCorrection diffs={diffs} />}
                         </li>
-                      ))}
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
