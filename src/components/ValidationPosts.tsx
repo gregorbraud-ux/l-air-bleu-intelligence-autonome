@@ -16,12 +16,14 @@ import {
   Copy,
   Eye,
   EyeOff,
+  MessageSquare,
   Pencil,
   Send,
   Sparkles,
   Trash2,
   Undo2,
   Wand2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
