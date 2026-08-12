@@ -221,6 +221,7 @@ function CalendrierPage() {
             contraintes={contraintes}
             onModifier={validation.modifier}
             onStatut={validation.changerStatut}
+            onJournaliser={validation.journaliser}
             onSupprimer={validation.supprimer}
           />
         </div>

@@ -25,11 +25,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
-import type { PostValidation, StatutValidation } from "@/lib/validation-posts";
+import {
+  contenuDe,
+  type ContenuPost,
+  type MetaVersion,
+  type PostValidation,
+  type StatutValidation,
+} from "@/lib/validation-posts";
 import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
 import { appliquerToutesCorrections, suggestionsPour } from "@/lib/corrections-posts";
 import { diffPatch } from "@/lib/diff-texte";
 import { DiffCorrection } from "@/components/DiffCorrection";
+import { HistoriqueVersions } from "@/components/HistoriqueVersions";
 
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
@@ -42,15 +49,43 @@ const filtres: Array<StatutValidation | "tous"> = ["à valider", "approuvé", "p
 type Props = {
   posts: PostValidation[];
   contraintes?: ContraintesConformite;
-  onModifier: (id: string, patch: Partial<PostValidation>) => void;
-  onStatut: (id: string, statut: StatutValidation) => void;
+  onModifier: (id: string, patch: Partial<PostValidation>, meta?: MetaVersion) => void;
+  onStatut: (id: string, statut: StatutValidation, meta?: MetaVersion) => void;
+  onJournaliser?: (id: string, contenu: ContenuPost, meta: MetaVersion) => void;
   onSupprimer: (id: string) => void;
 };
 
-export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSupprimer }: Props) {
+export function ValidationPosts({
+  posts,
+  contraintes,
+  onModifier,
+  onStatut,
+  onJournaliser,
+  onSupprimer,
+}: Props) {
   const [filtre, setFiltre] = useState<StatutValidation | "tous">("à valider");
   const [edition, setEdition] = useState<string | null>(null);
+  const [avantEdition, setAvantEdition] = useState<ContenuPost | null>(null);
   const [apercus, setApercus] = useState<string[]>([]);
+
+  const ouvrirEdition = (post: PostValidation) => {
+    setAvantEdition(contenuDe(post));
+    setEdition(post.id);
+  };
+
+  const fermerEdition = (post: PostValidation) => {
+    if (avantEdition && onJournaliser) {
+      const modifie = JSON.stringify(avantEdition) !== JSON.stringify(contenuDe(post));
+      if (modifie) {
+        onJournaliser(post.id, avantEdition, {
+          origine: "edition",
+          resume: "Édition manuelle avant renvoi en validation",
+        });
+      }
+    }
+    setAvantEdition(null);
+    setEdition(null);
+  };
 
   const basculerApercu = (cle: string) =>
     setApercus((prev) => (prev.includes(cle) ? prev.filter((c) => c !== cle) : [...prev, cle]));
@@ -167,7 +202,14 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                         onClick={() => {
                           const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes);
                           if (!appliquees.length) return;
-                          onModifier(post.id, corrige);
+                          const libelles = suggestions
+                            .filter((s) => appliquees.includes(s.id))
+                            .map((s) => s.titre);
+                          onModifier(post.id, corrige, {
+                            origine: "correction",
+                            corrections: libelles.length ? libelles : appliquees,
+                            resume: `${appliquees.length} correction(s) appliquée(s)`,
+                          });
                           setApercus((prev) => prev.filter((c) => !c.startsWith(`${post.id}-`)));
                           toast.success(`${appliquees.length} correction(s) appliquée(s).`);
                         }}
@@ -221,7 +263,11 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                             size="sm"
                             variant="secondary"
                             onClick={() => {
-                              onModifier(post.id, s.patch);
+                              onModifier(post.id, s.patch, {
+                                origine: "correction",
+                                corrections: [s.titre],
+                                resume: `Correction « ${s.champ} »`,
+                              });
                               setApercus((prev) => prev.filter((c) => c !== cle));
                               toast.success("Correction appliquée.");
                             }}
@@ -333,7 +379,7 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                   <Button
                     size="sm"
                     variant={enEdition ? "default" : "secondary"}
-                    onClick={() => setEdition(enEdition ? null : post.id)}
+                    onClick={() => (enEdition ? fermerEdition(post) : ouvrirEdition(post))}
                   >
                     {enEdition ? (
                       <>
@@ -359,10 +405,17 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                                   action: {
                                     label: "Corriger",
                                     onClick: () => {
-                                      const { post: corrige } = appliquerToutesCorrections(post, contraintes, {
+                                      const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes, {
                                         seulementBloquants: true,
                                       });
-                                      onModifier(post.id, corrige);
+                                      const libelles = suggestions
+                                        .filter((s) => appliquees.includes(s.id))
+                                        .map((s) => s.titre);
+                                      onModifier(post.id, corrige, {
+                                        origine: "correction",
+                                        corrections: libelles.length ? libelles : appliquees,
+                                        resume: "Corrections bloquantes",
+                                      });
                                       toast.success("Corrections bloquantes appliquées.");
                                     },
                                   },
@@ -373,7 +426,7 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                           return;
                         }
                         onStatut(post.id, "approuvé");
-                        setEdition(null);
+                        if (enEdition) fermerEdition(post);
                         toast.success("Post approuvé et ajouté au calendrier éditorial.");
                       }}
                     >
@@ -392,7 +445,16 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                       >
                         <Send className="mr-2 h-3.5 w-3.5" /> Marquer publié
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onStatut(post.id, "à valider")}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          onStatut(post.id, "à valider", {
+                            origine: "statut",
+                            resume: "Post renvoyé pour validation",
+                          })
+                        }
+                      >
                         <Undo2 className="mr-2 h-3.5 w-3.5" /> Renvoyer en revue
                       </Button>
                     </>
@@ -422,6 +484,17 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                 {post.source && (
                   <p className="mt-3 text-xs text-muted-foreground">Inspiré de : {post.source}</p>
                 )}
+
+                <HistoriqueVersions
+                  post={post}
+                  onRestaurer={(v) => {
+                    onModifier(post.id, v.contenu, {
+                      origine: "edition",
+                      resume: `Restauration de la version v${v.numero}`,
+                    });
+                    toast.success(`Version v${v.numero} restaurée.`);
+                  }}
+                />
               </li>
             );
           })}
