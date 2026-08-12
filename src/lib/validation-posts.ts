@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import type { IdeePost } from "@/lib/contenu.schema";
 
-export type StatutValidation = "à valider" | "approuvé" | "publié";
+export type StatutValidation = "à valider" | "approuvé" | "rejeté" | "publié";
 
-export type OrigineVersion = "correction" | "edition" | "statut";
+export type OrigineVersion = "correction" | "edition" | "statut" | "decision";
 
 export type ContenuPost = Pick<
   IdeePost,
@@ -18,6 +18,10 @@ export type VersionPost = {
   /** Libellés des corrections appliquées lors de ce renvoi en validation. */
   corrections: string[];
   resume: string;
+  /** Commentaire de décision (approbation / rejet). */
+  commentaire?: string;
+  /** Statut décidé lors de cette action, si c'est une décision. */
+  decision?: StatutValidation;
   /** État du post AVANT la modification enregistrée. */
   contenu: ContenuPost;
 };
@@ -26,6 +30,8 @@ export type PostValidation = IdeePost & {
   id: string;
   statutValidation: StatutValidation;
   majLe: string;
+  /** Dernier commentaire de décision saisi. */
+  commentaireDecision?: string;
   versions?: VersionPost[];
 };
 
@@ -43,7 +49,13 @@ export function contenuDe(post: IdeePost): ContenuPost {
   };
 }
 
-export type MetaVersion = { origine: OrigineVersion; corrections?: string[]; resume?: string };
+export type MetaVersion = {
+  origine: OrigineVersion;
+  corrections?: string[];
+  resume?: string;
+  commentaire?: string;
+  decision?: StatutValidation;
+};
 
 export const CLE_VALIDATION = "airbleu.posts.validation.v1";
 
@@ -124,6 +136,8 @@ export function useValidationPosts() {
             origine: meta.origine,
             corrections: meta.corrections ?? [],
             resume: meta.resume ?? "",
+            commentaire: meta.commentaire,
+            decision: meta.decision,
             contenu: contenuDe(p),
           };
           return { ...suivant, versions: [...versions, version] };
@@ -134,7 +148,13 @@ export function useValidationPosts() {
 
   const changerStatut = useCallback(
     (id: string, statutValidation: StatutValidation, meta?: MetaVersion) =>
-      modifier(id, { statutValidation }, meta),
+      modifier(
+        id,
+        meta?.commentaire !== undefined
+          ? { statutValidation, commentaireDecision: meta.commentaire }
+          : { statutValidation },
+        meta,
+      ),
     [modifier],
   );
 
@@ -155,6 +175,8 @@ export function useValidationPosts() {
               origine: meta.origine,
               corrections: meta.corrections ?? [],
               resume: meta.resume ?? "",
+              commentaire: meta.commentaire,
+              decision: meta.decision,
               contenu,
             },
           ],

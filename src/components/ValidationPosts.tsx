@@ -16,12 +16,14 @@ import {
   Copy,
   Eye,
   EyeOff,
+  MessageSquare,
   Pencil,
   Send,
   Sparkles,
   Trash2,
   Undo2,
   Wand2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
@@ -41,10 +43,17 @@ import { HistoriqueVersions } from "@/components/HistoriqueVersions";
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
   approuvé: "bg-chart-1/15 text-chart-1",
+  rejeté: "bg-destructive/15 text-destructive",
   publié: "bg-chart-2/15 text-chart-2",
 };
 
-const filtres: Array<StatutValidation | "tous"> = ["à valider", "approuvé", "publié", "tous"];
+const filtres: Array<StatutValidation | "tous"> = [
+  "à valider",
+  "approuvé",
+  "rejeté",
+  "publié",
+  "tous",
+];
 
 type Props = {
   posts: PostValidation[];
@@ -67,6 +76,36 @@ export function ValidationPosts({
   const [edition, setEdition] = useState<string | null>(null);
   const [avantEdition, setAvantEdition] = useState<ContenuPost | null>(null);
   const [apercus, setApercus] = useState<string[]>([]);
+  const [decision, setDecision] = useState<{ id: string; statut: "approuvé" | "rejeté" } | null>(null);
+  const [commentaire, setCommentaire] = useState("");
+
+  const ouvrirDecision = (id: string, statut: "approuvé" | "rejeté") => {
+    setDecision({ id, statut });
+    setCommentaire("");
+  };
+
+  const confirmerDecision = (post: PostValidation) => {
+    if (!decision) return;
+    const texte = commentaire.trim();
+    if (decision.statut === "rejeté" && !texte) {
+      toast.error("Ajoutez un commentaire expliquant le rejet.");
+      return;
+    }
+    onStatut(post.id, decision.statut, {
+      origine: "decision",
+      decision: decision.statut,
+      resume: decision.statut === "approuvé" ? "Post approuvé" : "Post rejeté",
+      commentaire: texte || "Approuvé sans commentaire",
+    });
+    if (edition === post.id) fermerEdition(post);
+    setDecision(null);
+    setCommentaire("");
+    toast.success(
+      decision.statut === "approuvé"
+        ? "Post approuvé et ajouté au calendrier éditorial."
+        : "Post rejeté : il reste consultable dans la file « rejeté ».",
+    );
+  };
 
   const ouvrirEdition = (post: PostValidation) => {
     setAvantEdition(contenuDe(post));
@@ -425,12 +464,35 @@ export function ValidationPosts({
                           setEdition(post.id);
                           return;
                         }
-                        onStatut(post.id, "approuvé");
-                        if (enEdition) fermerEdition(post);
-                        toast.success("Post approuvé et ajouté au calendrier éditorial.");
+                        ouvrirDecision(post.id, "approuvé");
                       }}
                     >
                       <Check className="mr-2 h-3.5 w-3.5" /> Approuver
+                    </Button>
+                  )}
+
+                  {post.statutValidation !== "rejeté" && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-destructive"
+                      onClick={() => ouvrirDecision(post.id, "rejeté")}
+                    >
+                      <X className="mr-2 h-3.5 w-3.5" /> Rejeter
+                    </Button>
+                  )}
+
+                  {post.statutValidation === "rejeté" && (
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        onStatut(post.id, "à valider", {
+                          origine: "statut",
+                          resume: "Post repris après rejet",
+                        })
+                      }
+                    >
+                      <Undo2 className="mr-2 h-3.5 w-3.5" /> Reprendre en validation
                     </Button>
                   )}
 
@@ -483,6 +545,54 @@ export function ValidationPosts({
                 </div>
                 {post.source && (
                   <p className="mt-3 text-xs text-muted-foreground">Inspiré de : {post.source}</p>
+                )}
+
+                {decision?.id === post.id && (
+                  <div className="mt-3 rounded-lg border border-border/60 bg-background/60 p-3">
+                    <p className="text-xs font-semibold">
+                      {decision.statut === "approuvé"
+                        ? "Commentaire d'approbation (optionnel)"
+                        : "Motif du rejet (obligatoire)"}
+                    </p>
+                    <Textarea
+                      rows={3}
+                      className="mt-2"
+                      value={commentaire}
+                      onChange={(e) => setCommentaire(e.target.value)}
+                      placeholder={
+                        decision.statut === "approuvé"
+                          ? "Ex. : accroche validée, publier avant 9 h."
+                          : "Ex. : ton trop commercial, ne correspond pas à l'offre du midi."
+                      }
+                    />
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant={decision.statut === "rejeté" ? "destructive" : "default"}
+                        onClick={() => confirmerDecision(post)}
+                      >
+                        {decision.statut === "approuvé" ? (
+                          <>
+                            <Check className="mr-2 h-3.5 w-3.5" /> Confirmer l'approbation
+                          </>
+                        ) : (
+                          <>
+                            <X className="mr-2 h-3.5 w-3.5" /> Confirmer le rejet
+                          </>
+                        )}
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setDecision(null)}>
+                        Annuler
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {post.commentaireDecision && decision?.id !== post.id && (
+                  <p className="mt-3 flex gap-1.5 rounded-md border border-border/60 bg-secondary/40 p-2 text-xs text-muted-foreground">
+                    <MessageSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                    <span className="whitespace-pre-line">{post.commentaireDecision}</span>
+                  </p>
                 )}
 
                 <HistoriqueVersions
