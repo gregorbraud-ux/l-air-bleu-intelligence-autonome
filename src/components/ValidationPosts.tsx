@@ -25,7 +25,13 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
-import type { MetaVersion, PostValidation, StatutValidation } from "@/lib/validation-posts";
+import {
+  contenuDe,
+  type ContenuPost,
+  type MetaVersion,
+  type PostValidation,
+  type StatutValidation,
+} from "@/lib/validation-posts";
 import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
 import { appliquerToutesCorrections, suggestionsPour } from "@/lib/corrections-posts";
 import { diffPatch } from "@/lib/diff-texte";
@@ -45,13 +51,41 @@ type Props = {
   contraintes?: ContraintesConformite;
   onModifier: (id: string, patch: Partial<PostValidation>, meta?: MetaVersion) => void;
   onStatut: (id: string, statut: StatutValidation, meta?: MetaVersion) => void;
+  onJournaliser?: (id: string, contenu: ContenuPost, meta: MetaVersion) => void;
   onSupprimer: (id: string) => void;
 };
 
-export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSupprimer }: Props) {
+export function ValidationPosts({
+  posts,
+  contraintes,
+  onModifier,
+  onStatut,
+  onJournaliser,
+  onSupprimer,
+}: Props) {
   const [filtre, setFiltre] = useState<StatutValidation | "tous">("à valider");
   const [edition, setEdition] = useState<string | null>(null);
+  const [avantEdition, setAvantEdition] = useState<ContenuPost | null>(null);
   const [apercus, setApercus] = useState<string[]>([]);
+
+  const ouvrirEdition = (post: PostValidation) => {
+    setAvantEdition(contenuDe(post));
+    setEdition(post.id);
+  };
+
+  const fermerEdition = (post: PostValidation) => {
+    if (avantEdition && onJournaliser) {
+      const modifie = JSON.stringify(avantEdition) !== JSON.stringify(contenuDe(post));
+      if (modifie) {
+        onJournaliser(post.id, avantEdition, {
+          origine: "edition",
+          resume: "Édition manuelle avant renvoi en validation",
+        });
+      }
+    }
+    setAvantEdition(null);
+    setEdition(null);
+  };
 
   const basculerApercu = (cle: string) =>
     setApercus((prev) => (prev.includes(cle) ? prev.filter((c) => c !== cle) : [...prev, cle]));
@@ -345,7 +379,7 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                   <Button
                     size="sm"
                     variant={enEdition ? "default" : "secondary"}
-                    onClick={() => setEdition(enEdition ? null : post.id)}
+                    onClick={() => (enEdition ? fermerEdition(post) : ouvrirEdition(post))}
                   >
                     {enEdition ? (
                       <>
@@ -392,7 +426,7 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                           return;
                         }
                         onStatut(post.id, "approuvé");
-                        setEdition(null);
+                        if (enEdition) fermerEdition(post);
                         toast.success("Post approuvé et ajouté au calendrier éditorial.");
                       }}
                     >
