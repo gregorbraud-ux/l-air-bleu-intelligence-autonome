@@ -41,10 +41,17 @@ import { HistoriqueVersions } from "@/components/HistoriqueVersions";
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
   approuvé: "bg-chart-1/15 text-chart-1",
+  rejeté: "bg-destructive/15 text-destructive",
   publié: "bg-chart-2/15 text-chart-2",
 };
 
-const filtres: Array<StatutValidation | "tous"> = ["à valider", "approuvé", "publié", "tous"];
+const filtres: Array<StatutValidation | "tous"> = [
+  "à valider",
+  "approuvé",
+  "rejeté",
+  "publié",
+  "tous",
+];
 
 type Props = {
   posts: PostValidation[];
@@ -67,6 +74,36 @@ export function ValidationPosts({
   const [edition, setEdition] = useState<string | null>(null);
   const [avantEdition, setAvantEdition] = useState<ContenuPost | null>(null);
   const [apercus, setApercus] = useState<string[]>([]);
+  const [decision, setDecision] = useState<{ id: string; statut: "approuvé" | "rejeté" } | null>(null);
+  const [commentaire, setCommentaire] = useState("");
+
+  const ouvrirDecision = (id: string, statut: "approuvé" | "rejeté") => {
+    setDecision({ id, statut });
+    setCommentaire("");
+  };
+
+  const confirmerDecision = (post: PostValidation) => {
+    if (!decision) return;
+    const texte = commentaire.trim();
+    if (decision.statut === "rejeté" && !texte) {
+      toast.error("Ajoutez un commentaire expliquant le rejet.");
+      return;
+    }
+    onStatut(post.id, decision.statut, {
+      origine: "decision",
+      decision: decision.statut,
+      resume: decision.statut === "approuvé" ? "Post approuvé" : "Post rejeté",
+      commentaire: texte || "Approuvé sans commentaire",
+    });
+    if (edition === post.id) fermerEdition(post);
+    setDecision(null);
+    setCommentaire("");
+    toast.success(
+      decision.statut === "approuvé"
+        ? "Post approuvé et ajouté au calendrier éditorial."
+        : "Post rejeté : il reste consultable dans la file « rejeté ».",
+    );
+  };
 
   const ouvrirEdition = (post: PostValidation) => {
     setAvantEdition(contenuDe(post));
