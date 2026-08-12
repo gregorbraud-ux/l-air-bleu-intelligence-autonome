@@ -3,11 +3,47 @@ import type { IdeePost } from "@/lib/contenu.schema";
 
 export type StatutValidation = "à valider" | "approuvé" | "publié";
 
+export type OrigineVersion = "correction" | "edition" | "statut";
+
+export type ContenuPost = Pick<
+  IdeePost,
+  "titre" | "accroche" | "legende" | "cta" | "angle" | "hashtags" | "canal" | "jour" | "heure"
+>;
+
+export type VersionPost = {
+  numero: number;
+  le: string;
+  statut: StatutValidation;
+  origine: OrigineVersion;
+  /** Libellés des corrections appliquées lors de ce renvoi en validation. */
+  corrections: string[];
+  resume: string;
+  /** État du post AVANT la modification enregistrée. */
+  contenu: ContenuPost;
+};
+
 export type PostValidation = IdeePost & {
   id: string;
   statutValidation: StatutValidation;
   majLe: string;
+  versions?: VersionPost[];
 };
+
+export function contenuDe(post: IdeePost): ContenuPost {
+  return {
+    titre: post.titre,
+    accroche: post.accroche,
+    legende: post.legende,
+    cta: post.cta,
+    angle: post.angle,
+    hashtags: [...post.hashtags],
+    canal: post.canal,
+    jour: post.jour,
+    heure: post.heure,
+  };
+}
+
+export type MetaVersion = { origine: OrigineVersion; corrections?: string[]; resume?: string };
 
 export const CLE_VALIDATION = "airbleu.posts.validation.v1";
 
@@ -73,16 +109,32 @@ export function useValidationPosts() {
     return ajoutes;
   }, []);
 
-  const modifier = useCallback((id: string, patch: Partial<PostValidation>) => {
+  const modifier = useCallback((id: string, patch: Partial<PostValidation>, meta?: MetaVersion) => {
     setPosts((precedents) =>
       precedents
-        .map((p) => (p.id === id ? { ...p, ...patch, majLe: new Date().toISOString() } : p))
+        .map((p) => {
+          if (p.id !== id) return p;
+          const versions = p.versions ?? [];
+          const suivant: PostValidation = { ...p, ...patch, majLe: new Date().toISOString() };
+          if (!meta) return suivant;
+          const version: VersionPost = {
+            numero: versions.length + 1,
+            le: new Date().toISOString(),
+            statut: p.statutValidation,
+            origine: meta.origine,
+            corrections: meta.corrections ?? [],
+            resume: meta.resume ?? "",
+            contenu: contenuDe(p),
+          };
+          return { ...suivant, versions: [...versions, version] };
+        })
         .sort((a, b) => a.jour - b.jour),
     );
   }, []);
 
   const changerStatut = useCallback(
-    (id: string, statutValidation: StatutValidation) => modifier(id, { statutValidation }),
+    (id: string, statutValidation: StatutValidation, meta?: MetaVersion) =>
+      modifier(id, { statutValidation }, meta),
     [modifier],
   );
 
