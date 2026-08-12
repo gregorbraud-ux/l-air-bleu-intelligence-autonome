@@ -138,11 +138,36 @@ export function useValidationPosts() {
     [modifier],
   );
 
+  /** Enregistre une version à partir d'un état antérieur connu (édition manuelle). */
+  const journaliser = useCallback((id: string, contenu: ContenuPost, meta: MetaVersion) => {
+    setPosts((precedents) =>
+      precedents.map((p) => {
+        if (p.id !== id) return p;
+        const versions = p.versions ?? [];
+        return {
+          ...p,
+          versions: [
+            ...versions,
+            {
+              numero: versions.length + 1,
+              le: new Date().toISOString(),
+              statut: p.statutValidation,
+              origine: meta.origine,
+              corrections: meta.corrections ?? [],
+              resume: meta.resume ?? "",
+              contenu,
+            },
+          ],
+        };
+      }),
+    );
+  }, []);
+
   const supprimer = useCallback((id: string) => {
     setPosts((precedents) => precedents.filter((p) => p.id !== id));
   }, []);
 
   const viderTout = useCallback(() => setPosts([]), []);
 
-  return { posts, charge, ajouterIdees, modifier, changerStatut, supprimer, viderTout };
+  return { posts, charge, ajouterIdees, modifier, changerStatut, journaliser, supprimer, viderTout };
 }
