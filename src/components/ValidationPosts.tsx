@@ -371,10 +371,17 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                                   action: {
                                     label: "Corriger",
                                     onClick: () => {
-                                      const { post: corrige } = appliquerToutesCorrections(post, contraintes, {
+                                      const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes, {
                                         seulementBloquants: true,
                                       });
-                                      onModifier(post.id, corrige);
+                                      const libelles = suggestions
+                                        .filter((s) => appliquees.includes(s.id))
+                                        .map((s) => s.titre);
+                                      onModifier(post.id, corrige, {
+                                        origine: "correction",
+                                        corrections: libelles.length ? libelles : appliquees,
+                                        resume: "Corrections bloquantes",
+                                      });
                                       toast.success("Corrections bloquantes appliquées.");
                                     },
                                   },
@@ -404,7 +411,16 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                       >
                         <Send className="mr-2 h-3.5 w-3.5" /> Marquer publié
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onStatut(post.id, "à valider")}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          onStatut(post.id, "à valider", {
+                            origine: "statut",
+                            resume: "Post renvoyé pour validation",
+                          })
+                        }
+                      >
                         <Undo2 className="mr-2 h-3.5 w-3.5" /> Renvoyer en revue
                       </Button>
                     </>
@@ -434,6 +450,17 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                 {post.source && (
                   <p className="mt-3 text-xs text-muted-foreground">Inspiré de : {post.source}</p>
                 )}
+
+                <HistoriqueVersions
+                  post={post}
+                  onRestaurer={(v) => {
+                    onModifier(post.id, v.contenu, {
+                      origine: "edition",
+                      resume: `Restauration de la version v${v.numero}`,
+                    });
+                    toast.success(`Version v${v.numero} restaurée.`);
+                  }}
+                />
               </li>
             );
           })}
