@@ -48,7 +48,9 @@ function CalendrierPage() {
   const generer = useServerFn(genererPlanEditorial);
   const validation = useValidationPosts();
   const { strategie, maj, basculerPlateforme, basculerTheme, reinitialiser } = useStrategieIA();
-  const valides = validation.posts.filter((p) => p.statutValidation !== "à valider");
+  const valides = validation.posts.filter(
+    (p) => p.statutValidation === "approuvé" || p.statutValidation === "publié",
+  );
 
   const contraintes: ContraintesConformite = useMemo(
     () => ({
