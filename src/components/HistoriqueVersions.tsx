@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, History, Undo2, Wand2 } from "lucide-react";
+import { Eye, EyeOff, History, MessageSquare, Undo2, Wand2 } from "lucide-react";
 import { diffPatch } from "@/lib/diff-texte";
 import { DiffCorrection } from "@/components/DiffCorrection";
 import { contenuDe, type PostValidation, type VersionPost } from "@/lib/validation-posts";
@@ -15,6 +15,7 @@ const libelleOrigine: Record<VersionPost["origine"], string> = {
   correction: "Corrections appliquées",
   edition: "Édition manuelle",
   statut: "Renvoi pour validation",
+  decision: "Décision de validation",
 };
 
 function dateCourte(iso: string) {
@@ -75,6 +76,7 @@ export function HistoriqueVersions({ post, onRestaurer }: Props) {
                   <div className="min-w-0">
                     <p className="text-xs font-medium">
                       v{v.numero} → v{v.numero + 1} · {libelleOrigine[v.origine]}
+                      {v.decision ? ` · ${v.decision}` : ""}
                     </p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {dateCourte(v.le)} · statut à ce moment : {v.statut}
@@ -109,6 +111,13 @@ export function HistoriqueVersions({ post, onRestaurer }: Props) {
                       </Badge>
                     ))}
                   </div>
+                )}
+
+                {v.commentaire && (
+                  <p className="mt-2 flex gap-1.5 rounded-md border border-border/60 bg-secondary/40 p-2 text-[11px] text-muted-foreground">
+                    <MessageSquare className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+                    <span className="whitespace-pre-line">{v.commentaire}</span>
+                  </p>
                 )}
 
                 {detail && (
