@@ -25,11 +25,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { canaux } from "@/lib/contenu.schema";
-import type { PostValidation, StatutValidation } from "@/lib/validation-posts";
+import type { MetaVersion, PostValidation, StatutValidation } from "@/lib/validation-posts";
 import { verifierPost, type ContraintesConformite } from "@/lib/conformite-posts";
 import { appliquerToutesCorrections, suggestionsPour } from "@/lib/corrections-posts";
 import { diffPatch } from "@/lib/diff-texte";
 import { DiffCorrection } from "@/components/DiffCorrection";
+import { HistoriqueVersions } from "@/components/HistoriqueVersions";
 
 const statutStyle: Record<StatutValidation, string> = {
   "à valider": "bg-chart-4/15 text-chart-4",
@@ -42,8 +43,8 @@ const filtres: Array<StatutValidation | "tous"> = ["à valider", "approuvé", "p
 type Props = {
   posts: PostValidation[];
   contraintes?: ContraintesConformite;
-  onModifier: (id: string, patch: Partial<PostValidation>) => void;
-  onStatut: (id: string, statut: StatutValidation) => void;
+  onModifier: (id: string, patch: Partial<PostValidation>, meta?: MetaVersion) => void;
+  onStatut: (id: string, statut: StatutValidation, meta?: MetaVersion) => void;
   onSupprimer: (id: string) => void;
 };
 
@@ -167,7 +168,14 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                         onClick={() => {
                           const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes);
                           if (!appliquees.length) return;
-                          onModifier(post.id, corrige);
+                          const libelles = suggestions
+                            .filter((s) => appliquees.includes(s.id))
+                            .map((s) => s.titre);
+                          onModifier(post.id, corrige, {
+                            origine: "correction",
+                            corrections: libelles.length ? libelles : appliquees,
+                            resume: `${appliquees.length} correction(s) appliquée(s)`,
+                          });
                           setApercus((prev) => prev.filter((c) => !c.startsWith(`${post.id}-`)));
                           toast.success(`${appliquees.length} correction(s) appliquée(s).`);
                         }}
@@ -221,7 +229,11 @@ export function ValidationPosts({ posts, contraintes, onModifier, onStatut, onSu
                             size="sm"
                             variant="secondary"
                             onClick={() => {
-                              onModifier(post.id, s.patch);
+                              onModifier(post.id, s.patch, {
+                                origine: "correction",
+                                corrections: [s.titre],
+                                resume: `Correction « ${s.champ} »`,
+                              });
                               setApercus((prev) => prev.filter((c) => c !== cle));
                               toast.success("Correction appliquée.");
                             }}
