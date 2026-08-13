@@ -8,6 +8,7 @@ import {
   Swords,
   BellRing,
   Menu,
+  MessageCircleQuestion,
   Waves,
   ShieldCheck,
   LogIn,
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Tableau de bord", icon: LayoutDashboard, module: null },
+  { to: "/assistant", label: "Assistant stratégique", icon: MessageCircleQuestion, module: null },
   { to: "/marketing", label: "Marketing IA", icon: Sparkles, module: "marketing" },
   { to: "/calendrier", label: "Calendrier éditorial", icon: CalendarDays, module: "calendrier" },
   { to: "/avis", label: "Avis Google", icon: Star, module: "avis" },
