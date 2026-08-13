@@ -1,13 +1,14 @@
-export const restaurant = {
-  nom: "L'Air Bleu",
-  societe: "SARL LG AIR",
-  adresse: "3 rue Anatole France, 44550 Montoir-de-Bretagne",
-  ville: "Montoir-de-Bretagne",
-  telephone: "02 40 90 01 17",
-  positionnement: "Restaurant traditionnel — référence du déjeuner en Loire-Atlantique",
-  couverts: 70,
-  ticketMoyen: 17.5,
-};
+/**
+ * ⚠️ Ce fichier contient à la fois des données OFFICIELLES (finances) et des jeux de
+ * données de DÉMONSTRATION (avis, concurrents, signaux de veille, calendrier d'exemple).
+ * Les données de démo NE DOIVENT JAMAIS être affichées comme des mesures réelles :
+ * elles sont marquées DÉMO dans l'interface via <BadgeEtat etat="demo" />.
+ * L'identité, les formules et les finances de référence vivent dans src/lib/lair-bleu.ts.
+ */
+export { restaurantAirBleu as restaurant } from "@/lib/lair-bleu";
+
+/** Vrai tant qu'aucune source de données réelle (Google, veille) n'est connectée. */
+export const DONNEES_DEMO = true;
 
 /** Exercice clos au 31/08/2025 — données officielles de référence. */
 export const finances = {
@@ -55,36 +56,6 @@ export const historiqueExercices = [
   { exercice: "2024/2025", ca: 492781.72, resultatNet: -9192.13, ebe: null },
 ];
 
-export type Kpi = { label: string; valeur: string; variation: number; detail: string };
-
-export const kpis: Kpi[] = [
-  { label: "Chiffre d'affaires annuel", valeur: "492 782 €", variation: 2.1, detail: "exercice clos au 31/08/2025" },
-  { label: "Résultat net", valeur: "-9 192 €", variation: -1.9, detail: "objectif : retour à l'équilibre" },
-  { label: "Ticket moyen déjeuner", valeur: "17,50 €", variation: 2.4, detail: "objectif 19 € (dessert + café)" },
-  { label: "Couverts / service midi", valeur: "70", variation: 3.2, detail: "capacité utilisée à 84 %" },
-  { label: "Note Google", valeur: "4,5 / 5", variation: 1.8, detail: "312 avis cumulés" },
-  { label: "Communauté Facebook + Instagram", valeur: "2 480", variation: 6.4, detail: "dont 1 690 abonnés Facebook" },
-];
-
-/** Répartition mensuelle indicative du CA de l'exercice clos au 31/08/2025 (total 492 782 €). */
-export const caMensuel = [
-  { mois: "Fév", ca: 38900, couverts: 2210 },
-  { mois: "Mar", ca: 41200, couverts: 2350 },
-  { mois: "Avr", ca: 42600, couverts: 2430 },
-  { mois: "Mai", ca: 43800, couverts: 2500 },
-  { mois: "Juin", ca: 44500, couverts: 2540 },
-  { mois: "Juil", ca: 39100, couverts: 2230 },
-  { mois: "Août", ca: 33400, couverts: 1910 },
-];
-
-export const canaux = [
-  { canal: "Google Business", part: 42 },
-  { canal: "Bouche-à-oreille", part: 24 },
-  { canal: "Facebook", part: 16 },
-  { canal: "Instagram", part: 10 },
-  { canal: "Téléphone / passage", part: 8 },
-];
-
 export type Avis = {
   auteur: string;
   note: number;
@@ -94,6 +65,7 @@ export type Avis = {
   repondu: boolean;
 };
 
+/** DÉMO — exemples de structure d'avis. Aucun avis Google réel n'est connecté. */
 export const avis: Avis[] = [
   {
     auteur: "Camille R.",
@@ -138,6 +110,7 @@ export const avis: Avis[] = [
   },
 ];
 
+/** DÉMO — répartition d'exemple, non mesurée. */
 export const repartitionNotes = [
   { note: "5 étoiles", nombre: 178 },
   { note: "4 étoiles", nombre: 86 },
@@ -154,6 +127,7 @@ export type Publication = {
   heure: string;
 };
 
+/** DÉMO — calendrier d'exemple. Le calendrier réel provient du flux de validation. */
 export const calendrier: Publication[] = [
   { jour: 1, titre: "Menu de la semaine", canal: "Facebook", statut: "publié", heure: "09:00" },
   { jour: 2, titre: "Plat du jour : blanquette maison", canal: "Google", statut: "publié", heure: "10:30" },
@@ -175,6 +149,7 @@ export type Concurrent = {
   tendance: number;
 };
 
+/** DÉMO — panel d'exemple. Aucune donnée n'est collectée automatiquement à ce jour. */
 export const concurrents: Concurrent[] = [
   { nom: "L'Air Bleu", note: 4.5, avis: 312, ticket: 17.5, visibilite: 68, tendance: 4.2 },
   { nom: "Brasserie du Brivet (Trignac)", note: 4.3, avis: 486, ticket: 19, visibilite: 74, tendance: 2.1 },
@@ -200,6 +175,7 @@ export type AlerteConcurrence = {
   sourceLabel: string;
 };
 
+/** DÉMO — signaux d'exemple illustrant le format attendu d'une veille réellement connectée. */
 export const alertesConcurrence: AlerteConcurrence[] = [
   {
     id: "a1",
@@ -384,6 +360,7 @@ export type ZoneVeille = {
   signaux: SignalVeille[];
 };
 
+/** DÉMO — signaux d'exemple par zone. Non collectés, à ne pas présenter comme une veille réelle. */
 export const zonesVeille: ZoneVeille[] = [
   {
     zone: "Trignac",
