@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AlertesRouteImport } from './routes/alertes'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AvisRouteImport } from './routes/avis'
 import { Route as CalendrierRouteImport } from './routes/calendrier'
@@ -33,6 +34,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AlertesRoute = AlertesRouteImport.update({
   id: '/alertes',
   path: '/alertes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -79,6 +85,7 @@ const AuthenticatedParametresRoute = AuthenticatedParametresRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alertes': typeof AlertesRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alertes': typeof AlertesRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/alertes': typeof AlertesRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alertes'
+    | '/assistant'
     | '/auth'
     | '/avis'
     | '/calendrier'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alertes'
+    | '/assistant'
     | '/auth'
     | '/avis'
     | '/calendrier'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/alertes'
+    | '/assistant'
     | '/auth'
     | '/avis'
     | '/calendrier'
@@ -158,6 +170,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AlertesRoute: typeof AlertesRoute
+  AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   AvisRoute: typeof AvisRoute
   CalendrierRoute: typeof CalendrierRoute
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/alertes'
       fullPath: '/alertes'
       preLoaderRoute: typeof AlertesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AlertesRoute: AlertesRoute,
+  AssistantRoute: AssistantRoute,
   AuthRoute: AuthRoute,
   AvisRoute: AvisRoute,
   CalendrierRoute: CalendrierRoute,
