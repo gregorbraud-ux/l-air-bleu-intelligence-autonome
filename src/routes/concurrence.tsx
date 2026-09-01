@@ -6,6 +6,7 @@ import { AlertesConcurrence } from "@/components/AlertesConcurrence";
 import { SyntheseVeilleZones } from "@/components/SyntheseVeilleZones";
 import { Badge } from "@/components/ui/badge";
 import { concurrents } from "@/lib/data";
+import { BadgeEtat, BandeauEtat } from "@/components/EtatDonnee";
 
 export const Route = createFileRoute("/concurrence")({
   head: () => ({
@@ -40,9 +41,18 @@ function ConcurrencePage() {
         sousTitre="Restaurants de déjeuner comparables : Montoir-de-Bretagne, Trignac, Donges, Saint-Nazaire"
       />
 
+      <BandeauEtat etat="demo" titre="Aucune veille réellement collectée">
+        Les notes, volumes d'avis, tickets moyens et tendances ci-dessous sont des DONNÉES DE DÉMONSTRATION : aucune source
+        ni API concurrentielle n'est connectée. Une donnée réelle ne sera affichée qu'avec sa source, son URL et son
+        horodatage ; sinon l'application indique « Non disponible ».
+      </BandeauEtat>
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <section className="surface-card overflow-x-auto p-5">
-          <h2 className="text-lg font-semibold">Comparatif du marché</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="text-lg font-semibold">Comparatif du marché</h2>
+            <BadgeEtat etat="demo" />
+          </div>
           <table className="mt-4 w-full min-w-[560px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">

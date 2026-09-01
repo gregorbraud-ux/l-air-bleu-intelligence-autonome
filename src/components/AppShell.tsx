@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   LogIn,
   SlidersHorizontal,
+  Plug,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -30,6 +31,7 @@ const nav = [
   { to: "/valorisation", label: "Valorisation", icon: Gauge, module: "valorisation" },
   { to: "/concurrence", label: "Concurrence", icon: Swords, module: "concurrence" },
   { to: "/alertes", label: "Alertes & seuils", icon: BellRing, module: "alertes" },
+  { to: "/integrations", label: "Intégrations", icon: Plug, module: null },
 ] as const;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {

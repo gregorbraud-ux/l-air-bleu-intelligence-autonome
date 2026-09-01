@@ -40,7 +40,7 @@ const questions = [
 const donneesDisponibles = [
   `Exercice ${dernierExerciceOfficiel.exercice} officiel : CA ${euroPrecis(dernierExerciceOfficiel.chiffreAffaires)}, résultat net ${euroPrecis(dernierExerciceOfficiel.resultatNet)}`,
   `Exercice 2025/2026 provisoire : cumul au 31/07/2026 ${euroPrecis(exerciceEnCoursProvisoire.caCumuleAu31Juillet2026)}`,
-  `${exerciceEnCoursProvisoire.servicesAoutPrevus} services du midi prévus en août 2026 (${exerciceEnCoursProvisoire.detailServicesAout})`,
+  `Août 2026 clôturé (gestion) : ${exerciceEnCoursProvisoire.caAout2026.toLocaleString("fr-FR")} € sur ${exerciceEnCoursProvisoire.servicesAoutRealises} services (${exerciceEnCoursProvisoire.detailServicesAout})`,
   "Formules et prix confirmés, capacité 70 couverts, service du midi uniquement",
 ];
 

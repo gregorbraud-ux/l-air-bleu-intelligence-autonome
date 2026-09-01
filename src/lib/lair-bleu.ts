@@ -63,8 +63,9 @@ export const dernierExerciceOfficiel = exercicesOfficiels[exercicesOfficiels.len
 export const exercicePrecedentOfficiel = exercicesOfficiels[exercicesOfficiels.length - 2];
 
 /**
- * Exercice 2025/2026 — PROVISOIRE.
- * Chiffres de gestion non validés par le bilan : à recalculer dès réception du bilan 2026.
+ * Exercice 2025/2026 — PROVISOIRE (comptabilité de gestion).
+ * Août 2026 est CLÔTURÉ en gestion : il n'y a plus de projection de services restants.
+ * À confirmer par le bilan 2026.
  */
 export const exerciceEnCoursProvisoire = {
   exercice: "2025/2026",
@@ -72,54 +73,66 @@ export const exerciceEnCoursProvisoire = {
   niveau: "provisoire" as const,
   caAu30Juin2026: 420000,
   caJuillet2026: 48000,
-  /** Cumul provisoire réel constaté à fin juillet 2026 (ce n'est pas une hypothèse). */
+  /** Cumul provisoire réel constaté à fin juillet 2026. */
   caCumuleAu31Juillet2026: 468000,
+  /** Août 2026 CLÔTURÉ en gestion. */
+  caAout2026: 27800,
+  aoutCloture: true,
+  /** CA cumulé provisoire de clôture au 31/08/2026 = 468 000 + 27 800. */
+  caCumuleAu31Aout2026: 495800,
   fermeture: "Fermeture après le service du midi du 14 août — reprise le 31 août",
-  servicesAoutPrevus: 11,
+  servicesAoutRealises: 11,
   detailServicesAout: "3–7 août, 10–14 août, 31 août",
-  note: "PRÉVISION PROVISOIRE — recalculer dès réception du bilan 2026.",
+  note: "DONNÉE DE GESTION PROVISOIRE — à confirmer par le bilan 2026. Ce n'est pas un chiffre comptable définitif.",
 } as const;
 
-/** CA moyen par service retenu par défaut pour la projection d'août (issu du cumul provisoire). */
-export const caMoyenParServiceAoutDefaut = 2087;
+/** CA de clôture provisoire 2025/2026 (donnée de gestion, août clôturé). */
+export const caClotureProvisoire2026 = exerciceEnCoursProvisoire.caCumuleAu31Aout2026;
 
-export type HypothesesProjection = {
-  caCumule: number;
-  servicesRestants: number;
-  caMoyenParService: number;
+/** CA moyen par service constaté en août (indicateur dérivé, non comptable). */
+export const caMoyenParServiceAout =
+  Math.round(exerciceEnCoursProvisoire.caAout2026 / exerciceEnCoursProvisoire.servicesAoutRealises);
+
+/**
+ * HISTORIQUE — OBSOLÈTE.
+ * Anciennes projections de clôture 2025/2026, conservées uniquement pour traçabilité.
+ * Ne jamais les afficher comme valeur courante.
+ */
+export const projectionsObsoletes = [
+  { valeur: 490957, libelle: "Projection centrale initiale (11 services × ≈2 087 €)", statut: "OBSOLÈTE" },
+  { valeur: 491000, libelle: "Projection centrale arrondie", statut: "OBSOLÈTE" },
+  { valeur: 493960, libelle: "Variante haute de projection", statut: "OBSOLÈTE" },
+  { valeur: 494000, libelle: "Variante haute arrondie", statut: "OBSOLÈTE" },
+] as const;
+
+export type HypothesesCloture = {
+  caCumuleJuillet: number;
+  caAout: number;
 };
 
-export function hypothesesProjectionDefaut(): HypothesesProjection {
+export function hypothesesClotureDefaut(): HypothesesCloture {
   return {
-    caCumule: exerciceEnCoursProvisoire.caCumuleAu31Juillet2026,
-    servicesRestants: exerciceEnCoursProvisoire.servicesAoutPrevus,
-    caMoyenParService: caMoyenParServiceAoutDefaut,
+    caCumuleJuillet: exerciceEnCoursProvisoire.caCumuleAu31Juillet2026,
+    caAout: exerciceEnCoursProvisoire.caAout2026,
   };
 }
 
-export type Projection = {
-  caPeriodeRestante: number;
-  caProjeteCloture: number;
+export type ClotureProvisoire = {
+  caCloture: number;
   ecartExerciceOfficiel: number;
   ecartPourcent: number;
 };
 
-/** Projection modifiable : CA cumulé + (services restants × CA moyen/service). */
-export function calculerProjection(h: HypothesesProjection): Projection {
-  const caPeriodeRestante = Math.max(0, h.servicesRestants) * Math.max(0, h.caMoyenParService);
-  const caProjeteCloture = h.caCumule + caPeriodeRestante;
+/** Cumul provisoire de clôture = cumul au 31/07 + août clôturé (modifiable si la gestion est corrigée). */
+export function calculerClotureProvisoire(h: HypothesesCloture): ClotureProvisoire {
+  const caCloture = Math.max(0, h.caCumuleJuillet) + Math.max(0, h.caAout);
   const ref = dernierExerciceOfficiel.chiffreAffaires;
   return {
-    caPeriodeRestante,
-    caProjeteCloture,
-    ecartExerciceOfficiel: caProjeteCloture - ref,
-    ecartPourcent: ((caProjeteCloture - ref) / ref) * 100,
+    caCloture,
+    ecartExerciceOfficiel: caCloture - ref,
+    ecartPourcent: ((caCloture - ref) / ref) * 100,
   };
 }
-
-/** Repères de projection centrale communiqués (arrondis). */
-export const projectionCentraleAout = 23000;
-export const projectionCentraleCloture = 491000;
 
 export const euro = (v: number) => `${Math.round(v).toLocaleString("fr-FR")} €`;
 export const euroPrecis = (v: number) =>
@@ -127,7 +140,6 @@ export const euroPrecis = (v: number) =>
 
 /** Contexte texte injecté dans tous les prompts IA — uniquement des faits confirmés. */
 export function contexteAirBleu(): string {
-  const proj = calculerProjection(hypothesesProjectionDefaut());
   return [
     `Restaurant : ${restaurantAirBleu.nom} (${restaurantAirBleu.societe}).`,
     `Adresse : ${restaurantAirBleu.adresse}. Téléphone : ${restaurantAirBleu.telephone}.`,
@@ -136,8 +148,11 @@ export function contexteAirBleu(): string {
     `Formules confirmées : ${formules.map((f) => `${f.libelle} ${f.prix.toString().replace(".", ",")} €`).join(" ; ")}${snackDisponible ? " ; snack." : "."}`,
     `Finances OFFICIELLES — exercice 2023/2024 : CA ${euroPrecis(exercicesOfficiels[0].chiffreAffaires)}, EBE ${euroPrecis(exercicesOfficiels[0].ebe ?? 0)}, résultat net ${euroPrecis(exercicesOfficiels[0].resultatNet)}.`,
     `Finances OFFICIELLES — exercice 2024/2025 : CA ${euroPrecis(exercicesOfficiels[1].chiffreAffaires)}, résultat net ${euroPrecis(exercicesOfficiels[1].resultatNet)}.`,
-    `Exercice 2025/2026 PROVISOIRE : CA cumulé au 31/07/2026 = ${euro(exerciceEnCoursProvisoire.caCumuleAu31Juillet2026)} (dont juillet ${euro(exerciceEnCoursProvisoire.caJuillet2026)}). ${exerciceEnCoursProvisoire.fermeture}. ${exerciceEnCoursProvisoire.servicesAoutPrevus} services du midi prévus en août (${exerciceEnCoursProvisoire.detailServicesAout}).`,
-    `PRÉVISION PROVISOIRE de clôture au 31/08/2026 : environ ${euro(proj.caProjeteCloture)} — jamais présentée comme un chiffre comptable définitif.`,
+    `Exercice 2025/2026 PROVISOIRE (gestion) : CA cumulé au 31/07/2026 = ${euro(exerciceEnCoursProvisoire.caCumuleAu31Juillet2026)} (dont juillet ${euro(exerciceEnCoursProvisoire.caJuillet2026)}) ; août 2026 CLÔTURÉ à ${euro(exerciceEnCoursProvisoire.caAout2026)} sur ${exerciceEnCoursProvisoire.servicesAoutRealises} services (${exerciceEnCoursProvisoire.detailServicesAout}).`,
+    `CA cumulé PROVISOIRE au 31/08/2026 = ${euro(caClotureProvisoire2026)}. Aucune projection restante : août est clôturé. Donnée de gestion à confirmer par le bilan 2026, jamais présentée comme comptable définitive.`,
+    "Les anciennes projections (490 957 / 491 000 / 493 960 / 494 000 €) sont OBSOLÈTES et ne doivent plus être citées.",
+    `Résultat net 2025/2026 : non disponible avant le bilan 2026.`,
     "Règles absolues : ne jamais inventer un prix, un horaire, un menu, un avis, un chiffre ou un concurrent. Si une donnée manque, écrire « donnée non disponible ».",
   ].join("\n");
 }
+
