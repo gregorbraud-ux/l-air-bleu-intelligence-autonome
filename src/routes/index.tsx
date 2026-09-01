@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  calculerProjection,
+  calculerClotureProvisoire,
   dernierExerciceOfficiel,
   euro,
   euroPrecis,
@@ -15,7 +15,9 @@ import {
   exercicePrecedentOfficiel,
   exercicesOfficiels,
   formules,
-  hypothesesProjectionDefaut,
+  hypothesesClotureDefaut,
+  projectionsObsoletes,
+  caMoyenParServiceAout,
   restaurantAirBleu,
 } from "@/lib/lair-bleu";
 
@@ -26,12 +28,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Pilotage de L'Air Bleu (SARL LG AIR), restaurant traditionnel du midi à Montoir-de-Bretagne : exercices officiels, exercice en cours provisoire et projection de clôture.",
+          "Pilotage de L'Air Bleu (SARL LG AIR), restaurant traditionnel du midi à Montoir-de-Bretagne : exercices officiels et cumul provisoire de gestion 2025/2026.",
       },
       { property: "og:title", content: "Tableau de bord — L'Air Bleu Intelligence" },
       {
         property: "og:description",
-        content: "Chiffre d'affaires officiel, cumul provisoire 2025/2026 et prévision de clôture au 31/08/2026.",
+        content: "Chiffre d'affaires officiel et cumul provisoire de clôture 2025/2026 au 31/08/2026.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -41,14 +43,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
-  const defauts = hypothesesProjectionDefaut();
-  const [caCumule, setCaCumule] = useState(defauts.caCumule);
-  const [servicesRestants, setServicesRestants] = useState(defauts.servicesRestants);
-  const [caMoyenParService, setCaMoyenParService] = useState(defauts.caMoyenParService);
+  const defauts = hypothesesClotureDefaut();
+  const [caCumuleJuillet, setCaCumuleJuillet] = useState(defauts.caCumuleJuillet);
+  const [caAout, setCaAout] = useState(defauts.caAout);
 
-  const projection = useMemo(
-    () => calculerProjection({ caCumule, servicesRestants, caMoyenParService }),
-    [caCumule, servicesRestants, caMoyenParService],
+  const cloture = useMemo(
+    () => calculerClotureProvisoire({ caCumuleJuillet, caAout }),
+    [caCumuleJuillet, caAout],
   );
 
   const evolutionOfficielle =
@@ -71,8 +72,9 @@ function Dashboard() {
       />
 
       <BandeauEtat etat="provisoire" titre="Trois niveaux de fiabilité distincts">
-        Les chiffres comptables clos sont marqués OFFICIEL. L'exercice 2025/2026 est PROVISOIRE (gestion, non validé par le
-        bilan). La clôture au 31/08/2026 est une PRÉVISION PROVISOIRE — à recalculer dès réception du bilan 2026.
+        Les chiffres comptables clos sont marqués OFFICIEL. L'exercice 2025/2026 est PROVISOIRE (comptabilité de gestion, non validée
+        par le bilan) : août 2026 est clôturé, il n'y a donc plus de prévision — le cumul au 31/08/2026 est une donnée de
+        gestion PROVISOIRE, à confirmer par le bilan 2026.
       </BandeauEtat>
 
       {/* ---------- Exercices officiels ---------- */}
@@ -129,9 +131,9 @@ function Dashboard() {
             detail="Cumul provisoire réel constaté"
           />
           <Carte
-            libelle="Services du midi prévus en août"
-            valeur={String(exerciceEnCoursProvisoire.servicesAoutPrevus)}
-            detail={exerciceEnCoursProvisoire.detailServicesAout}
+            libelle="Août 2026 (clôturé)"
+            valeur={`+ ${euro(exerciceEnCoursProvisoire.caAout2026)}`}
+            detail={`${exerciceEnCoursProvisoire.servicesAoutRealises} services du midi (${exerciceEnCoursProvisoire.detailServicesAout}) — soit ${euro(caMoyenParServiceAout)} / service`}
           />
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
@@ -139,50 +141,68 @@ function Dashboard() {
         </p>
       </section>
 
-      {/* ---------- Projection ---------- */}
+      {/* ---------- Clôture provisoire ---------- */}
       <section className="surface-card mt-6 p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-lg font-semibold">Projection de clôture au 31/08/2026</h2>
-          <BadgeEtat etat="prevision" />
+          <h2 className="text-lg font-semibold">Clôture au 31/08/2026 — cumul de gestion</h2>
+          <BadgeEtat etat="provisoire" />
         </div>
         <p className="mt-1 text-sm text-muted-foreground">{exerciceEnCoursProvisoire.note}</p>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-            <ChampNombre label="CA cumulé (€)" value={caCumule} onChange={setCaCumule} step={1000} />
-            <ChampNombre label="Services du midi restants" value={servicesRestants} onChange={setServicesRestants} step={1} />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             <ChampNombre
-              label="CA moyen par service (€)"
-              value={caMoyenParService}
-              onChange={setCaMoyenParService}
-              step={50}
+              label="CA cumulé au 31/07/2026 (€)"
+              value={caCumuleJuillet}
+              onChange={setCaCumuleJuillet}
+              step={1000}
             />
+            <ChampNombre label="CA d'août 2026 clôturé (€)" value={caAout} onChange={setCaAout} step={100} />
             <Button
               variant="outline"
               size="sm"
               className="w-fit"
               onClick={() => {
-                setCaCumule(defauts.caCumule);
-                setServicesRestants(defauts.servicesRestants);
-                setCaMoyenParService(defauts.caMoyenParService);
+                setCaCumuleJuillet(defauts.caCumuleJuillet);
+                setCaAout(defauts.caAout);
               }}
             >
-              <Calculator className="mr-2 h-4 w-4" /> Réinitialiser les hypothèses
+              <Calculator className="mr-2 h-4 w-4" /> Réinitialiser les valeurs de gestion
             </Button>
+            <div className="rounded-2xl border border-border/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Historique des projections — obsolètes
+              </p>
+              <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                {projectionsObsoletes.map((p) => (
+                  <li key={p.valeur} className="flex items-center justify-between gap-2">
+                    <span className="line-through">{euro(p.valeur)}</span>
+                    <BadgeEtat etat="non-disponible" texte="OBSOLÈTE" />
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Remplacées par le cumul réel de gestion : août 2026 est clôturé.
+              </p>
+            </div>
           </div>
 
           <div className="gradient-hero rounded-2xl p-6 text-primary-foreground">
-            <p className="text-sm opacity-80">CA projeté au 31/08/2026 (prévision provisoire)</p>
-            <p className="mt-2 font-display text-4xl sm:text-5xl">{euro(projection.caProjeteCloture)}</p>
+            <p className="text-sm opacity-80">CA cumulé provisoire au 31/08/2026</p>
+            <p className="mt-2 font-display text-4xl sm:text-5xl">{euro(cloture.caCloture)}</p>
             <ul className="mt-4 space-y-1 text-sm opacity-90">
-              <li>Période restante estimée : {euro(projection.caPeriodeRestante)}</li>
               <li>
-                Écart vs exercice {dernierExerciceOfficiel.exercice} officiel : {euro(projection.ecartExerciceOfficiel)} (
-                {projection.ecartPourcent.toFixed(1).replace(".", ",")} %)
+                Détail : {euro(caCumuleJuillet)} au 31/07 + {euro(caAout)} en août (clôturé)
               </li>
+              <li>
+                Écart vs exercice {dernierExerciceOfficiel.exercice} officiel : {euro(cloture.ecartExerciceOfficiel)} (
+                {cloture.ecartPourcent.toFixed(1).replace(".", ",")} %)
+              </li>
+              <li>Résultat net : non disponible avant le bilan 2026</li>
             </ul>
             <p className="mt-4 text-xs opacity-80">
-              Estimation de gestion, jamais un chiffre comptable définitif. À recalculer dès réception du bilan 2026.
+              Donnée de comptabilité de gestion PROVISOIRE — à confirmer par le bilan 2026. Ce n'est pas un chiffre
+              comptable définitif, et ce n'est plus une prévision.
             </p>
           </div>
         </div>
