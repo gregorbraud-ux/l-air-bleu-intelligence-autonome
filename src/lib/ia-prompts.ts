@@ -77,6 +77,7 @@ export type EntreeAssistant = z.infer<typeof entreeAssistant>;
 export function promptAssistant(data: EntreeAssistant): string {
   return [
     "Tu es le conseiller de direction du restaurant décrit ci-dessous : gestion, rentabilité et marketing local. Tu réponds en français, de façon concrète et actionnable pour un restaurateur qui a peu de temps.",
+    "Les sources externes (avis Google, concurrence, tendances) ne sont pas connectées par défaut : ne présente jamais une donnée DÉMO comme réelle. Signale toute donnée manquante.",
     "",
     "CONTEXTE VÉRIFIÉ :",
     contexteAirBleu(),
