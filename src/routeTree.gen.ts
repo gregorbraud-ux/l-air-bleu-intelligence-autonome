@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AvisRouteImport } from './routes/avis'
 import { Route as CalendrierRouteImport } from './routes/calendrier'
 import { Route as ConcurrenceRouteImport } from './routes/concurrence'
+import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as ValorisationRouteImport } from './routes/valorisation'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -61,6 +62,11 @@ const ConcurrenceRoute = ConcurrenceRouteImport.update({
   path: '/concurrence',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IntegrationsRoute = IntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketingRoute = MarketingRouteImport.update({
   id: '/marketing',
   path: '/marketing',
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
   '/concurrence': typeof ConcurrenceRoute
+  '/integrations': typeof IntegrationsRoute
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
   '/concurrence': typeof ConcurrenceRoute
+  '/integrations': typeof IntegrationsRoute
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/avis': typeof AvisRoute
   '/calendrier': typeof CalendrierRoute
   '/concurrence': typeof ConcurrenceRoute
+  '/integrations': typeof IntegrationsRoute
   '/marketing': typeof MarketingRoute
   '/valorisation': typeof ValorisationRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/calendrier'
     | '/concurrence'
+    | '/integrations'
     | '/marketing'
     | '/valorisation'
     | '/admin'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/calendrier'
     | '/concurrence'
+    | '/integrations'
     | '/marketing'
     | '/valorisation'
     | '/admin'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/avis'
     | '/calendrier'
     | '/concurrence'
+    | '/integrations'
     | '/marketing'
     | '/valorisation'
     | '/_authenticated/admin'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   AvisRoute: typeof AvisRoute
   CalendrierRoute: typeof CalendrierRoute
   ConcurrenceRoute: typeof ConcurrenceRoute
+  IntegrationsRoute: typeof IntegrationsRoute
   MarketingRoute: typeof MarketingRoute
   ValorisationRoute: typeof ValorisationRoute
 }
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConcurrenceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/integrations': {
+      id: '/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof IntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/marketing': {
       id: '/marketing'
       path: '/marketing'
@@ -290,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   AvisRoute: AvisRoute,
   CalendrierRoute: CalendrierRoute,
   ConcurrenceRoute: ConcurrenceRoute,
+  IntegrationsRoute: IntegrationsRoute,
   MarketingRoute: MarketingRoute,
   ValorisationRoute: ValorisationRoute,
 }

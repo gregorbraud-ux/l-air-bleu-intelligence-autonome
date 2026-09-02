@@ -32,7 +32,12 @@ const nav = [
   { to: "/concurrence", label: "Concurrence", icon: Swords, module: "concurrence" },
   { to: "/alertes", label: "Alertes & seuils", icon: BellRing, module: "alertes" },
   { to: "/integrations", label: "Intégrations", icon: Plug, module: null },
-] as const;
+] as const satisfies ReadonlyArray<{
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  module: ModuleCle | null;
+}>;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
