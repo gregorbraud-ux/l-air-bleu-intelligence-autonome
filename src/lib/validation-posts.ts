@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { IdeePost } from "@/lib/contenu.schema";
+import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
 export type StatutValidation = "à valider" | "approuvé" | "rejeté" | "publié";
 
