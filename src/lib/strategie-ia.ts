@@ -79,10 +79,21 @@ export function useStrategieIA() {
   useEffect(() => {
     setStrategie(lireStrategie());
     setPret(true);
+    void chargerReglageCloud<unknown>(CLE_STRATEGIE).then((distant) => {
+      if (!distant) return;
+      const fusionnee = fusionner(distant);
+      setStrategie(fusionnee);
+      try {
+        window.localStorage.setItem(CLE_STRATEGIE, JSON.stringify(fusionnee));
+      } catch {
+        /* cache local indisponible */
+      }
+    });
   }, []);
 
   const persister = useCallback((suivant: StrategieIA) => {
     setStrategie(suivant);
+    enregistrerReglageCloud(CLE_STRATEGIE, suivant);
     try {
       window.localStorage.setItem(CLE_STRATEGIE, JSON.stringify(suivant));
     } catch {
@@ -94,6 +105,7 @@ export function useStrategieIA() {
     (patch: Partial<StrategieIA>) =>
       setStrategie((p) => {
         const suivant = { ...p, ...patch };
+        enregistrerReglageCloud(CLE_STRATEGIE, suivant);
         try {
           window.localStorage.setItem(CLE_STRATEGIE, JSON.stringify(suivant));
         } catch {
