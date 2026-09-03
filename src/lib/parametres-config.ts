@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
 export type ModuleCle = "marketing" | "calendrier" | "avis" | "valorisation" | "concurrence" | "alertes";
 
