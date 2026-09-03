@@ -114,6 +114,17 @@ export function useParametresAdmin() {
   useEffect(() => {
     setParametres(lireParametres());
     setPret(true);
+    void chargerReglageCloud<unknown>(CLE_PARAMETRES).then((distant) => {
+      if (!distant) return;
+      const fusionnes = fusionner(distant);
+      setParametres(fusionnes);
+      try {
+        window.localStorage.setItem(CLE_PARAMETRES, JSON.stringify(fusionnes));
+        window.dispatchEvent(new Event("airbleu:parametres"));
+      } catch {
+        /* cache local indisponible */
+      }
+    });
     const surStockage = (e: StorageEvent) => {
       if (e.key === CLE_PARAMETRES) setParametres(lireParametres());
     };
@@ -127,6 +138,7 @@ export function useParametresAdmin() {
 
   const enregistrer = useCallback((suivant: ParametresAdmin) => {
     setParametres(suivant);
+    enregistrerReglageCloud(CLE_PARAMETRES, suivant);
     try {
       window.localStorage.setItem(CLE_PARAMETRES, JSON.stringify(suivant));
       window.dispatchEvent(new Event("airbleu:parametres"));
