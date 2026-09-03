@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { concurrents, reglesAlertesDefaut, type RegleAlerte } from "@/lib/data";
+import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
 export type CategorieAlerte = RegleAlerte["id"];
 
