@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { canaux } from "@/lib/contenu.schema";
+import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
 export type Canal = (typeof canaux)[number];
 
