@@ -74,10 +74,21 @@ export function useAlertesConfig() {
       setConfig(configParDefaut());
     }
     setPret(true);
+    void chargerReglageCloud<unknown>(CLE_STOCKAGE).then((distant) => {
+      if (!distant) return;
+      const fusionnee = fusionner(distant);
+      setConfig(fusionnee);
+      try {
+        window.localStorage.setItem(CLE_STOCKAGE, JSON.stringify(fusionnee));
+      } catch {
+        /* cache local indisponible */
+      }
+    });
   }, []);
 
   const enregistrer = useCallback((suivant: ConfigAlertes) => {
     setConfig(suivant);
+    enregistrerReglageCloud(CLE_STOCKAGE, suivant);
     try {
       window.localStorage.setItem(CLE_STOCKAGE, JSON.stringify(suivant));
     } catch {
