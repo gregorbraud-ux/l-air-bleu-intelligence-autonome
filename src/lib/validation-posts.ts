@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { IdeePost } from "@/lib/contenu.schema";
+import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
 export type StatutValidation = "à valider" | "approuvé" | "rejeté" | "publié";
 
@@ -92,10 +93,14 @@ export function useValidationPosts() {
   useEffect(() => {
     setPosts(lire());
     setCharge(true);
+    void chargerReglageCloud<PostValidation[]>(CLE_VALIDATION).then((distant) => {
+      if (Array.isArray(distant) && distant.length > 0) setPosts(distant);
+    });
   }, []);
 
   useEffect(() => {
     if (!charge) return;
+    enregistrerReglageCloud(CLE_VALIDATION, posts);
     try {
       window.localStorage.setItem(CLE_VALIDATION, JSON.stringify(posts));
     } catch {

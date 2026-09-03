@@ -1,5 +1,5 @@
 import { buildPushPayload, type PushSubscription } from "@block65/webcrypto-web-push";
-import { sendLovableEmail } from "@lovable.dev/email-js";
+import { envoyerEmail, resoudreFournisseurEmail } from "@/lib/email-fournisseur.server";
 import {
   corpsNotification,
   htmlEmail,
