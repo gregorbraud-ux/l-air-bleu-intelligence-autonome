@@ -22,7 +22,10 @@ type ClientMinimal = {
           col: string,
           v: string,
         ) => {
-          maybeSingle: () => Promise<{ data: { valeur: unknown } | null; error: { message: string } | null }>;
+          maybeSingle: () => Promise<{
+            data: { valeur: unknown } | null;
+            error: { message: string } | null;
+          }>;
         };
       };
     };

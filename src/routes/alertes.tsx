@@ -46,7 +46,8 @@ const libelleCategorie: Record<CategorieAlerte, string> = {
 };
 
 function PageAlertes() {
-  const { config, pret, enregistrer, majEtablissement, majCategorie, reinitialiser } = useAlertesConfig();
+  const { config, pret, enregistrer, majEtablissement, majCategorie, reinitialiser } =
+    useAlertesConfig();
   const etablissements = Object.values(config);
   const surveilles = etablissements.filter((e) => e.surveille);
 
@@ -57,7 +58,13 @@ function PageAlertes() {
         sousTitre="Seuils, catégories et canaux de notification, établissement par établissement"
         action={
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => { reinitialiser(); toast.success("Réglages réinitialisés."); }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                reinitialiser();
+                toast.success("Réglages réinitialisés.");
+              }}
+            >
               <RotateCcw className="mr-2 h-4 w-4" /> Réinitialiser
             </Button>
             <Button
@@ -84,7 +91,9 @@ function PageAlertes() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-          <Badge variant="secondary">{surveilles.length} / {etablissements.length} surveillés</Badge>
+          <Badge variant="secondary">
+            {surveilles.length} / {etablissements.length} surveillés
+          </Badge>
           <Button asChild variant="outline" size="sm">
             <Link to="/concurrence">
               <Swords className="mr-2 h-4 w-4" /> Voir le flux d'alertes
@@ -122,7 +131,10 @@ function PageAlertes() {
                       const meta = metaCategorie(id);
                       const cat = etab.categories[id];
                       return (
-                        <div key={id} className="space-y-3 rounded-2xl border border-border/70 bg-secondary/25 p-4">
+                        <div
+                          key={id}
+                          className="space-y-3 rounded-2xl border border-border/70 bg-secondary/25 p-4"
+                        >
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <p className="text-sm font-medium">

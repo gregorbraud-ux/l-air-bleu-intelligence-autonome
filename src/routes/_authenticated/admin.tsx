@@ -19,7 +19,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
         content: "Espace administrateur d'AirBleu AI : comptes, rôles et gestion des données.",
       },
       { property: "og:title", content: "Administration — AirBleu AI" },
-      { property: "og:description", content: "Gestion des comptes et rôles du restaurant L'Air Bleu." },
+      {
+        property: "og:description",
+        content: "Gestion des comptes et rôles du restaurant L'Air Bleu.",
+      },
     ],
   }),
   component: AdminPage,
@@ -44,8 +47,11 @@ function AdminPage() {
   });
 
   const majRole = useMutation({
-    mutationFn: (input: { userId: string; role: (typeof roles)[number]; action: "ajouter" | "retirer" }) =>
-      roleFn({ data: input }),
+    mutationFn: (input: {
+      userId: string;
+      role: (typeof roles)[number];
+      action: "ajouter" | "retirer";
+    }) => roleFn({ data: input }),
     onSuccess: () => {
       toast.success("Rôle mis à jour.");
       queryClient.invalidateQueries({ queryKey: ["membres"] });
@@ -115,8 +121,8 @@ function AdminPage() {
           <CardContent>
             {!estAdmin ? (
               <p className="text-sm text-muted-foreground">
-                Votre compte n'a pas les droits d'administration. Demandez à un administrateur de vous
-                attribuer un rôle.
+                Votre compte n'a pas les droits d'administration. Demandez à un administrateur de
+                vous attribuer un rôle.
               </p>
             ) : membres.isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

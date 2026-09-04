@@ -26,7 +26,10 @@ export const Route = createFileRoute("/calendrier")({
           "Planifiez les publications Facebook, Instagram, Google Business et newsletters du restaurant L'Air Bleu à Montoir-de-Bretagne.",
       },
       { property: "og:title", content: "Calendrier éditorial — AirBleu AI" },
-      { property: "og:description", content: "Un mois de publications planifiées et validées en un coup d'œil." },
+      {
+        property: "og:description",
+        content: "Un mois de publications planifiées et validées en un coup d'œil.",
+      },
     ],
   }),
   component: CalendrierPage,
@@ -81,7 +84,10 @@ function CalendrierPage() {
         ...alertesConcurrence.slice(0, 5).map((a) => `${a.concurrent} — ${a.titre} : ${a.detail}`),
         ...concurrents
           .filter((c) => c.nom !== "L'Air Bleu")
-          .map((c) => `${c.nom} : note ${c.note}/5, ticket ${c.ticket} €, visibilité ${c.visibilite}/100, tendance ${c.tendance} %`),
+          .map(
+            (c) =>
+              `${c.nom} : note ${c.note}/5, ticket ${c.ticket} €, visibilité ${c.visibilite}/100, tendance ${c.tendance} %`,
+          ),
       ],
     }),
     [],
@@ -115,7 +121,9 @@ function CalendrierPage() {
           `${controle.bloquants} publication(s) ne respectent pas vos contraintes (mots interdits, longueur, période) : à corriger avant approbation.`,
         );
       } else if (controle.avertissements > 0) {
-        toast.info(`${controle.avertissements} point(s) de vigilance détecté(s) par le contrôle automatique.`);
+        toast.info(
+          `${controle.avertissements} point(s) de vigilance détecté(s) par le contrôle automatique.`,
+        );
       }
     },
     onError: (e: Error) => toast.error(e.message),
@@ -161,7 +169,10 @@ function CalendrierPage() {
             : "Juillet 2026 — 9 publications programmées sur 4 canaux"
         }
         action={
-          <Button className="shrink-0" onClick={() => toast.success("Nouvelle publication ajoutée au brouillon")}>
+          <Button
+            className="shrink-0"
+            onClick={() => toast.success("Nouvelle publication ajoutée au brouillon")}
+          >
             <Plus className="mr-2 h-4 w-4" /> Publication
           </Button>
         }
@@ -174,8 +185,9 @@ function CalendrierPage() {
               <Sparkles className="h-4 w-4 text-primary" /> Générateur de calendrier IA
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Un mois de publications Facebook, Instagram, Google Business et newsletter, construit à partir de vos avis
-              Google récents et de la veille concurrentielle locale. Chaque idée passe d'abord par la file de validation.
+              Un mois de publications Facebook, Instagram, Google Business et newsletter, construit
+              à partir de vos avis Google récents et de la veille concurrentielle locale. Chaque
+              idée passe d'abord par la file de validation.
             </p>
           </div>
           <Button
@@ -254,7 +266,9 @@ function CalendrierPage() {
                           setCopie(false);
                           return;
                         }
-                        toast.info(p.titre, { description: `${p.canal} · ${p.heure} · ${p.statut}` });
+                        toast.info(p.titre, {
+                          description: `${p.canal} · ${p.heure} · ${p.statut}`,
+                        });
                       }}
                       className={`block w-full truncate rounded-md px-1.5 py-1 text-left text-[11px] font-medium ${canalStyle[p.canal]}`}
                     >
@@ -295,7 +309,11 @@ function CalendrierPage() {
                 Post prêt à publier
               </p>
               <Button variant="secondary" size="sm" onClick={copier}>
-                {copie ? <Check className="mr-2 h-3.5 w-3.5" /> : <Copy className="mr-2 h-3.5 w-3.5" />}
+                {copie ? (
+                  <Check className="mr-2 h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="mr-2 h-3.5 w-3.5" />
+                )}
                 {copie ? "Copié" : "Copier"}
               </Button>
             </div>
@@ -323,15 +341,20 @@ function CalendrierPage() {
           <h2 className="text-lg font-semibold">Prochaines publications</h2>
           <ul className="mt-4 space-y-3">
             {publications.slice(0, 5).map((p) => (
-              <li key={p.titre} className="flex items-center justify-between gap-3 border-b border-border/60 pb-3 last:border-0">
+              <li
+                key={p.titre}
+                className="flex items-center justify-between gap-3 border-b border-border/60 pb-3 last:border-0"
+              >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{p.titre}</p>
                   <p className="text-xs text-muted-foreground">
-                    {p.canal} · 
-                    {` ${p.jour} ${plan ? "août" : "juillet"} à ${p.heure}`}
+                    {p.canal} ·{` ${p.jour} ${plan ? "août" : "juillet"} à ${p.heure}`}
                   </p>
                 </div>
-                <Badge variant={p.statutValidation === "publié" ? "default" : "secondary"} className="shrink-0">
+                <Badge
+                  variant={p.statutValidation === "publié" ? "default" : "secondary"}
+                  className="shrink-0"
+                >
                   {p.statutValidation ?? p.statut}
                 </Badge>
               </li>
@@ -341,12 +364,15 @@ function CalendrierPage() {
         <div className="surface-card p-5">
           <h2 className="text-lg font-semibold">Recommandations IA</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {(plan?.tendances.length ? plan.tendances : [
-              "Publier le menu de la semaine chaque lundi avant 9 h : capte les recherches déjeuner du secteur.",
-              "Un post Google Business tous les 3 jours pour tenir la première page sur « restaurant Montoir-de-Bretagne ».",
-              "Story quotidienne du plat du jour vers 11 h, juste avant la décision de déjeuner.",
-              "Newsletter mensuelle aux entreprises voisines pour la clientèle professionnelle du midi.",
-            ]).map((t) => (
+            {(plan?.tendances.length
+              ? plan.tendances
+              : [
+                  "Publier le menu de la semaine chaque lundi avant 9 h : capte les recherches déjeuner du secteur.",
+                  "Un post Google Business tous les 3 jours pour tenir la première page sur « restaurant Montoir-de-Bretagne ».",
+                  "Story quotidienne du plat du jour vers 11 h, juste avant la décision de déjeuner.",
+                  "Newsletter mensuelle aux entreprises voisines pour la clientèle professionnelle du midi.",
+                ]
+            ).map((t) => (
               <li key={t}>{t}</li>
             ))}
           </ul>

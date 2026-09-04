@@ -20,7 +20,9 @@ export function RapportConformite({ rapport }: { rapport: Rapport }) {
           Contrôle automatique des contraintes
         </h3>
         <div className="flex flex-wrap gap-1.5 text-xs">
-          <Badge variant="secondary">{rapport.conformes}/{total} conformes</Badge>
+          <Badge variant="secondary">
+            {rapport.conformes}/{total} conformes
+          </Badge>
           {rapport.bloquants > 0 && (
             <Badge className="border-0 bg-destructive/15 text-destructive">
               {rapport.bloquants} à corriger
@@ -53,7 +55,9 @@ export function RapportConformite({ rapport }: { rapport: Rapport }) {
             <li key={`${post.jour}-${post.titre}`} className="flex gap-2 text-muted-foreground">
               <AlertTriangle
                 className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${
-                  anomalies.some((a) => a.gravite === "bloquant") ? "text-destructive" : "text-chart-4"
+                  anomalies.some((a) => a.gravite === "bloquant")
+                    ? "text-destructive"
+                    : "text-chart-4"
                 }`}
               />
               <span>

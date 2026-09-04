@@ -196,5 +196,14 @@ export function useValidationPosts() {
 
   const viderTout = useCallback(() => setPosts([]), []);
 
-  return { posts, charge, ajouterIdees, modifier, changerStatut, journaliser, supprimer, viderTout };
+  return {
+    posts,
+    charge,
+    ajouterIdees,
+    modifier,
+    changerStatut,
+    journaliser,
+    supprimer,
+    viderTout,
+  };
 }

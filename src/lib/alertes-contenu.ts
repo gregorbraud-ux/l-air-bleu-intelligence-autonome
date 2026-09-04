@@ -22,8 +22,10 @@ export const RESTAURANT = {
 const conseils: Record<AlerteConcurrence["type"], string> = {
   note: "Sollicitez 3 avis Google en fin de service midi pour garder l'avantage sur la note.",
   prix: "Mettez en avant notre rapport qualité/prix déjeuner sur Facebook et Instagram cette semaine.",
-  visibilite: "Publiez un post Google Business et une story Instagram pour reprendre de la visibilité locale.",
-  nouveaute: "Analysez l'offre repérée et adaptez notre formule express pour la clientèle pro du midi.",
+  visibilite:
+    "Publiez un post Google Business et une story Instagram pour reprendre de la visibilité locale.",
+  nouveaute:
+    "Analysez l'offre repérée et adaptez notre formule express pour la clientèle pro du midi.",
 };
 
 const libelleType: Record<AlerteConcurrence["type"], string> = {

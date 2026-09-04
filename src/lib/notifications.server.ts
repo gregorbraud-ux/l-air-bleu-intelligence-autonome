@@ -93,11 +93,19 @@ export async function envoyerEmailAlertes(
         erreur: message,
       })),
     );
-    return { canal: "email", envoyes: 0, echecs: alertes.length, message: `E-mail non envoyé : ${message}` };
+    return {
+      canal: "email",
+      envoyes: 0,
+      echecs: alertes.length,
+      message: `E-mail non envoyé : ${message}`,
+    };
   }
 }
 
-export async function envoyerPushAlertes(userId: string, alertes: AlerteEnvoi[]): Promise<ResultatCanal> {
+export async function envoyerPushAlertes(
+  userId: string,
+  alertes: AlerteEnvoi[],
+): Promise<ResultatCanal> {
   const publicKey = process.env["VAPID_PUBLIC_KEY"];
   const privateKey = process.env["VAPID_PRIVATE_KEY"];
   const subject = process.env["VAPID_SUBJECT"] ?? "mailto:contact@lairbleu.fr";
@@ -114,7 +122,12 @@ export async function envoyerPushAlertes(userId: string, alertes: AlerteEnvoi[])
 
   if (error) throw error;
   if (!abonnements || abonnements.length === 0) {
-    return { canal: "push", envoyes: 0, echecs: 0, message: "Aucun appareil abonné aux notifications push." };
+    return {
+      canal: "push",
+      envoyes: 0,
+      echecs: 0,
+      message: "Aucun appareil abonné aux notifications push.",
+    };
   }
 
   let envoyes = 0;

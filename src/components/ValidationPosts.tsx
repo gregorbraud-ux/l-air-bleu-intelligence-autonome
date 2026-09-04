@@ -76,7 +76,9 @@ export function ValidationPosts({
   const [edition, setEdition] = useState<string | null>(null);
   const [avantEdition, setAvantEdition] = useState<ContenuPost | null>(null);
   const [apercus, setApercus] = useState<string[]>([]);
-  const [decision, setDecision] = useState<{ id: string; statut: "approuvé" | "rejeté" } | null>(null);
+  const [decision, setDecision] = useState<{ id: string; statut: "approuvé" | "rejeté" } | null>(
+    null,
+  );
   const [commentaire, setCommentaire] = useState("");
 
   const ouvrirDecision = (id: string, statut: "approuvé" | "rejeté") => {
@@ -148,7 +150,8 @@ export function ValidationPosts({
         <div className="min-w-0">
           <h2 className="text-lg font-semibold">Validation des posts</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Éditez chaque idée, approuvez-la pour l'ajouter au calendrier, puis marquez-la comme publiée.
+            Éditez chaque idée, approuvez-la pour l'ajouter au calendrier, puis marquez-la comme
+            publiée.
           </p>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -206,7 +209,9 @@ export function ValidationPosts({
                     {anomalies.map((a) => (
                       <li
                         key={`${a.champ}-${a.message}`}
-                        className={a.gravite === "bloquant" ? "text-destructive" : "text-muted-foreground"}
+                        className={
+                          a.gravite === "bloquant" ? "text-destructive" : "text-muted-foreground"
+                        }
                       >
                         <span className="font-medium capitalize">{a.champ}</span> · {a.message}
                       </li>
@@ -239,7 +244,10 @@ export function ValidationPosts({
                       <Button
                         size="sm"
                         onClick={() => {
-                          const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes);
+                          const { post: corrige, appliquees } = appliquerToutesCorrections(
+                            post,
+                            contraintes,
+                          );
                           if (!appliquees.length) return;
                           const libelles = suggestions
                             .filter((s) => appliquees.includes(s.id))
@@ -259,7 +267,10 @@ export function ValidationPosts({
                     {apercus.includes(`${post.id}-global`) && (
                       <div className="mt-2.5">
                         <DiffCorrection
-                          diffs={diffPatch(post, appliquerToutesCorrections(post, contraintes).post)}
+                          diffs={diffPatch(
+                            post,
+                            appliquerToutesCorrections(post, contraintes).post,
+                          )}
                         />
                       </div>
                     )}
@@ -269,54 +280,58 @@ export function ValidationPosts({
                         const ouvert = apercus.includes(cle);
                         const diffs = ouvert ? diffPatch(post, s.patch) : [];
                         return (
-                        <li key={s.id} className="space-y-2">
-                        <div className="flex flex-wrap items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p className="text-xs font-medium">
-                              {s.titre}
-                              <span
-                                className={`ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase ${
-                                  s.gravite === "bloquant"
-                                    ? "bg-destructive/15 text-destructive"
-                                    : "bg-chart-4/15 text-chart-4"
-                                }`}
-                              >
-                                {s.champ}
-                              </span>
-                            </p>
-                            <p className="mt-0.5 text-xs text-muted-foreground">{s.detail}</p>
-                          </div>
-                          <div className="flex shrink-0 flex-wrap gap-1.5">
-                          <Button size="sm" variant="ghost" onClick={() => basculerApercu(cle)}>
-                            {ouvert ? (
-                              <>
-                                <EyeOff className="mr-1.5 h-3.5 w-3.5" /> Masquer le diff
-                              </>
-                            ) : (
-                              <>
-                                <Eye className="mr-1.5 h-3.5 w-3.5" /> Avant / après
-                              </>
-                            )}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() => {
-                              onModifier(post.id, s.patch, {
-                                origine: "correction",
-                                corrections: [s.titre],
-                                resume: `Correction « ${s.champ} »`,
-                              });
-                              setApercus((prev) => prev.filter((c) => c !== cle));
-                              toast.success("Correction appliquée.");
-                            }}
-                          >
-                            Appliquer
-                          </Button>
-                          </div>
-                        </div>
-                        {ouvert && <DiffCorrection diffs={diffs} />}
-                        </li>
+                          <li key={s.id} className="space-y-2">
+                            <div className="flex flex-wrap items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="text-xs font-medium">
+                                  {s.titre}
+                                  <span
+                                    className={`ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase ${
+                                      s.gravite === "bloquant"
+                                        ? "bg-destructive/15 text-destructive"
+                                        : "bg-chart-4/15 text-chart-4"
+                                    }`}
+                                  >
+                                    {s.champ}
+                                  </span>
+                                </p>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{s.detail}</p>
+                              </div>
+                              <div className="flex shrink-0 flex-wrap gap-1.5">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => basculerApercu(cle)}
+                                >
+                                  {ouvert ? (
+                                    <>
+                                      <EyeOff className="mr-1.5 h-3.5 w-3.5" /> Masquer le diff
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="mr-1.5 h-3.5 w-3.5" /> Avant / après
+                                    </>
+                                  )}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => {
+                                    onModifier(post.id, s.patch, {
+                                      origine: "correction",
+                                      corrections: [s.titre],
+                                      resume: `Correction « ${s.champ} »`,
+                                    });
+                                    setApercus((prev) => prev.filter((c) => c !== cle));
+                                    toast.success("Correction appliquée.");
+                                  }}
+                                >
+                                  Appliquer
+                                </Button>
+                              </div>
+                            </div>
+                            {ouvert && <DiffCorrection diffs={diffs} />}
+                          </li>
                         );
                       })}
                     </ul>
@@ -350,7 +365,9 @@ export function ValidationPosts({
                       />
                       <Select
                         value={post.canal}
-                        onValueChange={(v) => onModifier(post.id, { canal: v as PostValidation["canal"] })}
+                        onValueChange={(v) =>
+                          onModifier(post.id, { canal: v as PostValidation["canal"] })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -396,7 +413,9 @@ export function ValidationPosts({
                 ) : (
                   <>
                     {post.accroche && <p className="mt-3 text-sm font-medium">{post.accroche}</p>}
-                    <p className="mt-2 whitespace-pre-line text-sm leading-relaxed">{post.legende}</p>
+                    <p className="mt-2 whitespace-pre-line text-sm leading-relaxed">
+                      {post.legende}
+                    </p>
                     {post.hashtags.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {post.hashtags.map((h) => (
@@ -444,9 +463,10 @@ export function ValidationPosts({
                                   action: {
                                     label: "Corriger",
                                     onClick: () => {
-                                      const { post: corrige, appliquees } = appliquerToutesCorrections(post, contraintes, {
-                                        seulementBloquants: true,
-                                      });
+                                      const { post: corrige, appliquees } =
+                                        appliquerToutesCorrections(post, contraintes, {
+                                          seulementBloquants: true,
+                                        });
                                       const libelles = suggestions
                                         .filter((s) => appliquees.includes(s.id))
                                         .map((s) => s.titre);

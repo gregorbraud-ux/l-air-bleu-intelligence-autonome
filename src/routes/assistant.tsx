@@ -21,7 +21,10 @@ export const Route = createFileRoute("/assistant")({
           "Posez vos questions de direction : actions prioritaires, ticket moyen, contenus à publier, réponse à la concurrence — à partir des seules données disponibles de L'Air Bleu.",
       },
       { property: "og:title", content: "Assistant stratégique — L'Air Bleu Intelligence" },
-      { property: "og:description", content: "Analyse et actions prioritaires pour le déjeuner de L'Air Bleu." },
+      {
+        property: "og:description",
+        content: "Analyse et actions prioritaires pour le déjeuner de L'Air Bleu.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -65,10 +68,14 @@ function AssistantPage() {
     setChargement(true);
     setReponse(null);
     try {
-      const { texte } = await demander({ data: { question, donneesDisponibles, donneesManquantes } });
+      const { texte } = await demander({
+        data: { question, donneesDisponibles, donneesManquantes },
+      });
       setReponse(texte);
     } catch (error) {
-      toast.error("Analyse impossible", { description: error instanceof Error ? error.message : "Erreur inconnue" });
+      toast.error("Analyse impossible", {
+        description: error instanceof Error ? error.message : "Erreur inconnue",
+      });
     } finally {
       setChargement(false);
     }
@@ -83,7 +90,8 @@ function AssistantPage() {
 
       {statut.isSuccess && !iaDisponible && (
         <BandeauEtat etat="non-connecte" titre="IA non connectée">
-          Aucune clé IA n'est configurée côté serveur : l'assistant ne peut pas répondre. Aucune réponse n'est simulée.
+          Aucune clé IA n'est configurée côté serveur : l'assistant ne peut pas répondre. Aucune
+          réponse n'est simulée.
         </BandeauEtat>
       )}
 
@@ -96,9 +104,18 @@ function AssistantPage() {
             </Button>
           ))}
         </div>
-        <Textarea className="mt-4" rows={3} value={question} onChange={(e) => setQuestion(e.target.value)} />
+        <Textarea
+          className="mt-4"
+          rows={3}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+        />
         <Button className="mt-4" onClick={envoyer} disabled={chargement || !iaDisponible}>
-          {chargement ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+          {chargement ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="mr-2 h-4 w-4" />
+          )}
           Analyser
         </Button>
       </section>
@@ -106,9 +123,12 @@ function AssistantPage() {
       {reponse && (
         <section className="surface-card mt-6 p-5 sm:p-6">
           <h2 className="text-lg font-semibold">Analyse et actions prioritaires</h2>
-          <pre className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-foreground">{reponse}</pre>
+          <pre className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+            {reponse}
+          </pre>
           <p className="mt-4 text-xs text-muted-foreground">
-            Analyse générée à partir des données ci-dessous. Validation humaine requise avant toute action ou publication.
+            Analyse générée à partir des données ci-dessous. Validation humaine requise avant toute
+            action ou publication.
           </p>
         </section>
       )}
@@ -117,13 +137,17 @@ function AssistantPage() {
         <div className="surface-card p-5">
           <h3 className="font-semibold">Données prises en compte</h3>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-            {donneesDisponibles.map((d) => <li key={d}>{d}</li>)}
+            {donneesDisponibles.map((d) => (
+              <li key={d}>{d}</li>
+            ))}
           </ul>
         </div>
         <div className="surface-card p-5">
           <h3 className="font-semibold">Données manquantes</h3>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-            {donneesManquantes.map((d) => <li key={d}>{d}</li>)}
+            {donneesManquantes.map((d) => (
+              <li key={d}>{d}</li>
+            ))}
           </ul>
         </div>
       </section>

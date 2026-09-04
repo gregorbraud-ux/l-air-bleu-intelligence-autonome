@@ -1,17 +1,42 @@
 import { useCallback, useEffect, useState } from "react";
 import { chargerReglageCloud, enregistrerReglageCloud } from "@/lib/reglages-sync";
 
-export type ModuleCle = "marketing" | "calendrier" | "avis" | "valorisation" | "concurrence" | "alertes";
+export type ModuleCle =
+  "marketing" | "calendrier" | "avis" | "valorisation" | "concurrence" | "alertes";
 
 export type ModuleMeta = { cle: ModuleCle; label: string; description: string };
 
 export const modulesApp: ModuleMeta[] = [
-  { cle: "marketing", label: "Marketing IA", description: "Studio de génération de publications Facebook et Instagram." },
-  { cle: "calendrier", label: "Calendrier éditorial", description: "Planification IA des posts du mois." },
-  { cle: "avis", label: "Avis Google", description: "Analyse de réputation et réponses assistées." },
-  { cle: "valorisation", label: "Valorisation", description: "Estimation du fonds de commerce à partir des indicateurs." },
-  { cle: "concurrence", label: "Concurrence", description: "Veille des établissements du secteur et flux d'alertes." },
-  { cle: "alertes", label: "Alertes & seuils", description: "Configuration des seuils et des canaux de notification." },
+  {
+    cle: "marketing",
+    label: "Marketing IA",
+    description: "Studio de génération de publications Facebook et Instagram.",
+  },
+  {
+    cle: "calendrier",
+    label: "Calendrier éditorial",
+    description: "Planification IA des posts du mois.",
+  },
+  {
+    cle: "avis",
+    label: "Avis Google",
+    description: "Analyse de réputation et réponses assistées.",
+  },
+  {
+    cle: "valorisation",
+    label: "Valorisation",
+    description: "Estimation du fonds de commerce à partir des indicateurs.",
+  },
+  {
+    cle: "concurrence",
+    label: "Concurrence",
+    description: "Veille des établissements du secteur et flux d'alertes.",
+  },
+  {
+    cle: "alertes",
+    label: "Alertes & seuils",
+    description: "Configuration des seuils et des canaux de notification.",
+  },
 ];
 
 export type SourceGooglePlaces = {

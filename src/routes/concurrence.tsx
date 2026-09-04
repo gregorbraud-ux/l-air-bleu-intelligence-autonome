@@ -18,7 +18,10 @@ export const Route = createFileRoute("/concurrence")({
           "Comparez L'Air Bleu aux restaurants du secteur Montoir-de-Bretagne, Trignac, Donges et Saint-Nazaire : notes, avis, ticket moyen et visibilité locale.",
       },
       { property: "og:title", content: "Concurrence — AirBleu AI" },
-      { property: "og:description", content: "Veille concurrentielle locale du restaurant L'Air Bleu." },
+      {
+        property: "og:description",
+        content: "Veille concurrentielle locale du restaurant L'Air Bleu.",
+      },
     ],
   }),
   component: ConcurrencePage,
@@ -42,9 +45,10 @@ function ConcurrencePage() {
       />
 
       <BandeauEtat etat="demo" titre="Aucune veille réellement collectée">
-        Les notes, volumes d'avis, tickets moyens et tendances ci-dessous sont des DONNÉES DE DÉMONSTRATION : aucune source
-        ni API concurrentielle n'est connectée. Une donnée réelle ne sera affichée qu'avec sa source, son URL et son
-        horodatage ; sinon l'application indique « Non disponible ».
+        Les notes, volumes d'avis, tickets moyens et tendances ci-dessous sont des DONNÉES DE
+        DÉMONSTRATION : aucune source ni API concurrentielle n'est connectée. Une donnée réelle ne
+        sera affichée qu'avec sa source, son URL et son horodatage ; sinon l'application indique «
+        Non disponible ».
       </BandeauEtat>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
@@ -68,7 +72,10 @@ function ConcurrencePage() {
               {concurrents.map((c) => {
                 const moiMeme = c.nom === moi.nom;
                 return (
-                  <tr key={c.nom} className={`border-t border-border/60 ${moiMeme ? "bg-secondary/50" : ""}`}>
+                  <tr
+                    key={c.nom}
+                    className={`border-t border-border/60 ${moiMeme ? "bg-secondary/50" : ""}`}
+                  >
                     <td className="py-3 font-medium">
                       <span className="flex items-center gap-2">
                         {c.nom}
@@ -85,7 +92,11 @@ function ConcurrencePage() {
                           c.tendance >= 0 ? "text-success" : "text-destructive"
                         }`}
                       >
-                        {c.tendance >= 0 ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
+                        {c.tendance >= 0 ? (
+                          <ArrowUpRight className="h-3.5 w-3.5" />
+                        ) : (
+                          <ArrowDownRight className="h-3.5 w-3.5" />
+                        )}
                         {Math.abs(c.tendance)} %
                       </span>
                     </td>
@@ -103,7 +114,12 @@ function ConcurrencePage() {
               <RadarChart data={radar} outerRadius="72%">
                 <PolarGrid stroke="var(--color-border)" />
                 <PolarAngleAxis dataKey="axe" fontSize={11} />
-                <Radar dataKey="valeur" stroke="var(--color-chart-1)" fill="var(--color-chart-1)" fillOpacity={0.35} />
+                <Radar
+                  dataKey="valeur"
+                  stroke="var(--color-chart-1)"
+                  fill="var(--color-chart-1)"
+                  fillOpacity={0.35}
+                />
               </RadarChart>
             </ResponsiveContainer>
           </div>

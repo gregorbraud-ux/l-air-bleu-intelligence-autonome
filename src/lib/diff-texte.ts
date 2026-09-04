@@ -31,7 +31,7 @@ function enTexte(valeur: unknown): string {
 
 /** Découpe en mots en conservant les espaces pour une reconstruction fidèle. */
 function decouper(texte: string): string[] {
-  return texte.length ? texte.match(/\s+|[^\s]+/g) ?? [] : [];
+  return texte.length ? (texte.match(/\s+|[^\s]+/g) ?? []) : [];
 }
 
 /** Diff mot à mot par plus longue sous-séquence commune. */
@@ -43,7 +43,8 @@ export function diffMots(avant: string, apres: string): Segment[] {
   const table: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
   for (let i = n - 1; i >= 0; i -= 1) {
     for (let j = m - 1; j >= 0; j -= 1) {
-      table[i][j] = a[i] === b[j] ? table[i + 1][j + 1] + 1 : Math.max(table[i + 1][j], table[i][j + 1]);
+      table[i][j] =
+        a[i] === b[j] ? table[i + 1][j + 1] + 1 : Math.max(table[i + 1][j], table[i][j + 1]);
     }
   }
 
@@ -91,7 +92,13 @@ export function diffPatch(post: IdeePost, patch: Partial<IdeePost>): ChampDiff[]
     .map(([champ, valeur]) => {
       const avant = enTexte((post as Record<string, unknown>)[champ]);
       const apres = enTexte(valeur);
-      return { champ, avant, apres, segments: diffMots(avant, apres), delta: apres.length - avant.length };
+      return {
+        champ,
+        avant,
+        apres,
+        segments: diffMots(avant, apres),
+        delta: apres.length - avant.length,
+      };
     })
     .filter((d) => d.avant !== d.apres);
 }

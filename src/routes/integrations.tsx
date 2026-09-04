@@ -12,7 +12,8 @@ export const Route = createFileRoute("/integrations")({
       { title: "Intégrations — AirBleu AI | L'Air Bleu" },
       {
         name: "description",
-        content: "État des sources de données, du fournisseur IA et des services connectés pour L'Air Bleu.",
+        content:
+          "État des sources de données, du fournisseur IA et des services connectés pour L'Air Bleu.",
       },
       { property: "og:title", content: "Intégrations — AirBleu AI" },
       { property: "og:description", content: "Sources et connexions de l'espace L'Air Bleu." },
@@ -34,7 +35,16 @@ type IntegrationCardProps = {
   action?: string;
 };
 
-function IntegrationCard({ icon: Icon, title, description, etat, label, cout, details, action }: IntegrationCardProps) {
+function IntegrationCard({
+  icon: Icon,
+  title,
+  description,
+  etat,
+  label,
+  cout,
+  details,
+  action,
+}: IntegrationCardProps) {
   return (
     <article className="surface-card flex h-full flex-col p-5">
       <div className="flex items-start justify-between gap-3">
@@ -48,7 +58,9 @@ function IntegrationCard({ icon: Icon, title, description, etat, label, cout, de
       </div>
       <h2 className="mt-4 text-lg font-semibold">{title}</h2>
       <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-      <p className="mt-4 flex-1 border-t border-border/60 pt-4 text-sm leading-6 text-muted-foreground">{details}</p>
+      <p className="mt-4 flex-1 border-t border-border/60 pt-4 text-sm leading-6 text-muted-foreground">
+        {details}
+      </p>
       {action && (
         <Button variant="outline" size="sm" className="mt-4 w-fit" disabled>
           {action} <ExternalLink className="ml-2 h-3.5 w-3.5" />
@@ -74,15 +86,20 @@ function IntegrationsPage() {
         etat="officiel"
         titre="Aucune donnée externe n'est présentée comme réelle sans source"
       >
-        Les données comptables de référence viennent du contexte officiel de L'Air Bleu. Les sources externes affichent
-        leur état de connexion et leur date de collecte lorsqu'elles seront disponibles.
+        Les données comptables de référence viennent du contexte officiel de L'Air Bleu. Les sources
+        externes affichent leur état de connexion et leur date de collecte lorsqu'elles seront
+        disponibles.
       </BandeauEtat>
 
       <section className="grid gap-4 md:grid-cols-2">
         <IntegrationCard
           icon={Sparkles}
           title="Fournisseur IA"
-          description={ia.isLoading ? "Vérification côté serveur…" : ia.data?.remarque ?? "Statut indisponible."}
+          description={
+            ia.isLoading
+              ? "Vérification côté serveur…"
+              : (ia.data?.remarque ?? "Statut indisponible.")
+          }
           etat={iaDisponible ? "officiel" : "non-connecte"}
           label={iaDisponible ? "CONNECTÉ" : "NON CONNECTÉ"}
           cout={iaCout}
@@ -129,9 +146,9 @@ function IntegrationsPage() {
           <div>
             <h2 className="font-semibold">Clés et données sensibles</h2>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              Les clés privées restent côté serveur. L'interface ne les affiche pas et les appels IA passent par des
-              fonctions serveur. En cas de clé absente ou de quota épuisé, l'application affiche un état explicite au lieu
-              de simuler une réponse.
+              Les clés privées restent côté serveur. L'interface ne les affiche pas et les appels IA
+              passent par des fonctions serveur. En cas de clé absente ou de quota épuisé,
+              l'application affiche un état explicite au lieu de simuler une réponse.
             </p>
           </div>
         </div>

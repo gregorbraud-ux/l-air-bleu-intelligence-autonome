@@ -22,8 +22,13 @@ export function DiffCorrection({ diffs }: Props) {
               {libelleChamp(d.champ)}
             </p>
             <p className="text-[11px] text-muted-foreground">
-              {d.avant.length} <ArrowRight className="mx-0.5 inline h-3 w-3" /> {d.apres.length} car.
-              <span className={d.delta === 0 ? "" : d.delta > 0 ? "ml-1 text-chart-1" : "ml-1 text-chart-4"}>
+              {d.avant.length} <ArrowRight className="mx-0.5 inline h-3 w-3" /> {d.apres.length}{" "}
+              car.
+              <span
+                className={
+                  d.delta === 0 ? "" : d.delta > 0 ? "ml-1 text-chart-1" : "ml-1 text-chart-4"
+                }
+              >
                 {d.delta > 0 ? `(+${d.delta})` : d.delta < 0 ? `(${d.delta})` : ""}
               </span>
             </p>

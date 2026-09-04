@@ -1,5 +1,14 @@
 import { useServerFn } from "@tanstack/react-start";
-import { AlertTriangle, ExternalLink, Loader2, RefreshCw, Sparkles, UtensilsCrossed, Megaphone, CalendarClock } from "lucide-react";
+import {
+  AlertTriangle,
+  ExternalLink,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+  UtensilsCrossed,
+  Megaphone,
+  CalendarClock,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -85,13 +94,19 @@ export function SyntheseVeilleZones() {
             <Sparkles className="h-4 w-4 text-accent" /> Alertes automatiques par zone
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Synthèse IA des changements de menus, promotions et rythme de publication à Trignac, Donges et
-            Saint-Nazaire
-            {rapport ? ` · actualisée le ${new Date(rapport.genereLe).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}` : ""}
+            Synthèse IA des changements de menus, promotions et rythme de publication à Trignac,
+            Donges et Saint-Nazaire
+            {rapport
+              ? ` · actualisée le ${new Date(rapport.genereLe).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}`
+              : ""}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => void lancer()} disabled={chargement}>
-          {chargement ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+          {chargement ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="mr-2 h-4 w-4" />
+          )}
           Actualiser
         </Button>
       </div>
@@ -117,7 +132,9 @@ export function SyntheseVeilleZones() {
               <article key={z.zone} className="rounded-2xl border border-border/70 p-4">
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="font-semibold">{z.zone}</h3>
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${graviteStyle[z.gravite]}`}>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${graviteStyle[z.gravite]}`}
+                  >
                     {z.gravite}
                   </span>
                 </div>

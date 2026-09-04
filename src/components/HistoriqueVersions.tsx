@@ -36,7 +36,9 @@ export function HistoriqueVersions({ post, onRestaurer }: Props) {
   if (versions.length === 0) return null;
 
   const basculerDiff = (numero: number) =>
-    setDiffs((prev) => (prev.includes(numero) ? prev.filter((n) => n !== numero) : [...prev, numero]));
+    setDiffs((prev) =>
+      prev.includes(numero) ? prev.filter((n) => n !== numero) : [...prev, numero],
+    );
 
   const ordonnees = [...versions].sort((a, b) => b.numero - a.numero);
 

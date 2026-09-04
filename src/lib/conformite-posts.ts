@@ -167,7 +167,10 @@ export function verifierPlan(
   publications: IdeePost[],
   contraintes: ContraintesConformite,
 ): RapportConformite {
-  const parPost = publications.map((post) => ({ post, anomalies: verifierPost(post, contraintes) }));
+  const parPost = publications.map((post) => ({
+    post,
+    anomalies: verifierPost(post, contraintes),
+  }));
   const globales: Anomalie[] = [];
 
   const joursVus = new Map<number, number>();
@@ -182,9 +185,7 @@ export function verifierPlan(
   }
 
   if (contraintes.themes.length) {
-    const couverts = new Set(
-      publications.flatMap((p) => themesDetectes(p, contraintes.themes)),
-    );
+    const couverts = new Set(publications.flatMap((p) => themesDetectes(p, contraintes.themes)));
     const manquants = contraintes.themes.filter((t) => !couverts.has(t));
     if (manquants.length) {
       globales.push({
