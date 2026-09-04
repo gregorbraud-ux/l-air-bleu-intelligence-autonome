@@ -27,7 +27,7 @@ export const LIMITES = {
   hashtagsMax: 8,
 } as const;
 
-const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+const EMOJI = /(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]\u{FE0F}?|\u{FE0F})/u;
 
 function normaliser(valeur: string) {
   return valeur
