@@ -36,19 +36,17 @@ export async function envoyerEmailAlertes(
   destinataire: string,
   alertes: AlerteEnvoi[],
 ): Promise<ResultatCanal> {
-  const apiKey = process.env["LOVABLE_API_KEY"];
-  const domaine = process.env["EMAIL_SENDER_DOMAIN"] ?? process.env["SENDER_DOMAIN"];
+  const resolution = resoudreFournisseurEmail();
 
-  if (!apiKey || !domaine) {
-    const message =
-      "Aucun domaine d'expédition n'est encore configuré : l'envoi d'e-mails sera actif dès la validation du domaine.";
+  if (!resolution.disponible) {
+    const message = resolution.raison;
     await journaliser(
       alertes.map((a) => ({
         user_id: userId,
         alerte_id: a.id,
         canal: "email" as const,
         destinataire,
-        statut: "domaine_manquant",
+        statut: "fournisseur_manquant",
         erreur: message,
       })),
     );
@@ -56,20 +54,16 @@ export async function envoyerEmailAlertes(
   }
 
   try {
-    await sendLovableEmail(
-      {
-        to: destinataire,
-        from: `AirBleu AI <alertes@${domaine}>`,
-        sender_domain: domaine,
-        subject: sujetEmail(alertes),
-        html: htmlEmail(alertes),
-        text: texteEmail(alertes),
-        purpose: "alertes-veille-concurrentielle",
-        label: "veille",
-        idempotency_key: `veille-${userId}-${alertes.map((a) => a.id).join("-")}`,
-      },
-      { apiKey },
-    );
+    await envoyerEmail({
+      to: destinataire,
+      subject: sujetEmail(alertes),
+      html: htmlEmail(alertes),
+      text: texteEmail(alertes),
+      purpose: "alertes-veille-concurrentielle",
+      label: "veille",
+      idempotencyKey: `veille-${userId}-${alertes.map((a) => a.id).join("-")}`,
+    });
+
     await journaliser(
       alertes.map((a) => ({
         user_id: userId,
