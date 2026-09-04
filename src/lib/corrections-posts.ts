@@ -33,7 +33,7 @@ const REMPLACEMENTS: Record<string, string> = {
   chef: "équipe",
 };
 
-const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu;
+const EMOJI = /(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]\u{FE0F}?|\u{FE0F})/gu;
 
 function normaliser(v: string) {
   return v
