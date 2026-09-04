@@ -8,7 +8,11 @@ export const getMonEspace = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
 
     const [{ data: profil }, { data: roles }, { data: estAdmin }] = await Promise.all([
-      supabase.from("profiles").select("id, display_name, avatar_url").eq("id", userId).maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("id, display_name, avatar_url")
+        .eq("id", userId)
+        .maybeSingle(),
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
     ]);

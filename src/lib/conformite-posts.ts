@@ -27,7 +27,7 @@ export const LIMITES = {
   hashtagsMax: 8,
 } as const;
 
-const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+const EMOJI = /(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]\u{FE0F}?|\u{FE0F})/u;
 
 function normaliser(valeur: string) {
   return valeur
@@ -167,7 +167,10 @@ export function verifierPlan(
   publications: IdeePost[],
   contraintes: ContraintesConformite,
 ): RapportConformite {
-  const parPost = publications.map((post) => ({ post, anomalies: verifierPost(post, contraintes) }));
+  const parPost = publications.map((post) => ({
+    post,
+    anomalies: verifierPost(post, contraintes),
+  }));
   const globales: Anomalie[] = [];
 
   const joursVus = new Map<number, number>();
@@ -182,9 +185,7 @@ export function verifierPlan(
   }
 
   if (contraintes.themes.length) {
-    const couverts = new Set(
-      publications.flatMap((p) => themesDetectes(p, contraintes.themes)),
-    );
+    const couverts = new Set(publications.flatMap((p) => themesDetectes(p, contraintes.themes)));
     const manquants = contraintes.themes.filter((t) => !couverts.has(t));
     if (manquants.length) {
       globales.push({

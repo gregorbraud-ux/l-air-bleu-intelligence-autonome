@@ -90,8 +90,9 @@ export const exerciceEnCoursProvisoire = {
 export const caClotureProvisoire2026 = exerciceEnCoursProvisoire.caCumuleAu31Aout2026;
 
 /** CA moyen par service constaté en août (indicateur dérivé, non comptable). */
-export const caMoyenParServiceAout =
-  Math.round(exerciceEnCoursProvisoire.caAout2026 / exerciceEnCoursProvisoire.servicesAoutRealises);
+export const caMoyenParServiceAout = Math.round(
+  exerciceEnCoursProvisoire.caAout2026 / exerciceEnCoursProvisoire.servicesAoutRealises,
+);
 
 /**
  * HISTORIQUE — OBSOLÈTE.
@@ -99,7 +100,11 @@ export const caMoyenParServiceAout =
  * Ne jamais les afficher comme valeur courante.
  */
 export const projectionsObsoletes = [
-  { valeur: 490957, libelle: "Projection centrale initiale (11 services × ≈2 087 €)", statut: "OBSOLÈTE" },
+  {
+    valeur: 490957,
+    libelle: "Projection centrale initiale (11 services × ≈2 087 €)",
+    statut: "OBSOLÈTE",
+  },
   { valeur: 491000, libelle: "Projection centrale arrondie", statut: "OBSOLÈTE" },
   { valeur: 493960, libelle: "Variante haute de projection", statut: "OBSOLÈTE" },
   { valeur: 494000, libelle: "Variante haute arrondie", statut: "OBSOLÈTE" },
@@ -155,4 +160,3 @@ export function contexteAirBleu(): string {
     "Règles absolues : ne jamais inventer un prix, un horaire, un menu, un avis, un chiffre ou un concurrent. Si une donnée manque, écrire « donnée non disponible ».",
   ].join("\n");
 }
-

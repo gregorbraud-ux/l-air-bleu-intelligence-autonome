@@ -80,7 +80,8 @@ export const avis: Avis[] = [
     auteur: "Julien M.",
     note: 4,
     date: "10 juil.",
-    texte: "Bon rapport qualité-prix, mais salle très pleine à 12 h 30 : pensez à réserver si vous êtes pressés.",
+    texte:
+      "Bon rapport qualité-prix, mais salle très pleine à 12 h 30 : pensez à réserver si vous êtes pressés.",
     sentiment: "neutre",
     repondu: false,
   },
@@ -88,7 +89,8 @@ export const avis: Avis[] = [
     auteur: "Sofia B.",
     note: 2,
     date: "8 juil.",
-    texte: "Plat du jour épuisé quand nous sommes arrivés à 13 h et peu d'alternatives proposées. Dommage.",
+    texte:
+      "Plat du jour épuisé quand nous sommes arrivés à 13 h et peu d'alternatives proposées. Dommage.",
     sentiment: "négatif",
     repondu: false,
   },
@@ -96,7 +98,8 @@ export const avis: Avis[] = [
     auteur: "Antoine L.",
     note: 5,
     date: "5 juil.",
-    texte: "On y déjeune entre collègues chaque semaine : cuisine généreuse, accueil chaleureux, addition raisonnable.",
+    texte:
+      "On y déjeune entre collègues chaque semaine : cuisine généreuse, accueil chaleureux, addition raisonnable.",
     sentiment: "positif",
     repondu: true,
   },
@@ -104,7 +107,8 @@ export const avis: Avis[] = [
     auteur: "Marie D.",
     note: 4,
     date: "2 juil.",
-    texte: "Desserts maison excellents et produits frais. Repas de famille du dimanche très réussi.",
+    texte:
+      "Desserts maison excellents et produits frais. Repas de famille du dimanche très réussi.",
     sentiment: "positif",
     repondu: false,
   },
@@ -130,14 +134,56 @@ export type Publication = {
 /** DÉMO — calendrier d'exemple. Le calendrier réel provient du flux de validation. */
 export const calendrier: Publication[] = [
   { jour: 1, titre: "Menu de la semaine", canal: "Facebook", statut: "publié", heure: "09:00" },
-  { jour: 2, titre: "Plat du jour : blanquette maison", canal: "Google", statut: "publié", heure: "10:30" },
-  { jour: 4, titre: "Coulisses cuisine : épluchage du matin", canal: "Instagram", statut: "planifié", heure: "11:00" },
+  {
+    jour: 2,
+    titre: "Plat du jour : blanquette maison",
+    canal: "Google",
+    statut: "publié",
+    heure: "10:30",
+  },
+  {
+    jour: 4,
+    titre: "Coulisses cuisine : épluchage du matin",
+    canal: "Instagram",
+    statut: "planifié",
+    heure: "11:00",
+  },
   { jour: 8, titre: "Menu de la semaine", canal: "Facebook", statut: "planifié", heure: "09:00" },
-  { jour: 11, titre: "Dessert maison du jour", canal: "Instagram", statut: "brouillon", heure: "11:30" },
-  { jour: 15, titre: "Offre déjeuner pro : formule express", canal: "Google", statut: "planifié", heure: "10:00" },
-  { jour: 18, titre: "Portrait de l'équipe en salle", canal: "Facebook", statut: "brouillon", heure: "17:30" },
-  { jour: 22, titre: "Produits frais : nos fournisseurs locaux", canal: "Instagram", statut: "planifié", heure: "11:00" },
-  { jour: 26, titre: "Newsletter fidélité déjeuner", canal: "Newsletter", statut: "brouillon", heure: "08:30" },
+  {
+    jour: 11,
+    titre: "Dessert maison du jour",
+    canal: "Instagram",
+    statut: "brouillon",
+    heure: "11:30",
+  },
+  {
+    jour: 15,
+    titre: "Offre déjeuner pro : formule express",
+    canal: "Google",
+    statut: "planifié",
+    heure: "10:00",
+  },
+  {
+    jour: 18,
+    titre: "Portrait de l'équipe en salle",
+    canal: "Facebook",
+    statut: "brouillon",
+    heure: "17:30",
+  },
+  {
+    jour: 22,
+    titre: "Produits frais : nos fournisseurs locaux",
+    canal: "Instagram",
+    statut: "planifié",
+    heure: "11:00",
+  },
+  {
+    jour: 26,
+    titre: "Newsletter fidélité déjeuner",
+    canal: "Newsletter",
+    statut: "brouillon",
+    heure: "08:30",
+  },
 ];
 
 export type Concurrent = {
@@ -152,9 +198,23 @@ export type Concurrent = {
 /** DÉMO — panel d'exemple. Aucune donnée n'est collectée automatiquement à ce jour. */
 export const concurrents: Concurrent[] = [
   { nom: "L'Air Bleu", note: 4.5, avis: 312, ticket: 17.5, visibilite: 68, tendance: 4.2 },
-  { nom: "Brasserie du Brivet (Trignac)", note: 4.3, avis: 486, ticket: 19, visibilite: 74, tendance: 2.1 },
+  {
+    nom: "Brasserie du Brivet (Trignac)",
+    note: 4.3,
+    avis: 486,
+    ticket: 19,
+    visibilite: 74,
+    tendance: 2.1,
+  },
   { nom: "Le Routier de Montoir", note: 4.4, avis: 264, ticket: 15, visibilite: 61, tendance: 3.5 },
-  { nom: "Table de la Zone (Saint-Nazaire)", note: 4.1, avis: 198, ticket: 16.5, visibilite: 52, tendance: -1.3 },
+  {
+    nom: "Table de la Zone (Saint-Nazaire)",
+    note: 4.1,
+    avis: 198,
+    ticket: 16.5,
+    visibilite: 52,
+    tendance: -1.3,
+  },
   { nom: "Auberge de Donges", note: 4.6, avis: 402, ticket: 21, visibilite: 70, tendance: 3.4 },
 ];
 
@@ -182,7 +242,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     concurrent: "Brasserie du Brivet (Trignac)",
     type: "visibilite",
     titre: "Bond de visibilité locale",
-    detail: "Score de visibilité passé de 66 à 74 en 14 jours : publications Google Business quasi quotidiennes.",
+    detail:
+      "Score de visibilité passé de 66 à 74 en 14 jours : publications Google Business quasi quotidiennes.",
     variation: 12.1,
     gravite: "critique",
     date: "Aujourd'hui, 09:12",
@@ -195,7 +256,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     concurrent: "Auberge de Donges",
     type: "prix",
     titre: "Hausse de la formule déjeuner",
-    detail: "Formule du midi passée de 19 € à 21 € : opportunité de mise en avant de notre rapport qualité/prix.",
+    detail:
+      "Formule du midi passée de 19 € à 21 € : opportunité de mise en avant de notre rapport qualité/prix.",
     variation: 10.5,
     gravite: "importante",
     date: "Hier, 18:40",
@@ -208,7 +270,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     concurrent: "Le Routier de Montoir",
     type: "note",
     titre: "Note Google en progression",
-    detail: "4,2 → 4,4 / 5 après 26 nouveaux avis en un mois (sollicitation active en fin de repas).",
+    detail:
+      "4,2 → 4,4 / 5 après 26 nouveaux avis en un mois (sollicitation active en fin de repas).",
     variation: 4.8,
     gravite: "importante",
     date: "Il y a 2 jours",
@@ -221,7 +284,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     concurrent: "Table de la Zone (Saint-Nazaire)",
     type: "nouveaute",
     titre: "Formule express 13,90 € pour les pros",
-    detail: "Entrée + plat servis en 30 minutes, annoncée sur Facebook : cible la clientèle professionnelle du midi.",
+    detail:
+      "Entrée + plat servis en 30 minutes, annoncée sur Facebook : cible la clientèle professionnelle du midi.",
     variation: 0,
     gravite: "info",
     date: "Il y a 4 jours",
@@ -234,7 +298,8 @@ export const alertesConcurrence: AlerteConcurrence[] = [
     concurrent: "Brasserie du Brivet (Trignac)",
     type: "note",
     titre: "Chute ponctuelle de la note",
-    detail: "3 avis 2 étoiles sur l'attente du midi : opportunité de captation de la clientèle pressée.",
+    detail:
+      "3 avis 2 étoiles sur l'attente du midi : opportunité de captation de la clientèle pressée.",
     variation: -2.1,
     gravite: "info",
     date: "Il y a 6 jours",
@@ -306,37 +371,43 @@ export const reglesAlertesDefaut: RegleAlerte[] = [
 export const modulesIA: ModuleIA[] = [
   {
     titre: "Générateur de posts réseaux",
-    description: "Rédige des publications Facebook et Instagram à partir du menu de la semaine et du plat du jour.",
+    description:
+      "Rédige des publications Facebook et Instagram à partir du menu de la semaine et du plat du jour.",
     categorie: "Contenu",
     duree: "~20 s",
   },
   {
     titre: "Réponses aux avis",
-    description: "Propose une réponse personnalisée à chaque avis Google, adaptée au sentiment détecté.",
+    description:
+      "Propose une réponse personnalisée à chaque avis Google, adaptée au sentiment détecté.",
     categorie: "Réputation",
     duree: "~10 s",
   },
   {
     titre: "Optimisation de la carte",
-    description: "Analyse marges et popularité des plats du midi pour retrouver l'équilibre et gagner en rentabilité.",
+    description:
+      "Analyse marges et popularité des plats du midi pour retrouver l'équilibre et gagner en rentabilité.",
     categorie: "Revenus",
     duree: "~40 s",
   },
   {
     titre: "Campagne e-mail & SEO local",
-    description: "Crée une séquence de fidélisation et des textes optimisés sur les mots-clés déjeuner Montoir-de-Bretagne.",
+    description:
+      "Crée une séquence de fidélisation et des textes optimisés sur les mots-clés déjeuner Montoir-de-Bretagne.",
     categorie: "CRM & SEO",
     duree: "~30 s",
   },
   {
     titre: "Veille concurrentielle",
-    description: "Résume nouveautés, prix et notes des restaurants du secteur Montoir, Trignac, Donges, Saint-Nazaire.",
+    description:
+      "Résume nouveautés, prix et notes des restaurants du secteur Montoir, Trignac, Donges, Saint-Nazaire.",
     categorie: "Marché",
     duree: "~1 min",
   },
   {
     titre: "Prévision d'affluence du midi",
-    description: "Anticipe les couverts du déjeuner selon la météo, l'activité des entreprises voisines et l'historique.",
+    description:
+      "Anticipe les couverts du déjeuner selon la météo, l'activité des entreprises voisines et l'historique.",
     categorie: "Opérations",
     duree: "~15 s",
   },
@@ -378,7 +449,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "promotion",
         etablissement: "Brasserie du Brivet",
-        constat: "Formule entrée + plat + café à 15,90 € annoncée pour les artisans et salariés de la zone.",
+        constat:
+          "Formule entrée + plat + café à 15,90 € annoncée pour les artisans et salariés de la zone.",
         variation: "-1,10 € vs formule précédente",
         date: "Il y a 3 jours",
         source: "https://www.facebook.com/search/top?q=Brasserie%20du%20Brivet%20Trignac",
@@ -387,7 +459,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "publication",
         etablissement: "Brasserie du Brivet",
-        constat: "Rythme de publication passé à 5 posts / semaine (plat du jour publié chaque matin avant 10 h).",
+        constat:
+          "Rythme de publication passé à 5 posts / semaine (plat du jour publié chaque matin avant 10 h).",
         variation: "+12 pts de visibilité en 14 jours",
         date: "Aujourd'hui",
         source: "https://www.google.com/maps/search/?api=1&query=Brasserie+du+Brivet+Trignac",
@@ -396,7 +469,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "publication",
         etablissement: "Le Comptoir de la Zone",
-        constat: "Aucune publication depuis 3 semaines : fenêtre de visibilité libre sur les recherches déjeuner Trignac.",
+        constat:
+          "Aucune publication depuis 3 semaines : fenêtre de visibilité libre sur les recherches déjeuner Trignac.",
         date: "Il y a 3 semaines",
         source: "https://www.facebook.com/search/top?q=Le%20Comptoir%20de%20la%20Zone%20Trignac",
         sourceLabel: "Page Facebook",
@@ -419,7 +493,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "menu",
         etablissement: "Auberge de Donges",
-        constat: "Carte recentrée sur 6 plats maison, mise en avant des producteurs locaux dans les descriptions.",
+        constat:
+          "Carte recentrée sur 6 plats maison, mise en avant des producteurs locaux dans les descriptions.",
         date: "Il y a 5 jours",
         source: "https://www.google.com/maps/search/?api=1&query=Auberge+de+Donges",
         sourceLabel: "Menu Google",
@@ -427,7 +502,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "publication",
         etablissement: "Le Relais du Port",
-        constat: "2 posts Instagram par semaine avec photos de l'équipe : forte interaction locale malgré peu d'abonnés.",
+        constat:
+          "2 posts Instagram par semaine avec photos de l'équipe : forte interaction locale malgré peu d'abonnés.",
         variation: "+18 % d'engagement",
         date: "Cette semaine",
         source: "https://www.instagram.com/explore/search/keyword/?q=relais%20du%20port%20donges",
@@ -442,7 +518,8 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "promotion",
         etablissement: "Table de la Zone",
-        constat: "Formule express 13,90 € (entrée + plat servis en 30 min) ciblant la clientèle professionnelle du midi.",
+        constat:
+          "Formule express 13,90 € (entrée + plat servis en 30 min) ciblant la clientèle professionnelle du midi.",
         variation: "-2,60 € vs notre ticket moyen",
         date: "Il y a 4 jours",
         source: "https://www.facebook.com/search/top?q=Table%20de%20la%20Zone%20Saint-Nazaire",
@@ -451,15 +528,18 @@ export const zonesVeille: ZoneVeille[] = [
       {
         categorie: "menu",
         etablissement: "Cantine des Chantiers",
-        constat: "Ajout d'un menu à emporter en bocal pour les équipes des chantiers, retrait avant 11 h 30.",
+        constat:
+          "Ajout d'un menu à emporter en bocal pour les équipes des chantiers, retrait avant 11 h 30.",
         date: "Cette semaine",
-        source: "https://www.google.com/maps/search/?api=1&query=Cantine+des+Chantiers+Saint-Nazaire",
+        source:
+          "https://www.google.com/maps/search/?api=1&query=Cantine+des+Chantiers+Saint-Nazaire",
         sourceLabel: "Fiche Google Business",
       },
       {
         categorie: "publication",
         etablissement: "Table de la Zone",
-        constat: "Publication irrégulière (1 post / 10 jours) mais forte activité d'avis clients sollicités en caisse.",
+        constat:
+          "Publication irrégulière (1 post / 10 jours) mais forte activité d'avis clients sollicités en caisse.",
         variation: "-1,3 % de tendance",
         date: "Il y a 6 jours",
         source: "https://www.google.com/maps/search/?api=1&query=Table+de+la+Zone+Saint-Nazaire",

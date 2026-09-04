@@ -32,7 +32,11 @@ export function usePushNotifications() {
   useEffect(() => {
     let vivant = true;
     (async () => {
-      if (typeof window === "undefined" || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+      if (
+        typeof window === "undefined" ||
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window)
+      ) {
         if (vivant) setEtat("non-supporte");
         return;
       }
@@ -82,7 +86,10 @@ export function usePushNotifications() {
       setEtat("actif");
       return { ok: true, message: "Notifications push activées sur cet appareil." };
     } catch (error) {
-      return { ok: false, message: error instanceof Error ? error.message : "Activation impossible." };
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : "Activation impossible.",
+      };
     } finally {
       setOccupe(false);
     }
@@ -100,7 +107,10 @@ export function usePushNotifications() {
       setEtat("inactif");
       return { ok: true, message: "Notifications push désactivées sur cet appareil." };
     } catch (error) {
-      return { ok: false, message: error instanceof Error ? error.message : "Désactivation impossible." };
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : "Désactivation impossible.",
+      };
     } finally {
       setOccupe(false);
     }

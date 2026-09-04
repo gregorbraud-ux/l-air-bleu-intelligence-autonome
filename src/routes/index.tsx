@@ -33,7 +33,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Tableau de bord — L'Air Bleu Intelligence" },
       {
         property: "og:description",
-        content: "Chiffre d'affaires officiel et cumul provisoire de clôture 2025/2026 au 31/08/2026.",
+        content:
+          "Chiffre d'affaires officiel et cumul provisoire de clôture 2025/2026 au 31/08/2026.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,9 +73,10 @@ function Dashboard() {
       />
 
       <BandeauEtat etat="provisoire" titre="Trois niveaux de fiabilité distincts">
-        Les chiffres comptables clos sont marqués OFFICIEL. L'exercice 2025/2026 est PROVISOIRE (comptabilité de gestion, non validée
-        par le bilan) : août 2026 est clôturé, il n'y a donc plus de prévision — le cumul au 31/08/2026 est une donnée de
-        gestion PROVISOIRE, à confirmer par le bilan 2026.
+        Les chiffres comptables clos sont marqués OFFICIEL. L'exercice 2025/2026 est PROVISOIRE
+        (comptabilité de gestion, non validée par le bilan) : août 2026 est clôturé, il n'y a donc
+        plus de prévision — le cumul au 31/08/2026 est une donnée de gestion PROVISOIRE, à confirmer
+        par le bilan 2026.
       </BandeauEtat>
 
       {/* ---------- Exercices officiels ---------- */}
@@ -97,18 +99,28 @@ function Dashboard() {
                   valeur={euroPrecis(ex.resultatNet)}
                   ton={ex.resultatNet >= 0 ? "positif" : "negatif"}
                 />
-                <Ligne libelle="EBE" valeur={ex.ebe === null ? "Non disponible" : euroPrecis(ex.ebe)} />
+                <Ligne
+                  libelle="EBE"
+                  valeur={ex.ebe === null ? "Non disponible" : euroPrecis(ex.ebe)}
+                />
               </dl>
             </article>
           ))}
         </div>
         <p className="mt-4 text-sm">
           Évolution du chiffre d'affaires entre les deux derniers exercices clos :{" "}
-          <span className={`inline-flex items-center gap-1 font-semibold ${evolutionOfficielle >= 0 ? "text-success" : "text-destructive"}`}>
-            {evolutionOfficielle >= 0 ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+          <span
+            className={`inline-flex items-center gap-1 font-semibold ${evolutionOfficielle >= 0 ? "text-success" : "text-destructive"}`}
+          >
+            {evolutionOfficielle >= 0 ? (
+              <ArrowUpRight className="h-4 w-4" />
+            ) : (
+              <ArrowDownRight className="h-4 w-4" />
+            )}
             {evolutionOfficielle.toFixed(1).replace(".", ",")} %
           </span>{" "}
-          — malgré la hausse du CA, le résultat net est passé de {euroPrecis(exercicePrecedentOfficiel.resultatNet)} à{" "}
+          — malgré la hausse du CA, le résultat net est passé de{" "}
+          {euroPrecis(exercicePrecedentOfficiel.resultatNet)} à{" "}
           {euroPrecis(dernierExerciceOfficiel.resultatNet)}.
         </p>
       </section>
@@ -116,15 +128,23 @@ function Dashboard() {
       {/* ---------- Exercice en cours provisoire ---------- */}
       <section className="surface-card mt-6 p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-lg font-semibold">Exercice {exerciceEnCoursProvisoire.exercice} en cours</h2>
+          <h2 className="text-lg font-semibold">
+            Exercice {exerciceEnCoursProvisoire.exercice} en cours
+          </h2>
           <BadgeEtat etat="provisoire" />
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
           Chiffres de gestion non validés par le bilan. {exerciceEnCoursProvisoire.fermeture}.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <Carte libelle="CA au 30/06/2026" valeur={euro(exerciceEnCoursProvisoire.caAu30Juin2026)} />
-          <Carte libelle="Juillet 2026" valeur={`+ ${euro(exerciceEnCoursProvisoire.caJuillet2026)}`} />
+          <Carte
+            libelle="CA au 30/06/2026"
+            valeur={euro(exerciceEnCoursProvisoire.caAu30Juin2026)}
+          />
+          <Carte
+            libelle="Juillet 2026"
+            valeur={`+ ${euro(exerciceEnCoursProvisoire.caJuillet2026)}`}
+          />
           <Carte
             libelle="CA cumulé au 31/07/2026"
             valeur={euro(exerciceEnCoursProvisoire.caCumuleAu31Juillet2026)}
@@ -157,7 +177,12 @@ function Dashboard() {
               onChange={setCaCumuleJuillet}
               step={1000}
             />
-            <ChampNombre label="CA d'août 2026 clôturé (€)" value={caAout} onChange={setCaAout} step={100} />
+            <ChampNombre
+              label="CA d'août 2026 clôturé (€)"
+              value={caAout}
+              onChange={setCaAout}
+              step={100}
+            />
             <Button
               variant="outline"
               size="sm"
@@ -195,14 +220,15 @@ function Dashboard() {
                 Détail : {euro(caCumuleJuillet)} au 31/07 + {euro(caAout)} en août (clôturé)
               </li>
               <li>
-                Écart vs exercice {dernierExerciceOfficiel.exercice} officiel : {euro(cloture.ecartExerciceOfficiel)} (
+                Écart vs exercice {dernierExerciceOfficiel.exercice} officiel :{" "}
+                {euro(cloture.ecartExerciceOfficiel)} (
                 {cloture.ecartPourcent.toFixed(1).replace(".", ",")} %)
               </li>
               <li>Résultat net : non disponible avant le bilan 2026</li>
             </ul>
             <p className="mt-4 text-xs opacity-80">
-              Donnée de comptabilité de gestion PROVISOIRE — à confirmer par le bilan 2026. Ce n'est pas un chiffre
-              comptable définitif, et ce n'est plus une prévision.
+              Donnée de comptabilité de gestion PROVISOIRE — à confirmer par le bilan 2026. Ce n'est
+              pas un chiffre comptable définitif, et ce n'est plus une prévision.
             </p>
           </div>
         </div>
@@ -240,11 +266,21 @@ function Carte({ libelle, valeur, detail }: { libelle: string; valeur: string; d
   );
 }
 
-function Ligne({ libelle, valeur, ton }: { libelle: string; valeur: string; ton?: "positif" | "negatif" }) {
+function Ligne({
+  libelle,
+  valeur,
+  ton,
+}: {
+  libelle: string;
+  valeur: string;
+  ton?: "positif" | "negatif";
+}) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-1 last:border-0">
       <span className="text-muted-foreground">{libelle}</span>
-      <span className={`font-semibold ${ton === "positif" ? "text-success" : ton === "negatif" ? "text-destructive" : ""}`}>
+      <span
+        className={`font-semibold ${ton === "positif" ? "text-success" : ton === "negatif" ? "text-destructive" : ""}`}
+      >
         {valeur}
       </span>
     </div>

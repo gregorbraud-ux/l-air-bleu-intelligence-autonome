@@ -91,7 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "AirBleu AI" },
       {
         property: "og:description",
-        content: "Le copilote digital du restaurant L'Air Bleu : performance, marketing et réputation.",
+        content:
+          "Le copilote digital du restaurant L'Air Bleu : performance, marketing et réputation.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -124,13 +124,17 @@ export function construirePrompt(data: EntreePlan) {
     `Période à couvrir : du jour ${data.jourDebut} au jour ${data.jourFin} du mois.`,
     `Fréquence cible : environ ${data.frequenceParSemaine} publication(s) par semaine.`,
     `Plateformes autorisées (n'utilise AUCUN autre canal) : ${data.plateformes.join(", ")}.`,
-    data.themes.length ? `Thèmes imposés par la stratégie (répartis-les équitablement) : ${data.themes.join(" ; ")}.` : "",
+    data.themes.length
+      ? `Thèmes imposés par la stratégie (répartis-les équitablement) : ${data.themes.join(" ; ")}.`
+      : "",
     data.motsInterdits.length
       ? `Mots et expressions STRICTEMENT interdits dans tous les textes (titres, accroches, légendes, hashtags, CTA) : ${data.motsInterdits.join(", ")}. N'utilise ni ces termes ni de variantes proches.`
       : "",
     ``,
     `Avis Google récents :`,
-    ...data.avis.map((a) => `- ${a.date} · ${a.note}/5 (${a.sentiment}) · ${a.auteur} : ${a.texte}`),
+    ...data.avis.map(
+      (a) => `- ${a.date} · ${a.note}/5 (${a.sentiment}) · ${a.auteur} : ${a.texte}`,
+    ),
     ``,
     `Tendances et signaux de veille concurrentielle :`,
     ...data.tendancesConcurrence.map((t) => `- ${t}`),

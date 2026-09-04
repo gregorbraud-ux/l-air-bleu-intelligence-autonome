@@ -1,19 +1,59 @@
-import { AlertTriangle, BadgeCheck, CircleSlash, FlaskConical, Hourglass, PlugZap } from "lucide-react";
+import {
+  AlertTriangle,
+  BadgeCheck,
+  CircleSlash,
+  FlaskConical,
+  Hourglass,
+  PlugZap,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type Etat = "officiel" | "provisoire" | "prevision" | "demo" | "non-connecte" | "non-disponible";
+export type Etat =
+  "officiel" | "provisoire" | "prevision" | "demo" | "non-connecte" | "non-disponible";
 
 const config: Record<Etat, { label: string; classe: string; Icone: typeof BadgeCheck }> = {
-  officiel: { label: "OFFICIEL", classe: "bg-success/12 text-success border-success/30", Icone: BadgeCheck },
-  provisoire: { label: "PROVISOIRE", classe: "bg-warning/15 text-accent-foreground border-warning/40", Icone: Hourglass },
-  prevision: { label: "PRÉVISION", classe: "bg-primary/10 text-primary border-primary/30", Icone: AlertTriangle },
-  demo: { label: "DÉMO", classe: "bg-muted text-muted-foreground border-border", Icone: FlaskConical },
-  "non-connecte": { label: "NON CONNECTÉ", classe: "bg-destructive/10 text-destructive border-destructive/30", Icone: PlugZap },
-  "non-disponible": { label: "NON DISPONIBLE", classe: "bg-muted text-muted-foreground border-border", Icone: CircleSlash },
+  officiel: {
+    label: "OFFICIEL",
+    classe: "bg-success/12 text-success border-success/30",
+    Icone: BadgeCheck,
+  },
+  provisoire: {
+    label: "PROVISOIRE",
+    classe: "bg-warning/15 text-accent-foreground border-warning/40",
+    Icone: Hourglass,
+  },
+  prevision: {
+    label: "PRÉVISION",
+    classe: "bg-primary/10 text-primary border-primary/30",
+    Icone: AlertTriangle,
+  },
+  demo: {
+    label: "DÉMO",
+    classe: "bg-muted text-muted-foreground border-border",
+    Icone: FlaskConical,
+  },
+  "non-connecte": {
+    label: "NON CONNECTÉ",
+    classe: "bg-destructive/10 text-destructive border-destructive/30",
+    Icone: PlugZap,
+  },
+  "non-disponible": {
+    label: "NON DISPONIBLE",
+    classe: "bg-muted text-muted-foreground border-border",
+    Icone: CircleSlash,
+  },
 };
 
-export function BadgeEtat({ etat, texte, className }: { etat: Etat; texte?: string; className?: string }) {
+export function BadgeEtat({
+  etat,
+  texte,
+  className,
+}: {
+  etat: Etat;
+  texte?: string;
+  className?: string;
+}) {
   const { label, classe, Icone } = config[etat];
   return (
     <span
@@ -58,15 +98,26 @@ export type NiveauGratuite = "gratuit" | "gratuit-limite" | "payant" | "non-conn
 
 const gratuite: Record<NiveauGratuite, { label: string; classe: string }> = {
   gratuit: { label: "Gratuit", classe: "bg-success/12 text-success border-success/30" },
-  "gratuit-limite": { label: "Gratuit avec limites", classe: "bg-warning/15 text-accent-foreground border-warning/40" },
-  payant: { label: "API payante requise", classe: "bg-destructive/10 text-destructive border-destructive/30" },
+  "gratuit-limite": {
+    label: "Gratuit avec limites",
+    classe: "bg-warning/15 text-accent-foreground border-warning/40",
+  },
+  payant: {
+    label: "API payante requise",
+    classe: "bg-destructive/10 text-destructive border-destructive/30",
+  },
   "non-connecte": { label: "Non connecté", classe: "bg-muted text-muted-foreground border-border" },
 };
 
 export function BadgeCout({ niveau }: { niveau: NiveauGratuite }) {
   const { label, classe } = gratuite[niveau];
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider", classe)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+        classe,
+      )}
+    >
       {label}
     </span>
   );

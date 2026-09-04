@@ -8,7 +8,8 @@ export const genererPlanEditorial = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => entreePlan.parse(input))
   .handler(async ({ data }): Promise<PlanEditorial> => {
     const { genererObjetIA } = await import("@/lib/ia-fournisseur.server");
-    const { planSchema, nettoyerPlanAvecContraintes, construirePrompt } = await import("@/lib/contenu.schema");
+    const { planSchema, nettoyerPlanAvecContraintes, construirePrompt } =
+      await import("@/lib/contenu.schema");
 
     const plan = await genererObjetIA(construirePrompt(data), planSchema);
     return nettoyerPlanAvecContraintes(plan as PlanEditorial, {

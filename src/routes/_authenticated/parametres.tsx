@@ -23,7 +23,8 @@ export const Route = createFileRoute("/_authenticated/parametres")({
       { property: "og:title", content: "Paramètres admin — AirBleu AI" },
       {
         property: "og:description",
-        content: "Sources de données, seuils cibles et activation des modules du restaurant L'Air Bleu.",
+        content:
+          "Sources de données, seuils cibles et activation des modules du restaurant L'Air Bleu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,7 +34,8 @@ export const Route = createFileRoute("/_authenticated/parametres")({
 });
 
 function PageParametres() {
-  const { parametres, pret, enregistrer, majModule, majSection, reinitialiser } = useParametresAdmin();
+  const { parametres, pret, enregistrer, majModule, majSection, reinitialiser } =
+    useParametresAdmin();
   const actifs = modulesApp.filter((m) => parametres.modules[m.cle]).length;
 
   return (
@@ -74,8 +76,8 @@ function PageParametres() {
                 <ToggleLeft className="h-4 w-4 text-primary" /> Modules de l'application
               </CardTitle>
               <CardDescription>
-                {actifs} module{actifs > 1 ? "s" : ""} actif{actifs > 1 ? "s" : ""} sur {modulesApp.length} — les
-                modules désactivés disparaissent de la navigation.
+                {actifs} module{actifs > 1 ? "s" : ""} actif{actifs > 1 ? "s" : ""} sur{" "}
+                {modulesApp.length} — les modules désactivés disparaissent de la navigation.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3 sm:grid-cols-2">
@@ -108,7 +110,9 @@ function PageParametres() {
               <CardTitle className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-primary" /> Source Google Places (avis)
               </CardTitle>
-              <CardDescription>Récupération automatique des avis de la fiche établissement.</CardDescription>
+              <CardDescription>
+                Récupération automatique des avis de la fiche établissement.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between gap-4">
@@ -137,7 +141,9 @@ function PageParametres() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Fréquence de synchronisation : {parametres.googlePlaces.frequenceHeures} h</Label>
+                <Label>
+                  Fréquence de synchronisation : {parametres.googlePlaces.frequenceHeures} h
+                </Label>
                 <Slider
                   min={6}
                   max={72}
@@ -167,7 +173,9 @@ function PageParametres() {
               <CardTitle className="flex items-center gap-2">
                 <Swords className="h-4 w-4 text-primary" /> Source veille concurrentielle
               </CardTitle>
-              <CardDescription>Périmètre et canaux surveillés autour de Montoir-de-Bretagne.</CardDescription>
+              <CardDescription>
+                Périmètre et canaux surveillés autour de Montoir-de-Bretagne.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between gap-4">
@@ -222,7 +230,9 @@ function PageParametres() {
               <CardTitle className="flex items-center gap-2">
                 <Database className="h-4 w-4 text-primary" /> Source KPI &amp; finances
               </CardTitle>
-              <CardDescription>Données de référence utilisées par le tableau de bord et la valorisation.</CardDescription>
+              <CardDescription>
+                Données de référence utilisées par le tableau de bord et la valorisation.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between gap-4">
@@ -291,8 +301,8 @@ function PageParametres() {
                 <Gauge className="h-4 w-4 text-primary" /> Seuils cibles
               </CardTitle>
               <CardDescription>
-                Objectifs de pilotage. Les seuils de veille par établissement restent réglables dans « Alertes
-                &amp; seuils ».
+                Objectifs de pilotage. Les seuils de veille par établissement restent réglables dans
+                « Alertes &amp; seuils ».
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
@@ -327,7 +337,9 @@ function PageParametres() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Score de visibilité locale cible : {parametres.seuils.visibiliteCible}</Label>
+                <Label>
+                  Score de visibilité locale cible : {parametres.seuils.visibiliteCible}
+                </Label>
                 <Slider
                   min={40}
                   max={100}

@@ -21,7 +21,9 @@ const typeLabel: Record<RegleAlerte["id"], string> = {
 
 export function AlertesConcurrence() {
   const { config, pret } = useAlertesConfig();
-  const [lues, setLues] = useState<string[]>(alertesConcurrence.filter((a) => a.lue).map((a) => a.id));
+  const [lues, setLues] = useState<string[]>(
+    alertesConcurrence.filter((a) => a.lue).map((a) => a.id),
+  );
 
   const etablissementsSurveilles = useMemo(
     () => Object.values(config).filter((e) => e.surveille),
@@ -55,7 +57,11 @@ export function AlertesConcurrence() {
         <div className="min-w-0">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <BellRing className="h-4 w-4 text-accent" /> Alertes de veille
-            {nonLues > 0 && <Badge variant="destructive">{nonLues} nouvelle{nonLues > 1 ? "s" : ""}</Badge>}
+            {nonLues > 0 && (
+              <Badge variant="destructive">
+                {nonLues} nouvelle{nonLues > 1 ? "s" : ""}
+              </Badge>
+            )}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {pret
@@ -93,7 +99,9 @@ export function AlertesConcurrence() {
                     {a.concurrent} · {a.date} · {typeLabel[a.type]}
                   </p>
                 </div>
-                <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${graviteStyle[a.gravite]}`}>
+                <span
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${graviteStyle[a.gravite]}`}
+                >
                   {a.gravite}
                 </span>
               </div>
@@ -116,7 +124,11 @@ export function AlertesConcurrence() {
                 {lue ? (
                   <Badge variant="secondary">Traitée</Badge>
                 ) : (
-                  <Button size="sm" variant="outline" onClick={() => setLues((prev) => [...prev, a.id])}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setLues((prev) => [...prev, a.id])}
+                  >
                     <Check className="mr-2 h-4 w-4" /> Marquer comme traitée
                   </Button>
                 )}

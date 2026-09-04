@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { canaux } from "@/lib/contenu.schema";
 import {
   nombreDePosts,
@@ -105,7 +111,9 @@ export function StrategieIAPanneau({
               min={1}
               max={31}
               value={strategie.jourDebut}
-              onChange={(e) => onMaj({ jourDebut: Math.min(31, Math.max(1, Number(e.target.value) || 1)) })}
+              onChange={(e) =>
+                onMaj({ jourDebut: Math.min(31, Math.max(1, Number(e.target.value) || 1)) })
+              }
             />
           </div>
           <div className="space-y-2">
@@ -116,7 +124,9 @@ export function StrategieIAPanneau({
               min={1}
               max={31}
               value={strategie.jourFin}
-              onChange={(e) => onMaj({ jourFin: Math.min(31, Math.max(1, Number(e.target.value) || 31)) })}
+              onChange={(e) =>
+                onMaj({ jourFin: Math.min(31, Math.max(1, Number(e.target.value) || 31)) })
+              }
             />
           </div>
         </div>
@@ -173,7 +183,8 @@ export function StrategieIAPanneau({
 
       <div className="space-y-2">
         <Label htmlFor="motsInterdits" className="flex items-center gap-2">
-          <Ban className="h-3.5 w-3.5 text-muted-foreground" /> Mots interdits (séparés par des virgules)
+          <Ban className="h-3.5 w-3.5 text-muted-foreground" /> Mots interdits (séparés par des
+          virgules)
         </Label>
         <Input
           id="motsInterdits"

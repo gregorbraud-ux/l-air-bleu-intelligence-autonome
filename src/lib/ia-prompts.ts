@@ -82,8 +82,12 @@ export function promptAssistant(data: EntreeAssistant): string {
     "CONTEXTE VÉRIFIÉ :",
     contexteAirBleu(),
     "",
-    data.donneesDisponibles.length ? `DONNÉES DISPONIBLES DANS L'APPLICATION :\n- ${data.donneesDisponibles.join("\n- ")}` : "",
-    data.donneesManquantes.length ? `DONNÉES MANQUANTES (ne pas les inventer, les signaler) :\n- ${data.donneesManquantes.join("\n- ")}` : "",
+    data.donneesDisponibles.length
+      ? `DONNÉES DISPONIBLES DANS L'APPLICATION :\n- ${data.donneesDisponibles.join("\n- ")}`
+      : "",
+    data.donneesManquantes.length
+      ? `DONNÉES MANQUANTES (ne pas les inventer, les signaler) :\n- ${data.donneesManquantes.join("\n- ")}`
+      : "",
     "",
     `QUESTION : ${data.question}`,
     "",

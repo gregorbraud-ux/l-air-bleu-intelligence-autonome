@@ -26,7 +26,13 @@ export const themesDisponibles = [
   "Événements & jours spéciaux",
 ] as const;
 
-export const tonsDisponibles = ["Chaleureux", "Convivial", "Authentique", "Dynamique", "Gourmand"] as const;
+export const tonsDisponibles = [
+  "Chaleureux",
+  "Convivial",
+  "Authentique",
+  "Dynamique",
+  "Gourmand",
+] as const;
 
 export const CLE_STRATEGIE = "airbleu.strategie.ia.v1";
 
@@ -34,7 +40,12 @@ export function strategieParDefaut(): StrategieIA {
   return {
     frequenceParSemaine: 3,
     plateformes: ["Facebook", "Instagram", "Google"],
-    themes: ["Menu du midi", "Plat du jour", "Produits frais & fournisseurs locaux", "Équipe & coulisses"],
+    themes: [
+      "Menu du midi",
+      "Plat du jour",
+      "Produits frais & fournisseurs locaux",
+      "Équipe & coulisses",
+    ],
     motsInterdits: ["promo choc", "pas cher", "fast-food"],
     mois: "Août 2026",
     jourDebut: 1,

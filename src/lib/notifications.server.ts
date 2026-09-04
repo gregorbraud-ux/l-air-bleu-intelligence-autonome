@@ -36,19 +36,17 @@ export async function envoyerEmailAlertes(
   destinataire: string,
   alertes: AlerteEnvoi[],
 ): Promise<ResultatCanal> {
-  const apiKey = process.env["LOVABLE_API_KEY"];
-  const domaine = process.env["EMAIL_SENDER_DOMAIN"] ?? process.env["SENDER_DOMAIN"];
+  const resolution = resoudreFournisseurEmail();
 
-  if (!apiKey || !domaine) {
-    const message =
-      "Aucun domaine d'expédition n'est encore configuré : l'envoi d'e-mails sera actif dès la validation du domaine.";
+  if (!resolution.disponible) {
+    const message = resolution.raison;
     await journaliser(
       alertes.map((a) => ({
         user_id: userId,
         alerte_id: a.id,
         canal: "email" as const,
         destinataire,
-        statut: "domaine_manquant",
+        statut: "fournisseur_manquant",
         erreur: message,
       })),
     );
@@ -56,20 +54,16 @@ export async function envoyerEmailAlertes(
   }
 
   try {
-    await sendLovableEmail(
-      {
-        to: destinataire,
-        from: `AirBleu AI <alertes@${domaine}>`,
-        sender_domain: domaine,
-        subject: sujetEmail(alertes),
-        html: htmlEmail(alertes),
-        text: texteEmail(alertes),
-        purpose: "alertes-veille-concurrentielle",
-        label: "veille",
-        idempotency_key: `veille-${userId}-${alertes.map((a) => a.id).join("-")}`,
-      },
-      { apiKey },
-    );
+    await envoyerEmail({
+      to: destinataire,
+      subject: sujetEmail(alertes),
+      html: htmlEmail(alertes),
+      text: texteEmail(alertes),
+      purpose: "alertes-veille-concurrentielle",
+      label: "veille",
+      idempotencyKey: `veille-${userId}-${alertes.map((a) => a.id).join("-")}`,
+    });
+
     await journaliser(
       alertes.map((a) => ({
         user_id: userId,
@@ -99,11 +93,19 @@ export async function envoyerEmailAlertes(
         erreur: message,
       })),
     );
-    return { canal: "email", envoyes: 0, echecs: alertes.length, message: `E-mail non envoyé : ${message}` };
+    return {
+      canal: "email",
+      envoyes: 0,
+      echecs: alertes.length,
+      message: `E-mail non envoyé : ${message}`,
+    };
   }
 }
 
-export async function envoyerPushAlertes(userId: string, alertes: AlerteEnvoi[]): Promise<ResultatCanal> {
+export async function envoyerPushAlertes(
+  userId: string,
+  alertes: AlerteEnvoi[],
+): Promise<ResultatCanal> {
   const publicKey = process.env["VAPID_PUBLIC_KEY"];
   const privateKey = process.env["VAPID_PRIVATE_KEY"];
   const subject = process.env["VAPID_SUBJECT"] ?? "mailto:contact@lairbleu.fr";
@@ -120,7 +122,12 @@ export async function envoyerPushAlertes(userId: string, alertes: AlerteEnvoi[])
 
   if (error) throw error;
   if (!abonnements || abonnements.length === 0) {
-    return { canal: "push", envoyes: 0, echecs: 0, message: "Aucun appareil abonné aux notifications push." };
+    return {
+      canal: "push",
+      envoyes: 0,
+      echecs: 0,
+      message: "Aucun appareil abonné aux notifications push.",
+    };
   }
 
   let envoyes = 0;

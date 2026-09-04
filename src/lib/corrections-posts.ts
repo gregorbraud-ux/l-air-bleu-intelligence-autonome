@@ -33,10 +33,13 @@ const REMPLACEMENTS: Record<string, string> = {
   chef: "équipe",
 };
 
-const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu;
+const EMOJI = /(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]\u{FE0F}?|\u{FE0F})/gu;
 
 function normaliser(v: string) {
-  return v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return v
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function echapper(v: string) {
@@ -50,7 +53,11 @@ function remplacementPour(mot: string) {
 }
 
 function nettoyerEspaces(v: string) {
-  return v.replace(/[ \t]{2,}/g, " ").replace(/ +([,.;!?])/g, "$1").replace(/\n{3,}/g, "\n\n").trim();
+  return v
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/ +([,.;!?])/g, "$1")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function remplacerDansTexte(texte: string, mot: string, parDefaut: string) {
@@ -61,9 +68,13 @@ function remplacerDansTexte(texte: string, mot: string, parDefaut: string) {
 
 function motsInterditsPresents(post: IdeePost, motsInterdits: string[]) {
   const cible = normaliser(
-    [post.titre, post.accroche, post.legende, post.cta, post.angle, post.hashtags.join(" ")].join("\n"),
+    [post.titre, post.accroche, post.legende, post.cta, post.angle, post.hashtags.join(" ")].join(
+      "\n",
+    ),
   );
-  return motsInterdits.map((m) => m.trim()).filter((m) => m.length > 1 && cible.includes(normaliser(m)));
+  return motsInterdits
+    .map((m) => m.trim())
+    .filter((m) => m.length > 1 && cible.includes(normaliser(m)));
 }
 
 /** Raccourcit un texte sans couper un mot, en gardant une ponctuation propre. */
@@ -113,7 +124,9 @@ export function suggestionsPour(post: IdeePost, contraintes: ContraintesConformi
       legende: remplacerDansTexte(post.legende, mot, remplacement),
       cta: remplacerDansTexte(post.cta, mot, remplacement),
       angle: remplacerDansTexte(post.angle, mot, remplacement),
-      hashtags: post.hashtags.filter((h) => !normaliser(h).includes(normaliser(mot.replace(/\s+/g, "")))),
+      hashtags: post.hashtags.filter(
+        (h) => !normaliser(h).includes(normaliser(mot.replace(/\s+/g, ""))),
+      ),
     };
     suggestions.push({
       id: `interdit-${mot}`,
@@ -191,7 +204,10 @@ export function suggestionsPour(post: IdeePost, contraintes: ContraintesConformi
     ];
     const complet = [...post.hashtags];
     base.forEach((h) => {
-      if (complet.length < LIMITES.hashtagsMin && !complet.some((x) => normaliser(x) === normaliser(h))) {
+      if (
+        complet.length < LIMITES.hashtagsMin &&
+        !complet.some((x) => normaliser(x) === normaliser(h))
+      ) {
         complet.push(h);
       }
     });
@@ -265,7 +281,10 @@ export function suggestionsPour(post: IdeePost, contraintes: ContraintesConformi
   }
 
   // 8. Emoji sur Google Business
-  if (post.canal === "Google" && EMOJI.test(`${post.titre}${post.accroche}${post.legende}${post.cta}`)) {
+  if (
+    post.canal === "Google" &&
+    EMOJI.test(`${post.titre}${post.accroche}${post.legende}${post.cta}`)
+  ) {
     suggestions.push({
       id: "emoji",
       champ: "format",

@@ -58,8 +58,9 @@ function ValorisationPage() {
       />
 
       <BandeauEtat etat="provisoire" titre="Estimation indicative, pas une évaluation d'expert">
-        Les bornes de multiples sont des hypothèses de travail que vous pouvez ajuster, et non un barème sectoriel sourcé.
-        Seule une évaluation par votre expert-comptable engage une valeur. À réactualiser dès réception du bilan 2026.
+        Les bornes de multiples sont des hypothèses de travail que vous pouvez ajuster, et non un
+        barème sectoriel sourcé. Seule une évaluation par votre expert-comptable engage une valeur.
+        À réactualiser dès réception du bilan 2026.
       </BandeauEtat>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
@@ -72,7 +73,12 @@ function ValorisationPage() {
             </Button>
           </div>
 
-          <Champ label="CA de référence (€)" value={h.caReference} step={1000} onChange={(v) => maj({ caReference: v })} />
+          <Champ
+            label="CA de référence (€)"
+            value={h.caReference}
+            step={1000}
+            onChange={(v) => maj({ caReference: v })}
+          />
           <div className="flex flex-wrap gap-2 text-xs">
             {exercicesOfficiels.map((ex) => (
               <Button
@@ -84,7 +90,11 @@ function ValorisationPage() {
                 {ex.exercice} officiel
               </Button>
             ))}
-            <Button variant="secondary" size="sm" onClick={() => maj({ caReference: caClotureProvisoire2026 })}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => maj({ caReference: caClotureProvisoire2026 })}
+            >
               2025/2026 provisoire
             </Button>
           </div>
@@ -94,7 +104,10 @@ function ValorisationPage() {
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Label className="text-sm">Excédent brut d'exploitation retenu</Label>
-              <BadgeEtat etat={h.sourceEbe === "officiel" ? "officiel" : "provisoire"} texte={h.sourceEbe === "officiel" ? "BILAN" : "RECONSTITUÉ"} />
+              <BadgeEtat
+                etat={h.sourceEbe === "officiel" ? "officiel" : "provisoire"}
+                texte={h.sourceEbe === "officiel" ? "BILAN" : "RECONSTITUÉ"}
+              />
             </div>
             <div className="flex flex-wrap gap-2">
               <Button
@@ -124,8 +137,8 @@ function ValorisationPage() {
                   onChange={(v) => maj({ tauxEbeEstime: v })}
                 />
                 <p className="rounded-xl bg-warning/15 p-3 text-xs text-accent-foreground">
-                  EBE reconstitué : {euro(resultat.ebeRetenu)}. Cette valeur n'est pas comptable — la méthode EBE est donc
-                  affichée à titre indicatif seulement.
+                  EBE reconstitué : {euro(resultat.ebeRetenu)}. Cette valeur n'est pas comptable —
+                  la méthode EBE est donc affichée à titre indicatif seulement.
                 </p>
               </>
             )}
@@ -134,18 +147,53 @@ function ValorisationPage() {
           <Separator />
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Champ label="Multiple de CA — bas" value={h.multipleCaBas} step={0.05} onChange={(v) => maj({ multipleCaBas: v })} />
-            <Champ label="Multiple de CA — haut" value={h.multipleCaHaut} step={0.05} onChange={(v) => maj({ multipleCaHaut: v })} />
-            <Champ label="Multiple d'EBE — bas" value={h.multipleEbeBas} step={0.1} onChange={(v) => maj({ multipleEbeBas: v })} />
-            <Champ label="Multiple d'EBE — haut" value={h.multipleEbeHaut} step={0.1} onChange={(v) => maj({ multipleEbeHaut: v })} />
+            <Champ
+              label="Multiple de CA — bas"
+              value={h.multipleCaBas}
+              step={0.05}
+              onChange={(v) => maj({ multipleCaBas: v })}
+            />
+            <Champ
+              label="Multiple de CA — haut"
+              value={h.multipleCaHaut}
+              step={0.05}
+              onChange={(v) => maj({ multipleCaHaut: v })}
+            />
+            <Champ
+              label="Multiple d'EBE — bas"
+              value={h.multipleEbeBas}
+              step={0.1}
+              onChange={(v) => maj({ multipleEbeBas: v })}
+            />
+            <Champ
+              label="Multiple d'EBE — haut"
+              value={h.multipleEbeHaut}
+              step={0.1}
+              onChange={(v) => maj({ multipleEbeHaut: v })}
+            />
           </div>
 
           <Separator />
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <Champ label="CAF annuelle (€)" value={h.cafDisponible} step={500} onChange={(v) => maj({ cafDisponible: v })} />
-            <Champ label="Durée (années)" value={h.dureeFinancementAnnees} step={1} onChange={(v) => maj({ dureeFinancementAnnees: v })} />
-            <Champ label="Taux (%)" value={h.tauxInteret} step={0.25} onChange={(v) => maj({ tauxInteret: v })} />
+            <Champ
+              label="CAF annuelle (€)"
+              value={h.cafDisponible}
+              step={500}
+              onChange={(v) => maj({ cafDisponible: v })}
+            />
+            <Champ
+              label="Durée (années)"
+              value={h.dureeFinancementAnnees}
+              step={1}
+              onChange={(v) => maj({ dureeFinancementAnnees: v })}
+            />
+            <Champ
+              label="Taux (%)"
+              value={h.tauxInteret}
+              step={0.25}
+              onChange={(v) => maj({ tauxInteret: v })}
+            />
           </div>
         </section>
 
@@ -157,7 +205,8 @@ function ValorisationPage() {
               {euro(resultat.fourchetteBasse)} — {euro(resultat.fourchetteHaute)}
             </p>
             <p className="mt-3 text-xs opacity-85">
-              Aucune valeur unique n'est affichée : une valeur précise au centime serait trompeuse à ce stade.
+              Aucune valeur unique n'est affichée : une valeur précise au centime serait trompeuse à
+              ce stade.
             </p>
           </div>
 
@@ -165,7 +214,10 @@ function ValorisationPage() {
             <article key={m.cle} className="surface-card p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="font-semibold">{m.titre}</h3>
-                <BadgeEtat etat={m.fiable ? "officiel" : "non-disponible"} texte={m.fiable ? "EXPLOITABLE" : "INDICATIF"} />
+                <BadgeEtat
+                  etat={m.fiable ? "officiel" : "non-disponible"}
+                  texte={m.fiable ? "EXPLOITABLE" : "INDICATIF"}
+                />
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{m.formule}</p>
               <p className="mt-3 font-display text-2xl">
@@ -183,14 +235,23 @@ function ValorisationPage() {
           <div className="surface-card p-5">
             <h3 className="font-semibold">Facteurs qualitatifs à intégrer manuellement</h3>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-              <li>Bail commercial, loyer et durée restante — donnée non disponible dans l'application.</li>
-              <li>État du matériel et investissements à prévoir — donnée non disponible.</li>
-              <li>Dépendance à la clientèle professionnelle du midi et saisonnalité (fermeture d'août).</li>
               <li>
-                Résultat net {dernierExerciceOfficiel.exercice} négatif ({euroPrecis(dernierExerciceOfficiel.resultatNet)}) :
-                un repreneur en tiendra compte à la baisse.
+                Bail commercial, loyer et durée restante — donnée non disponible dans l'application.
               </li>
-              <li>Réputation en ligne réelle : non mesurée tant que les avis Google ne sont pas connectés.</li>
+              <li>État du matériel et investissements à prévoir — donnée non disponible.</li>
+              <li>
+                Dépendance à la clientèle professionnelle du midi et saisonnalité (fermeture
+                d'août).
+              </li>
+              <li>
+                Résultat net {dernierExerciceOfficiel.exercice} négatif (
+                {euroPrecis(dernierExerciceOfficiel.resultatNet)}) : un repreneur en tiendra compte
+                à la baisse.
+              </li>
+              <li>
+                Réputation en ligne réelle : non mesurée tant que les avis Google ne sont pas
+                connectés.
+              </li>
             </ul>
           </div>
         </section>

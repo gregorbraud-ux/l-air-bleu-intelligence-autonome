@@ -14,10 +14,14 @@ export const Route = createFileRoute("/avis")({
       { title: "Avis Google — AirBleu AI | L'Air Bleu" },
       {
         name: "description",
-        content: "Suivez la note Google de L'Air Bleu, analysez le sentiment des avis et répondez grâce à l'IA.",
+        content:
+          "Suivez la note Google de L'Air Bleu, analysez le sentiment des avis et répondez grâce à l'IA.",
       },
       { property: "og:title", content: "Avis Google — AirBleu AI" },
-      { property: "og:description", content: "Réputation en ligne du restaurant L'Air Bleu, pilotée par l'IA." },
+      {
+        property: "og:description",
+        content: "Réputation en ligne du restaurant L'Air Bleu, pilotée par l'IA.",
+      },
     ],
   }),
   component: AvisPage,
@@ -26,7 +30,7 @@ export const Route = createFileRoute("/avis")({
 const sentimentStyle: Record<string, string> = {
   positif: "bg-success/10 text-success",
   neutre: "bg-warning/15 text-accent-foreground",
-  "négatif": "bg-destructive/10 text-destructive",
+  négatif: "bg-destructive/10 text-destructive",
 };
 
 function AvisPage() {
@@ -42,9 +46,10 @@ function AvisPage() {
         titre="Avis Google non connectés"
         action={<BadgeCout niveau="gratuit-limite" />}
       >
-        Aucun avis réel n'est récupéré aujourd'hui. La note, le volume et les avis affichés sont des EXEMPLES DÉMO et ne
-        doivent pas être utilisés comme mesure. L'interface est prête à recevoir une source réelle (avis, note, volume,
-        date, réponse, statut, source, horodatage) via la fiche Google Business Profile.
+        Aucun avis réel n'est récupéré aujourd'hui. La note, le volume et les avis affichés sont des
+        EXEMPLES DÉMO et ne doivent pas être utilisés comme mesure. L'interface est prête à recevoir
+        une source réelle (avis, note, volume, date, réponse, statut, source, horodatage) via la
+        fiche Google Business Profile.
       </BandeauEtat>
 
       <section className="grid gap-4 lg:grid-cols-3">
@@ -68,11 +73,22 @@ function AvisPage() {
           <div className="mt-4 h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={repartitionNotes} margin={{ left: -16 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="note" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis tickLine={false} axisLine={false} fontSize={12} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)" }} />
-                <Bar dataKey="nombre" fill="var(--color-chart-1)" radius={[8, 8, 0, 0]} barSize={38} />
+                <Tooltip
+                  contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)" }}
+                />
+                <Bar
+                  dataKey="nombre"
+                  fill="var(--color-chart-1)"
+                  radius={[8, 8, 0, 0]}
+                  barSize={38}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -95,7 +111,9 @@ function AvisPage() {
                   <BadgeEtat etat="demo" />
                 </div>
               </div>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${sentimentStyle[a.sentiment]}`}>
+              <span
+                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${sentimentStyle[a.sentiment]}`}
+              >
                 {a.sentiment}
               </span>
             </div>
@@ -106,10 +124,12 @@ function AvisPage() {
               ) : (
                 <Button
                   size="sm"
-                  onClick={() => toast.info("Avis de démonstration", {
+                  onClick={() =>
+                    toast.info("Avis de démonstration", {
                       description:
                         "Connectez une source d'avis réelle pour générer une réponse publiable. Aucune réponse n'est publiée automatiquement.",
-                    })}
+                    })
+                  }
                 >
                   <MessageSquareReply className="mr-2 h-4 w-4" /> Répondre avec l'IA
                 </Button>

@@ -78,8 +78,12 @@ function Brand() {
         <Waves className="h-5 w-5 text-primary-foreground" />
       </div>
       <div className="min-w-0">
-        <p className="truncate font-display text-lg leading-tight text-sidebar-accent-foreground">AirBleu AI</p>
-        <p className="truncate text-xs text-sidebar-foreground/60">L'Air Bleu · Montoir-de-Bretagne</p>
+        <p className="truncate font-display text-lg leading-tight text-sidebar-accent-foreground">
+          AirBleu AI
+        </p>
+        <p className="truncate text-xs text-sidebar-foreground/60">
+          L'Air Bleu · Montoir-de-Bretagne
+        </p>
       </div>
     </div>
   );
@@ -162,7 +166,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span className="truncate font-display text-lg">AirBleu AI</span>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-10">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+          {children}
+        </main>
       </div>
     </div>
   );
