@@ -24,7 +24,7 @@ export const Route = createFileRoute("/integrations")({
 });
 
 type IntegrationCardProps = {
-  icon: typeof Database;
+  icon: React.ComponentType<React.ComponentProps<typeof Database>>;
   title: string;
   description: string;
   etat: "officiel" | "non-connecte" | "demo";
