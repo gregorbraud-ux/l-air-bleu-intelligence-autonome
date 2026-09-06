@@ -19,7 +19,10 @@ self.addEventListener("push", (event) => {
     data: { url: data.url || null, interne: data.interne || "/concurrence" },
     actions: data.url
       ? [
-          { action: "source", title: data.sourceLabel ? `Voir : ${data.sourceLabel}` : "Voir la source" },
+          {
+            action: "source",
+            title: data.sourceLabel ? `Voir : ${data.sourceLabel}` : "Voir la source",
+          },
           { action: "app", title: "Ouvrir AirBleu AI" },
         ]
       : [{ action: "app", title: "Ouvrir AirBleu AI" }],
@@ -31,7 +34,8 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const { url, interne } = event.notification.data || {};
-  const cible = event.action === "app" ? interne || "/concurrence" : url || interne || "/concurrence";
+  const cible =
+    event.action === "app" ? interne || "/concurrence" : url || interne || "/concurrence";
 
   event.waitUntil(
     (async () => {

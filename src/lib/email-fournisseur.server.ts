@@ -105,10 +105,16 @@ export async function envoyerEmail(message: MessageEmail): Promise<{ fournisseur
     return { fournisseur: fournisseur.nom };
   }
 
-  const { sendLovableEmail } = await import("@lovable.dev/email-js");
+  // Envoi via l'API HTTP de la plateforme d'hébergement (aucun paquet propriétaire installé).
   const domaine = domaineLovable()!;
-  await sendLovableEmail(
-    {
+  const res = await fetch("https://api.lovable.dev/v1/email/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env["LOVABLE_API_KEY"]!}`,
+      "content-type": "application/json",
+      "Idempotency-Key": message.idempotencyKey,
+    },
+    body: JSON.stringify({
       to: message.to,
       from: `AirBleu AI <alertes@${domaine}>`,
       sender_domain: domaine,
@@ -118,8 +124,11 @@ export async function envoyerEmail(message: MessageEmail): Promise<{ fournisseur
       purpose: message.purpose,
       label: message.label,
       idempotency_key: message.idempotencyKey,
-    },
-    { apiKey: process.env["LOVABLE_API_KEY"]! },
-  );
+    }),
+  });
+  if (!res.ok) {
+    const corps = await res.text();
+    throw new Error(`HTTP ${res.status} ${corps.slice(0, 200)}`);
+  }
   return { fournisseur: fournisseur.nom };
 }
