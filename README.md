@@ -28,11 +28,12 @@ aucune donnée fictive n'est présentée comme réelle.
 
 ### Dépendances restant liées à la plateforme Lovable
 
-- `@lovable.dev/vite-tanstack-config` : **outillage de build uniquement** (devDependency).
-  Il regroupe les plugins TanStack Start / React / Tailwind / Nitro et la détection du
-  bac à sable. Le remplacer par une configuration Vite manuelle est possible mais casse
-  actuellement la cible de build serverless du projet : il est donc conservé comme outil,
-  et aucun code applicatif ne l'importe.
+- `@lovable.dev/vite-tanstack-config` : **outillage d'édition uniquement** (devDependency),
+  utilisé par `vite.config.ts` pour l'aperçu dans l'éditeur (HMR, proxy d'aperçu).
+  Une configuration 100 % standard équivalente existe et est vérifiée :
+  `vite.config.standalone.ts` (`npm run dev:standalone`, `npm run build:standalone`).
+  Pour héberger l'application hors Lovable, utilisez cette configuration : plus aucun
+  paquet Lovable n'intervient dans le build.
 - `@lovable.dev/cloud-auth-js` : chargé **dynamiquement et uniquement dans l'aperçu de
   l'éditeur** (`src/lib/auth-oauth.ts`). En production, la connexion Google passe par
   Supabase Auth natif ; ce paquet n'est jamais évalué.
@@ -50,7 +51,19 @@ aucune donnée fictive n'est présentée comme réelle.
 
 ```sh
 npm i
-npm run dev      # http://localhost:8080
+npm run dev                 # aperçu éditeur
+npm run dev:standalone      # 100 % autonome, http://localhost:8080
 npm run lint
-npm run build
+npm run typecheck
+npm run build:standalone    # build de déploiement autonome (sortie dist/)
 ```
+
+## Déploiement autonome
+
+1. Créer un projet Supabase (ou auto-héberger), appliquer les migrations de `supabase/migrations`
+   puis vérifier que RLS est actif sur toutes les tables `app_*`.
+2. Renseigner les variables ci-dessus (côté serveur : `SUPABASE_*`, `IA_*`, `EMAIL_*`, `VAPID_*` ;
+   côté navigateur : uniquement les `VITE_SUPABASE_*` publiques — aucune clé secrète).
+3. Activer le provider Google dans Supabase Auth et déclarer l'URL de redirection `<domaine>/auth`.
+4. `npm run build:standalone`, puis déployer `dist/` sur n'importe quel hébergeur Node/serverless
+   (Cloudflare Workers, Vercel, Netlify, VPS avec Nitro).
