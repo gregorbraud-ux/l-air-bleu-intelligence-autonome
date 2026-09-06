@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { connexionGoogle } from "@/lib/auth-oauth";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,9 +103,7 @@ function AuthPage() {
 
   async function google() {
     setEnCours(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
+    const result = await connexionGoogle();
     if (result.error) {
       setEnCours(false);
       toast.error("Connexion Google impossible.");
