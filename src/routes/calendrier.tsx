@@ -257,9 +257,9 @@ function CalendrierPage() {
               >
                 <span className="text-xs font-semibold text-muted-foreground">{jour}</span>
                 <div className="mt-1 space-y-1">
-                  {items.map((p) => (
+                  {items.map((p, i) => (
                     <button
-                      key={p.titre}
+                      key={`${p.jour}-${i}-${p.titre}`}
                       onClick={() => {
                         if (p.genere) {
                           setSelection(p as PostValidation);
@@ -340,9 +340,9 @@ function CalendrierPage() {
         <div className="surface-card p-5">
           <h2 className="text-lg font-semibold">Prochaines publications</h2>
           <ul className="mt-4 space-y-3">
-            {publications.slice(0, 5).map((p) => (
+            {publications.slice(0, 5).map((p, i) => (
               <li
-                key={p.titre}
+                key={`${p.jour}-${i}-${p.titre}`}
                 className="flex items-center justify-between gap-3 border-b border-border/60 pb-3 last:border-0"
               >
                 <div className="min-w-0">
