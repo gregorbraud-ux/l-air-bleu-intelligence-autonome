@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "dev:standalone": "vite dev --config vite.config.standalone.ts",
-    "build:standalone": "vite build --config vite.config.standalone.ts",
+    "dev:standalone": "vite dev",
+    "build:standalone": "vite build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
