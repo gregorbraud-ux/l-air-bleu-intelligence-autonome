@@ -1,20 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Connexion Google.
+ * Connexion Google — Supabase Auth natif uniquement.
  *
- * Production (domaine propre / hébergement autonome) : Supabase Auth natif,
- * aucune dépendance externe.
- *
- * Aperçu dans l'éditeur (iframe) : le flux natif est bloqué par l'iframe, on
- * charge alors dynamiquement le connecteur d'aperçu. Cet import n'est jamais
- * évalué en production.
+ * Aucun connecteur propriétaire n'est importé : le build est totalement
+ * autonome. Dans un aperçu en iframe, le flux de redirection peut être bloqué
+ * par le navigateur ; on ouvre alors la page d'autorisation dans un onglet.
  */
-export function estApercuEditeur(): boolean {
+export function estApercuIframe(): boolean {
   if (typeof window === "undefined") return false;
-  const hote = window.location.hostname;
-  const dansIframe = window.self !== window.top;
-  return dansIframe && (hote.endsWith(".lovable.app") || hote.endsWith(".lovableproject.com"));
+  return window.self !== window.top;
 }
 
 export async function connexionGoogle(): Promise<{
@@ -23,10 +18,14 @@ export async function connexionGoogle(): Promise<{
 }> {
   const redirect_uri = `${window.location.origin}/auth`;
 
-  if (estApercuEditeur()) {
-    const { lovable } = await import("@/integrations/lovable/index");
-    const res = await lovable.auth.signInWithOAuth("google", { redirect_uri });
-    return { error: res.error ?? null, redirected: res.redirected };
+  if (estApercuIframe()) {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: redirect_uri, skipBrowserRedirect: true },
+    });
+    if (error) return { error, redirected: false };
+    if (data?.url) window.open(data.url, "_blank", "noopener,noreferrer");
+    return { error: null, redirected: Boolean(data?.url) };
   }
 
   const { error } = await supabase.auth.signInWithOAuth({
