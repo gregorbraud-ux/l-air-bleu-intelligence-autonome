@@ -99,7 +99,13 @@ function AssistantPage() {
         <h2 className="text-lg font-semibold">Votre question</h2>
         <div className="mt-3 flex flex-wrap gap-2">
           {questions.map((q) => (
-            <Button key={q} variant="outline" size="sm" onClick={() => setQuestion(q)}>
+            <Button
+              key={q}
+              variant="outline"
+              size="sm"
+              className="h-auto max-w-full whitespace-normal py-1.5 text-left"
+              onClick={() => setQuestion(q)}
+            >
               {q}
             </Button>
           ))}

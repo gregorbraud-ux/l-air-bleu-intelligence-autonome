@@ -3,67 +3,73 @@
 Application web PWA de pilotage marketing, financier et concurrentiel du restaurant
 **L'Air Bleu** (SARL LG AIR — 3 rue Anatole France, 44550 Montoir-de-Bretagne — 02 40 90 01 17).
 
+## Indépendance
+
+Le projet s'installe, se lance et se déploie **hors de toute plateforme d'édition** :
+plus aucun paquet propriétaire n'est présent dans `package.json`, la configuration Vite
+est 100 % standard et aucun service tiers n'est requis au runtime.
+
+```sh
+npm install       # ou bun install
+npm run dev       # http://localhost:8080
+npm run typecheck
+npm run lint
+npm run build     # sortie dist/ (client + serveur)
+```
+
 ## Stack
 
-- TanStack Start (React 19, Vite 7) — SSR + fonctions serveur
+- TanStack Start (React 19, Vite) — SSR + fonctions serveur
 - Supabase (base de données, authentification, RLS)
 - Tailwind CSS v4, shadcn/ui
 - PWA : manifeste + service worker (`public/sw.js`) et notifications Web Push (VAPID)
 
-## Fonctionnement autonome
+## Variables d'environnement
 
-L'application n'a besoin d'aucun service propriétaire pour tourner :
+### Obligatoires (base de données + authentification)
 
-| Brique | Autonome | Variables d'environnement |
+| Variable | Portée | Rôle |
 | --- | --- | --- |
-| Base de données / Auth | oui (Supabase self-host ou hébergé) | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` |
-| Connexion Google | oui — Supabase Auth natif (`signInWithOAuth`) | provider Google activé dans Supabase Auth |
-| Notifications push | oui — Web Push VAPID | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` |
-| E-mails d'alerte | oui — n'importe quelle API HTTP (Resend, Postmark, Brevo…) | `EMAIL_API_URL`, `EMAIL_API_KEY`, `EMAIL_FROM` |
-| Génération IA | oui — n'importe quel endpoint compatible OpenAI | `IA_API_URL`, `IA_API_KEY`, `IA_MODELE` |
-| Avis Google | non connecté par défaut | `GOOGLE_PLACES_API_KEY` (facultatif, payant) |
+| `VITE_SUPABASE_URL` | navigateur | URL du projet Supabase |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | navigateur | clé publique (jamais secrète) |
+| `SUPABASE_URL` | serveur | URL du projet Supabase |
+| `SUPABASE_PUBLISHABLE_KEY` | serveur | clé publique |
+| `SUPABASE_SERVICE_ROLE_KEY` | serveur | opérations d'administration (jamais exposée) |
 
-Sans identifiants, les modules concernés s'affichent explicitement comme **NON CONNECTÉ** :
-aucune donnée fictive n'est présentée comme réelle.
+### Facultatives — chaque service absent est affiché comme NON CONFIGURÉ
 
-### Dépendances restant liées à la plateforme Lovable
+| Service | Variables | Sans configuration |
+| --- | --- | --- |
+| Génération IA (endpoint compatible OpenAI, y compris serveur local) | `IA_API_URL`, `IA_API_KEY`, `IA_MODELE` | « IA NON CONFIGURÉE », aucun texte simulé |
+| E-mails d'alerte (Resend, Postmark, Brevo… toute API HTTP) | `EMAIL_API_URL`, `EMAIL_API_KEY`, `EMAIL_FROM` | envoi désactivé proprement |
+| Notifications push Web Push | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | push désactivé |
+| Avis Google (Places API, payant) | `GOOGLE_PLACES_API_KEY` | module « NON CONNECTÉ » |
 
-- `@lovable.dev/vite-tanstack-config` : **outillage d'édition uniquement** (devDependency),
-  utilisé par `vite.config.ts` pour l'aperçu dans l'éditeur (HMR, proxy d'aperçu).
-  Une configuration 100 % standard équivalente existe et est vérifiée :
-  `vite.config.standalone.ts` (`npm run dev:standalone`, `npm run build:standalone`).
-  Pour héberger l'application hors Lovable, utilisez cette configuration : plus aucun
-  paquet Lovable n'intervient dans le build.
-- `@lovable.dev/cloud-auth-js` : chargé **dynamiquement et uniquement dans l'aperçu de
-  l'éditeur** (`src/lib/auth-oauth.ts`). En production, la connexion Google passe par
-  Supabase Auth natif ; ce paquet n'est jamais évalué.
-- `LOVABLE_API_KEY` : utilisé seulement comme repli gratuit pour l'IA et l'e-mail lorsque
-  aucun fournisseur externe n'est configuré. Renseigner `IA_API_*` / `EMAIL_API_*` rend
-  l'application totalement indépendante.
+Aucune clé secrète n'est envoyée au navigateur : seules les variables `VITE_SUPABASE_*`
+publiques sont exposées côté client.
+
+## Authentification
+
+- Production **et** développement : Supabase Auth natif (e-mail/mot de passe + Google).
+- Activer le provider Google dans Supabase Auth et déclarer l'URL de redirection `<domaine>/auth`.
+- Dans un aperçu affiché en iframe, la page d'autorisation Google s'ouvre dans un nouvel
+  onglet (la redirection en iframe est bloquée par les navigateurs). Aucun connecteur
+  propriétaire n'est utilisé : le confort d'aperçu intégré est volontairement abandonné
+  au profit de l'indépendance technique.
 
 ## Chiffres de référence
 
 - Exercice clos 31/08/2025 — **OFFICIEL** : CA 492 781,72 € ; résultat net -9 192,13 €
 - Exercice 2025/2026 — **PROVISOIRE** au 31/08/2026 : CA 495 800 € (août clôturé à 27 800 €),
   à confirmer par le bilan 2026
+- Les anciennes projections ne subsistent qu'en historique marqué OBSOLÈTE.
 
-## Développement
-
-```sh
-npm i
-npm run dev                 # aperçu éditeur
-npm run dev:standalone      # 100 % autonome, http://localhost:8080
-npm run lint
-npm run typecheck
-npm run build:standalone    # build de déploiement autonome (sortie dist/)
-```
-
-## Déploiement autonome
+## Déploiement
 
 1. Créer un projet Supabase (ou auto-héberger), appliquer les migrations de `supabase/migrations`
    puis vérifier que RLS est actif sur toutes les tables `app_*`.
-2. Renseigner les variables ci-dessus (côté serveur : `SUPABASE_*`, `IA_*`, `EMAIL_*`, `VAPID_*` ;
-   côté navigateur : uniquement les `VITE_SUPABASE_*` publiques — aucune clé secrète).
-3. Activer le provider Google dans Supabase Auth et déclarer l'URL de redirection `<domaine>/auth`.
-4. `npm run build:standalone`, puis déployer `dist/` sur n'importe quel hébergeur Node/serverless
-   (Cloudflare Workers, Vercel, Netlify, VPS avec Nitro).
+2. Renseigner les variables ci-dessus (secrets uniquement côté serveur).
+3. `npm run build`, puis déployer `dist/` sur n'importe quel hébergeur Node/serverless
+   (Cloudflare Workers, Vercel, Netlify, VPS).
+
+Le dossier `.lovable/` ne contient que des métadonnées d'éditeur et n'intervient pas dans le build.

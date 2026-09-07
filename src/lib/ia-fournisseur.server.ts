@@ -1,16 +1,13 @@
 /**
- * Couche d'abstraction du fournisseur IA.
- * Objectif : pouvoir remplacer Lovable AI Gateway par un autre fournisseur
- * compatible OpenAI (ou désactiver l'IA) sans toucher au reste de l'application.
+ * Fournisseur IA — 100 % indépendant.
  *
- * Ordre de résolution :
- *  1. IA_BASE_URL + IA_API_KEY (+ IA_MODELE)  → fournisseur externe compatible OpenAI
- *  2. LOVABLE_API_KEY                          → Lovable AI Gateway (par défaut)
- *  3. aucun                                    → mode SANS IA (aucune simulation)
+ * Un seul mode : un endpoint compatible OpenAI configuré côté serveur
+ * (IA_API_URL — alias historique IA_BASE_URL — + IA_API_KEY + IA_MODELE).
+ * Sans configuration : mode « IA NON CONFIGURÉE », aucune simulation.
  */
 
 export type FournisseurIA = {
-  id: "externe" | "lovable";
+  id: "externe";
   nom: string;
   modele: string;
   /** Statut de coût réel, affiché tel quel dans l'interface. */
@@ -22,36 +19,25 @@ export type ResolutionIA =
   | { disponible: true; fournisseur: FournisseurIA }
   | { disponible: false; fournisseur: null; raison: string };
 
-const MODELE_DEFAUT = "google/gemini-3.6-flash";
+const MODELE_DEFAUT = "gpt-4o-mini";
+
+function baseIA() {
+  return (process.env.IA_API_URL ?? process.env.IA_BASE_URL)?.trim();
+}
 
 export function resoudreFournisseurIA(): ResolutionIA {
-  const baseExterne = process.env.IA_BASE_URL?.trim();
-  const cleExterne = process.env.IA_API_KEY?.trim();
-  if (baseExterne && cleExterne) {
+  const base = baseIA();
+  const cle = process.env.IA_API_KEY?.trim();
+  if (base && cle) {
     return {
       disponible: true,
       fournisseur: {
         id: "externe",
-        nom: `Fournisseur externe (${new URL(baseExterne).host})`,
+        nom: `Fournisseur IA (${new URL(base).host})`,
         modele: process.env.IA_MODELE?.trim() || MODELE_DEFAUT,
         cout: "payant",
         remarque:
-          "Fournisseur configuré manuellement : le coût dépend de votre contrat avec ce fournisseur.",
-      },
-    };
-  }
-
-  const cleLovable = process.env.LOVABLE_API_KEY?.trim();
-  if (cleLovable) {
-    return {
-      disponible: true,
-      fournisseur: {
-        id: "lovable",
-        nom: "Lovable AI Gateway",
-        modele: MODELE_DEFAUT,
-        cout: "gratuit-limite",
-        remarque:
-          "Inclus dans l'espace de travail Lovable, avec un quota de crédits mensuel. Une fois le quota atteint, la génération s'arrête : ce n'est pas une gratuité illimitée.",
+          "Fournisseur configuré manuellement : le coût dépend de votre contrat avec ce fournisseur (un serveur local compatible OpenAI reste gratuit).",
       },
     };
   }
@@ -60,7 +46,7 @@ export function resoudreFournisseurIA(): ResolutionIA {
     disponible: false,
     fournisseur: null,
     raison:
-      "Aucun fournisseur IA configuré. L'application fonctionne en mode sans IA : les modules de génération sont désactivés, aucun texte n'est simulé.",
+      "IA NON CONFIGURÉE : renseignez IA_API_URL, IA_API_KEY et IA_MODELE côté serveur. Les modules de génération restent désactivés, aucun texte n'est simulé.",
   };
 }
 
@@ -72,20 +58,12 @@ async function creerProvider(structure: boolean) {
   if (!resolution.disponible) throw new Error(resolution.raison);
   const { fournisseur } = resolution;
 
-  if (fournisseur.id === "externe") {
-    const { createOpenAICompatible } = await import("@ai-sdk/openai-compatible");
-    const provider = createOpenAICompatible({
-      name: "ia-externe",
-      baseURL: process.env.IA_BASE_URL!.trim(),
-      supportsStructuredOutputs: structure,
-      headers: { Authorization: `Bearer ${process.env.IA_API_KEY!.trim()}` },
-    });
-    return { modele: provider(fournisseur.modele), fournisseur };
-  }
-
-  const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
-  const provider = createLovableAiGatewayProvider(process.env.LOVABLE_API_KEY!.trim(), undefined, {
-    structuredOutputs: structure,
+  const { createOpenAICompatible } = await import("@ai-sdk/openai-compatible");
+  const provider = createOpenAICompatible({
+    name: "ia-externe",
+    baseURL: baseIA()!,
+    supportsStructuredOutputs: structure,
+    headers: { Authorization: `Bearer ${process.env.IA_API_KEY!.trim()}` },
   });
   return { modele: provider(fournisseur.modele), fournisseur };
 }
