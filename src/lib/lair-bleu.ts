@@ -143,6 +143,8 @@ export const euro = (v: number) => `${Math.round(v).toLocaleString("fr-FR")} €
 export const euroPrecis = (v: number) =>
   v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
+import { contexteSEO } from "./seo-editorial";
+
 /** Contexte texte injecté dans tous les prompts IA — uniquement des faits confirmés. */
 export function contexteAirBleu(): string {
   return [
@@ -158,5 +160,6 @@ export function contexteAirBleu(): string {
     "Les anciennes projections (490 957 / 491 000 / 493 960 / 494 000 €) sont OBSOLÈTES et ne doivent plus être citées.",
     `Résultat net 2025/2026 : non disponible avant le bilan 2026.`,
     "Règles absolues : ne jamais inventer un prix, un horaire, un menu, un avis, un chiffre ou un concurrent. Si une donnée manque, écrire « donnée non disponible ».",
+    contexteSEO(),
   ].join("\n");
 }

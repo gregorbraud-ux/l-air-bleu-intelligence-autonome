@@ -1,11 +1,16 @@
-# Roadmap — L'Air Bleu Intelligence (autonomie)
+# Roadmap — L'Air Bleu Intelligence (indépendance)
 
-- [x] E-mail : plus aucun paquet propriétaire au runtime (envoyerEmail + appel HTTP de repli)
-- [x] Auth : Supabase Auth natif en production, connecteur d'aperçu isolé (src/lib/auth-oauth.ts)
-- [x] Vite : @lovable.dev/vite-tanstack-config conservé comme outillage de build, documenté dans le README
-- [x] Suppression de lovable-error-reporting ; src/integrations/lovable uniquement en import dynamique d'aperçu
-- [x] package.json : @lovable.dev/email-js retiré
-- [x] Chiffres officiels conservés (492 781,72 € ; -9 192,13 € ; 495 800 € provisoire, août 27 800 €)
-- [x] typecheck + lint (--fix) + build + vérification mobile 390 px sans erreur console
-- [x] README et variables d'environnement documentés
-- [ ] Secrets VAPID (public/privé/subject) : à saisir par l'utilisateur dans Réglages du projet → Secrets
+## Réellement indépendant
+- [x] Aucun paquet `@lovable.dev/*` dans package.json ni bun.lock ; package-lock.json obsolète supprimé
+- [x] Vite : configuration standard (TanStack Start, React, Tailwind, tsconfig-paths)
+- [x] Auth : Supabase Auth natif, session en localStorage standard (plus de broker d'aperçu)
+- [x] E-mail et IA : fournisseurs génériques configurés par variables serveur, sinon « NON CONFIGURÉ »
+- [x] Fichiers .lovable/project.json, previewAuthStorage.ts, cron-auth.ts supprimés
+- [x] .gitignore protège .env* ; .env.example sans secret
+- [x] Source de vérité SEO (src/lib/seo-editorial.ts) injectée dans les prompts IA
+- [x] Chiffres conservés (492 781,72 € ; -9 192,13 € ; 495 800 € provisoire, août 27 800 €)
+
+## Reste à faire
+- [ ] Clés VAPID, IA, e-mail, Google Places : à fournir par l'utilisateur dans l'environnement
+- [ ] Création du dépôt GitHub source de vérité et premier commit (hors de cet éditeur)
+- [ ] Emballage iOS/Android via Capacitor (non commencé)
