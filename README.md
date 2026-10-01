@@ -1,75 +1,69 @@
-# L'Air Bleu Intelligence (AirBleu AI)
+# L'Air Bleu Intelligence
 
 Application web PWA de pilotage marketing, financier et concurrentiel du restaurant
 **L'Air Bleu** (SARL LG AIR — 3 rue Anatole France, 44550 Montoir-de-Bretagne — 02 40 90 01 17).
 
-## Indépendance
+> L'Air Bleu — entre les deux rives, une bonne adresse pour déjeuner.
 
-Le projet s'installe, se lance et se déploie **hors de toute plateforme d'édition** :
-plus aucun paquet propriétaire n'est présent dans `package.json`, la configuration Vite
-est 100 % standard et aucun service tiers n'est requis au runtime.
+## Installation locale
 
 ```sh
-npm install       # ou bun install
-npm run dev       # http://localhost:8080
+git clone <depot> && cd <depot>
+cp .env.example .env      # puis renseigner les valeurs
+npm install
+npm run dev               # http://localhost:8080
 npm run typecheck
 npm run lint
-npm run build     # sortie dist/ (client + serveur)
+npm run build             # sortie dist/ (client + serveur)
 ```
 
 ## Stack
 
-- TanStack Start (React 19, Vite) — SSR + fonctions serveur
-- Supabase (base de données, authentification, RLS)
-- Tailwind CSS v4, shadcn/ui
-- PWA : manifeste + service worker (`public/sw.js`) et notifications Web Push (VAPID)
+TanStack Start (React 19, Vite, SSR + fonctions serveur), Supabase (base, Auth, RLS),
+Tailwind CSS v4, shadcn/ui. Aucune dépendance propriétaire d'éditeur.
 
 ## Variables d'environnement
 
-### Obligatoires (base de données + authentification)
+Voir `.env.example`. Le fichier `.env` n'est jamais versionné.
 
-| Variable | Portée | Rôle |
+| Variable | Portée | Obligatoire |
 | --- | --- | --- |
-| `VITE_SUPABASE_URL` | navigateur | URL du projet Supabase |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | navigateur | clé publique (jamais secrète) |
-| `SUPABASE_URL` | serveur | URL du projet Supabase |
-| `SUPABASE_PUBLISHABLE_KEY` | serveur | clé publique |
-| `SUPABASE_SERVICE_ROLE_KEY` | serveur | opérations d'administration (jamais exposée) |
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` | navigateur (publiques) | oui |
+| `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` | serveur | oui |
+| `SUPABASE_SERVICE_ROLE_KEY` | serveur, secret | oui (admin) |
+| `IA_API_URL`, `IA_API_KEY`, `IA_MODELE` | serveur | non — sinon « IA NON CONFIGURÉE » |
+| `EMAIL_API_URL`, `EMAIL_API_KEY`, `EMAIL_FROM` | serveur | non — envoi désactivé |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | serveur | non — push désactivé |
+| `GOOGLE_PLACES_API_KEY` | serveur | non — avis « NON CONNECTÉ » |
 
-### Facultatives — chaque service absent est affiché comme NON CONFIGURÉ
+Seules les variables `VITE_*` (publiques) atteignent le navigateur.
 
-| Service | Variables | Sans configuration |
-| --- | --- | --- |
-| Génération IA (endpoint compatible OpenAI, y compris serveur local) | `IA_API_URL`, `IA_API_KEY`, `IA_MODELE` | « IA NON CONFIGURÉE », aucun texte simulé |
-| E-mails d'alerte (Resend, Postmark, Brevo… toute API HTTP) | `EMAIL_API_URL`, `EMAIL_API_KEY`, `EMAIL_FROM` | envoi désactivé proprement |
-| Notifications push Web Push | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | push désactivé |
-| Avis Google (Places API, payant) | `GOOGLE_PLACES_API_KEY` | module « NON CONNECTÉ » |
+## Supabase Auth
 
-Aucune clé secrète n'est envoyée au navigateur : seules les variables `VITE_SUPABASE_*`
-publiques sont exposées côté client.
+E-mail/mot de passe et Google via Supabase Auth natif ; session stockée en localStorage.
+Activer le provider Google et déclarer `<domaine>/auth` comme URL de redirection.
+Appliquer les migrations de `supabase/migrations` et vérifier que RLS est actif.
 
-## Authentification
+## Déploiement indépendant
 
-- Production **et** développement : Supabase Auth natif (e-mail/mot de passe + Google).
-- Activer le provider Google dans Supabase Auth et déclarer l'URL de redirection `<domaine>/auth`.
-- Dans un aperçu affiché en iframe, la page d'autorisation Google s'ouvre dans un nouvel
-  onglet (la redirection en iframe est bloquée par les navigateurs). Aucun connecteur
-  propriétaire n'est utilisé : le confort d'aperçu intégré est volontairement abandonné
-  au profit de l'indépendance technique.
+`npm run build`, puis déployer `dist/` sur tout hébergeur Node/serverless
+(Cloudflare Workers, Vercel, Netlify, VPS). Les secrets se configurent chez l'hébergeur.
 
-## Chiffres de référence
+## PWA
 
-- Exercice clos 31/08/2025 — **OFFICIEL** : CA 492 781,72 € ; résultat net -9 192,13 €
-- Exercice 2025/2026 — **PROVISOIRE** au 31/08/2026 : CA 495 800 € (août clôturé à 27 800 €),
-  à confirmer par le bilan 2026
-- Les anciennes projections ne subsistent qu'en historique marqué OBSOLÈTE.
+Manifeste `public/manifest.webmanifest`, service worker `public/sw.js`, notifications Web Push (VAPID).
 
-## Déploiement
+## Mobile iOS/Android (prévu)
 
-1. Créer un projet Supabase (ou auto-héberger), appliquer les migrations de `supabase/migrations`
-   puis vérifier que RLS est actif sur toutes les tables `app_*`.
-2. Renseigner les variables ci-dessus (secrets uniquement côté serveur).
-3. `npm run build`, puis déployer `dist/` sur n'importe quel hébergeur Node/serverless
-   (Cloudflare Workers, Vercel, Netlify, VPS).
+Une seule base de code : la PWA sera emballée avec Capacitor (`@capacitor/ios`, `@capacitor/android`)
+en pointant sur le build web. Pas de codebase native séparée.
 
-Le dossier `.lovable/` ne contient que des métadonnées d'éditeur et n'intervient pas dans le build.
+## Source de vérité métier
+
+- `src/lib/lair-bleu.ts` : identité, finances (officiel 2024/25 : CA 492 781,72 €, résultat -9 192,13 € ;
+  2025/26 PROVISOIRE : 495 800 €, août 27 800 €, à confirmer par le bilan 2026).
+- `src/lib/seo-editorial.ts` : positionnement SEO ; donnée inconnue = « non disponible ».
+
+## Lovable
+
+Lovable peut servir d'éditeur facultatif. Le projet n'en dépend ni pour le build ni au runtime.
